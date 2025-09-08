@@ -1,7 +1,7 @@
 <div class="home-container">
   <div class="header-info">
     <div class="score">
-      <img src="assets/images/heart.png" alt="Heart">
+      <img src="assets/images/time.png" alt="Heart">
       <span>90</span>
     </div>
     <div class="profile">
@@ -17,23 +17,27 @@
   <div class="main-content">
     <img src="assets/images/treelogo.png" alt="Tree Logo" class="tree-logo">
     
-    <div class="menu-grid">
-      <button routerLink="/exercise" class="menu-item">
-        <img src="assets/images/exer.png" alt="Exercise">
-        <span>ออกกำลังกาย</span>
-      </button>
-      <button routerLink="/ranking" class="menu-item">
-        <img src="assets/images/graph.png" alt="Ranking">
-        <span>อันดับ</span>
-      </button>
-      <button class="menu-item">
-        <img src="assets/images/tree.png" alt="My Tree">
-        <span>ต้นไม้ของฉัน</span>
-      </button>
-      <button class="menu-item">
-        <img src="assets/images/seting.png" alt="Settings">
-        <span>ตั้งค่า</span>
-      </button>
-    </div>
+   <div class="menu-grid">
+  <button class="menu-item" (click)="goTo('/exercise')">
+    <img src="assets/images/exer.png" alt="Exercise">
+    <span>ออกกำลังกาย</span>
+  </button>
+  
+  <button class="menu-item" (click)="goTo('/ranking')">
+    <img src="assets/images/graph.png" alt="Ranking">
+    <span>อันดับ</span>
+  </button>
+  
+  <button class="menu-item" (click)="goTo('/my-tree')">
+    <img src="assets/images/tree.png" alt="My Tree">
+    <span>ต้นไม้ของฉัน</span>
+  </button>
+  
+  <button class="menu-item" (click)="goTo('/settings')">
+    <img src="assets/images/seting.png" alt="Settings">
+    <span>ตั้งค่า</span>
+  </button>
+</div>
+
   </div>
 </div>

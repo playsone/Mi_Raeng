@@ -1,0 +1,86 @@
+/* --- CSS ที่ยังคงไว้สำหรับดีไซน์เฉพาะ --- */
+:host {
+  display: block;
+  background-color: #e0f2fe;
+  font-family: "Sarabun", sans-serif;
+  background-image: url("/assets/images/bgquiz.png");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+
+  /* เต็มหน้าจอแบบที่ body เคยทำ */
+  min-height: 100vh;
+}
+
+/* ดีไซน์ของ Custom Radio Button ที่เป็นเอกลักษณ์ของคุณ */
+.option-label {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  cursor: pointer;
+  font-size: 1.1rem;
+  gap: 10px;
+  position: relative;
+}
+
+.custom-checkbox {
+  width: 50px;
+  height: 50px;
+  border: 3px solid;
+  border-radius: 10px;
+  transition: all 0.2s ease-in-out;
+  position: relative;
+}
+
+.option-label.green .custom-checkbox {
+  border-color: #4caf50;
+}
+.option-label.red .custom-checkbox {
+  border-color: #f44336;
+}
+
+input[type="radio"] {
+  position: absolute;
+  opacity: 0;
+}
+
+input[type="radio"]:checked + .custom-checkbox {
+  transform: scale(1.1);
+}
+
+.option-label.green input[type="radio"]:checked + .custom-checkbox {
+  background-color: #4caf50;
+}
+.option-label.red input[type="radio"]:checked + .custom-checkbox {
+  background-color: #f44336;
+}
+
+input[type="radio"]:checked + .custom-checkbox::after {
+  content: "✔";
+  color: white;
+  font-size: 30px;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+/* ปรับแต่งสี Heading เพิ่มเติม */
+h1 {
+  color: #0d47a1;
+  font-weight: 700;
+}
+
+/* สไตล์ของ SVG Icon */
+.icon-container svg {
+  width: 150px;
+  height: auto;
+  stroke: #2196f3;
+  stroke-width: 4;
+  fill: transparent;
+}
+.icon-container .heart {
+  fill: #f44336;
+  stroke: #f44336;
+}

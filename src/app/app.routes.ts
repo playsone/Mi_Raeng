@@ -6,6 +6,7 @@ import { Register } from './pages/register/register';
 import { Home} from './pages/home/home';
 import { Exercise } from './pages/exercise/exercise';
 import { Ranking } from './pages/ranking/ranking';
+import { MyTree } from './pages/my-tree/my-tree';
 
 export const routes: Routes = [
   { path: '', redirectTo: '/welcome', pathMatch: 'full' },
@@ -13,8 +14,9 @@ export const routes: Routes = [
   { path: 'login', component: Login },
   { path: 'register', component: Register },
   { path: 'home', component: Home },
-  { path: 'exercise', component: Exercise },
-  { path: 'ranking', component: Ranking }
+  { path: 'exercise', component: Exercise }, 
+  { path: 'ranking', component: Ranking } ,
+  { path: 'mytree', component: MyTree } 
 ];
 
 @NgModule({

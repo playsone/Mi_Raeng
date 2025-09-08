@@ -7,6 +7,7 @@ import { Home} from './pages/home/home';
 import { Exercise } from './pages/exercise/exercise';
 import { Ranking } from './pages/ranking/ranking';
 import { MyTree } from './pages/my-tree/my-tree';
+import { Quiz } from './pages/quiz/quiz';
 
 export const routes: Routes = [
   { path: '', redirectTo: '/welcome', pathMatch: 'full' },
@@ -16,7 +17,8 @@ export const routes: Routes = [
   { path: 'home', component: Home },
   { path: 'exercise', component: Exercise }, 
   { path: 'ranking', component: Ranking } ,
-  { path: 'mytree', component: MyTree } 
+  { path: 'mytree', component: MyTree },
+  { path: 'quiz', component: Quiz }
 ];
 
 @NgModule({

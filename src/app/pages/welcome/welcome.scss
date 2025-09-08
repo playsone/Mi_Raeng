@@ -1,0 +1,79 @@
+.welcome-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  background: linear-gradient(to bottom, #d6f2ff, #78d6ff);
+  font-family: Arial, sans-serif;
+  position: relative;
+  overflow: hidden;
+
+  .logo {
+    width: 250px;
+    height: auto;
+    margin-bottom: 20px;
+    z-index: 2;
+  }
+
+  .text-content {
+    text-align: center;
+    color: #4b0082;
+    margin-bottom: 40px;
+    z-index: 2;
+
+    h1 {
+      font-size: 2.5em;
+      font-weight: bold;
+    }
+
+    p {
+      font-size: 1.2em;
+    }
+  }
+
+  .button-group {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    width: 80%;
+    max-width: 300px;
+    z-index: 2;
+
+    .login-btn,
+    .register-btn {
+      padding: 15px;
+      border-radius: 50px;
+      border: none;
+      font-size: 1.2em;
+      font-weight: bold;
+      cursor: pointer;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      transition: transform 0.2s, background-color 0.2s;
+    }
+
+    .login-btn {
+      background-color: #27d97b;
+      color: white;
+    }
+
+    .register-btn {
+      background-color: white;
+      color: #27d97b;
+      border: 2px solid #27d97b;
+    }
+
+    .login-btn:hover,
+    .register-btn:hover {
+      transform: translateY(-2px);
+    }
+  }
+
+  .flowers {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    z-index: 1;
+  }
+}

@@ -1,11 +1,20 @@
 import { Component } from '@angular/core';
+import { Router } from '@angular/router';
+import { MatIconModule } from '@angular/material/icon';
 
 @Component({
   selector: 'app-login',
-  imports: [],
+  standalone: true,
+  imports: [MatIconModule],
   templateUrl: './login.html',
-  styleUrl: './login.scss'
+  styleUrls: ['./login.scss']
 })
 export class Login {
+  constructor(private router: Router) {}
 
+  login(event: Event) {
+    event.preventDefault(); // ป้องกัน form submit ปกติ
+    // สามารถเพิ่ม logic ตรวจสอบเบอร์โทร/รหัสผ่านก่อน
+    this.router.navigate(['/home']); // ไปหน้า home
+  }
 }

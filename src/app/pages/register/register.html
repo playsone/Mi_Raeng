@@ -1,8 +1,7 @@
 <div class="register-container">
-  <button class="back-btn" routerLink="/welcome">
+  <button class="back-btn" type="button" onclick="history.back()">
     <span>⬅️</span>
   </button>
-  
   <div class="header">
     <h1>สมัครสมาชิก</h1>
   </div>
@@ -33,9 +32,8 @@
     <div class="select-group">
       <div>
         <span>🎂</span>
-        <select>
-          <option disabled selected>อายุ</option>
-          </select>
+       <input type="number" placeholder="อายุ" min="1" max="120">
+
       </div>
       <div>
         <span>🚻</span>

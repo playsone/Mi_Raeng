@@ -1,0 +1,127 @@
+// นำเข้าฟอนต์ 'Nunito' จาก Google Fonts
+@import url('https://fonts.googleapis.com/css2?family=Nunito:wght@700;900&display=swap');
+
+// --- ⚙️ ตัวแปรหลัก (Custom Properties) ---
+:host {
+  --primary-color: #3b5998;
+  --bg-start: #d6f2ff;
+  --bg-end: #78d6ff;
+  --font-main: 'Nunito', sans-serif;
+  --song-box-bg: #fce4ec; // สีชมพูอ่อนสำหรับกล่องชื่อเพลง
+  --profile-border-color: #ff80ab; // สีขอบโปรไฟล์
+}
+
+// --- 🎨 สไตล์หลักของ Component ---
+:host {
+  display: block; 
+  min-height: 100vh; 
+  background: linear-gradient(to bottom, var(--bg-start), var(--bg-end)); 
+  font-family: var(--font-main); 
+  color: var(--primary-color); 
+}
+
+// --- 🌟 ส่วนหัว (Header) ---
+.info-box {
+  display: flex;
+  align-items: center;
+  background-color: rgba(255, 255, 255, 0.8);
+  border-radius: 50px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  font-weight: bold;
+  font-size: clamp(1.1rem, 0.4rem + 2.8vw, 1.8rem);
+  padding: clamp(8px, 0.5vh + 1vw, 12px) clamp(15px, 1rem + 2vw, 25px);
+
+  .icon {
+    width: clamp(24px, 1rem + 3vw, 38px);
+    height: clamp(24px, 1rem + 3vw, 38px);
+    margin-right: clamp(8px, 0.5rem + 1vw, 12px);
+  }
+}
+
+.profile-info {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  
+  .profile-pic {
+    width: clamp(60px, 5rem + 8vw, 100px);
+    height: clamp(60px, 5rem + 8vw, 100px);
+    border-radius: 50%;
+    margin-bottom: 5px;
+  }
+
+  .profile-name {
+    font-size: clamp(1.2rem, 0.5rem + 2.5vw, 2rem);
+    font-weight: 900;
+  }
+}
+
+// --- 🎶 ส่วนกลาง (Main Content) ---
+h1 {
+  font-size: clamp(1.8rem, 1rem + 3.5vw, 3.2rem);
+  font-weight: 900;
+  color: var(--primary-color);
+  text-shadow: 0 2px 3px rgba(255,255,255,0.5);
+}
+
+.song-list-container {
+  display: flex;
+  flex-direction: column;
+  gap: clamp(15px, 1rem + 2vh, 25px);
+  width: 100%;
+  max-width: 500px;
+  margin: 0 auto;
+}
+
+// --- ✨ Layout แบบซ้อนทับ (Overlapping) ---
+
+.song-name {
+  position: relative;
+  background-color: var(--song-box-bg);
+  border-radius: 50px;
+  box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+  transition: filter 0.2s ease;
+  cursor: pointer;
+  min-height: clamp(60px, 10vh, 90px);
+
+  // ✨ การเปลี่ยนแปลง: จัดให้ .song-title อยู่กลาง
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  &:hover {
+    filter: brightness(0.95);
+  }
+}
+
+// ✨ การเปลี่ยนแปลง: เพิ่มสไตล์สำหรับตัวหนังสือโดยเฉพาะ
+.song-title {
+  font-size: clamp(1.2rem, 0.8rem + 2vw, 2.2rem);
+  font-weight: 700;
+  // ทำให้ข้อความไม่ถูกปุ่มกดทับ
+  position: relative;
+  z-index: 5;
+}
+
+
+// สไตล์สำหรับปุ่มยังคงเหมือนเดิม
+.song-button {
+  position: absolute;
+  z-index: 10;
+  top: 50%;
+  transform: translateY(-50%);
+  left: -20px;
+
+  img {
+    width: clamp(100px, 8rem + 10vw, 120px);
+    height: auto;
+    filter: drop-shadow(0 5px 8px rgba(0,0,0,0.2));
+    transition: transform 0.2s ease;
+  }
+}
+
+.song-item:nth-child(even) .song-button {
+  left: auto;
+  right: -20px;
+}
+

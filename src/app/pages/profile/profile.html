@@ -1,52 +1,98 @@
-<div class="register-container">
+<div class="profile-container">
   <button class="back-btn" type="button" onclick="history.back()">
     <span>⬅️</span>
   </button>
-  <div class="header">
-    <h1>ข้อมูลของฉัน</h1>
+
+  <!-- ✨ เพิ่ม Wrapper นี้เข้ามา ✨ -->
+  <div class="content-wrapper">
+    <div class="header">
+      <h1>ข้อมูลของฉัน</h1>
+    </div>
+
+    <!-- ============================================= -->
+    <!-- V V V      โหมดแสดงผล (View Mode)      V V V -->
+    <!-- ============================================= -->
+    <div *ngIf="!isEditing" class="view-mode">
+      <div class="info-group">
+        <span class="icon">👤</span>
+        <div class="text-content">
+          <label>ชื่อ-นามสกุล</label>
+          <p>{{ userData.fullName }}</p>
+        </div>
+      </div>
+      <div class="info-group">
+        <span class="icon">📞</span>
+        <div class="text-content">
+          <label>เบอร์โทร</label>
+          <p>{{ userData.phone }}</p>
+        </div>
+      </div>
+      <div class="info-group">
+        <span class="icon">🎂</span>
+        <div class="text-content">
+          <label>อายุ</label>
+          <p>{{ userData.age }} ปี</p>
+        </div>
+      </div>
+      <div class="info-group">
+        <span class="icon">🚻</span>
+        <div class="text-content">
+          <label>เพศ</label>
+          <p>{{ userData.gender }}</p>
+        </div>
+      </div>
+
+      <!-- ปุ่มในโหมดแสดงผล -->
+      <!-- ปุ่มในโหมดแสดงผล (สลับตำแหน่งแล้ว) -->
+      <div class="button-group">
+        <!-- ✨ "แก้ไขข้อมูล" (ปุ่มหลัก) มาก่อน -->
+        <button type="button" class="submit-btn" (click)="toggleEdit()">แก้ไขข้อมูล</button>
+        <!-- ✨ "ออกจากระบบ" (ปุ่มรอง) อยู่สุดท้าย -->
+        <button type="button" class="logout-btn" (click)="logout()">ออกจากระบบ</button>
+      </div>
+    </div>
+
+
+    <!-- ============================================= -->
+    <!-- V V V       โหมดแก้ไข (Edit Mode)       V V V -->
+    <!-- ============================================= -->
+    <form *ngIf="isEditing" (ngSubmit)="saveChanges()">
+      <div class="input-group">
+        <span>👤</span>
+        <input type="text" placeholder="ชื่อ-นามสกุล" [(ngModel)]="userData.fullName" name="fullName">
+      </div>
+      
+      <div class="input-group">
+        <span>📞</span>
+        <input type="tel" placeholder="เบอร์โทร" [(ngModel)]="userData.phone" name="phone">
+      </div>
+      
+      <div class="input-group">
+        <span>🔒</span>
+        <input type="password" placeholder="รหัสผ่านใหม่ (ถ้าต้องการเปลี่ยน)">
+      </div>
+      
+      <!-- select-group จะอยู่เต็มความกว้าง และมี 2 คอลัมน์ย่อยข้างใน -->
+      <div class="select-group">
+        <div>
+          <span>🎂</span>
+          <input type="number" placeholder="อายุ" min="1" max="120" [(ngModel)]="userData.age" name="age">
+        </div>
+        <div>
+          <span>🚻</span>
+          <select [(ngModel)]="userData.gender" name="gender">
+            <option>ชาย</option>
+            <option>หญิง</option>
+            <option>อื่นๆ</option>
+          </select>
+        </div>
+      </div>
+      
+      <!-- ปุ่มในโหมดแก้ไข -->
+      <div class="button-group">
+        <button type="submit" class="submit-btn">บันทึก</button>
+        <button type="button" class="cancel-btn" (click)="toggleEdit()">ยกเลิก</button>
+      </div>
+    </form>
   </div>
-
-  <form>
-    <div class="input-group">
-      <span>👤</span>
-      <input type="text" placeholder="ชื่อ-นามสกุล">
-    </div>
-    
-    <div class="input-group">
-      <span>📞</span>
-      <input type="tel" placeholder="เบอร์โทร">
-    </div>
-    
-    <div class="input-group">
-      <span>🔒</span>
-      <input type="password" placeholder="รหัสผ่าน">
-      <span>👁️</span>
-    </div>
-    
-    <div class="input-group">
-      <span>🔒</span>
-      <input type="password" placeholder="ยืนยันรหัสผ่าน">
-      <span>👁️</span>
-    </div>
-
-    <div class="select-group">
-      <div>
-        <span>🎂</span>
-       <input type="number" placeholder="อายุ" min="1" max="120">
-
-      </div>
-      <div>
-        <span>🚻</span>
-        <select>
-          <option disabled selected>เพศ</option>
-          <option>ชาย</option>
-          <option>หญิง</option>
-          <option>อื่นๆ</option>
-        </select>
-      </div>
-    </div>
-    
-    <button type="submit" class="submit-btn">แก้ไขข้อมูล</button>
-     <button type="submit" class="submit-btn">ออกจากระบบ</button>
-  </form>
 </div>

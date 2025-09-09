@@ -8,40 +8,40 @@
   padding: 20px;
 
   // --- 🌟 ส่วนหัว (Header) ---
-.info-box {
-  display: flex;
-  align-items: center;
-  background-color: rgba(255, 255, 255, 0.8);
-  border-radius: 50px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  font-weight: bold;
-  font-size: clamp(1.1rem, 0.4rem + 2.8vw, 1.8rem);
-  padding: clamp(8px, 0.5vh + 1vw, 12px) clamp(15px, 1rem + 2vw, 25px);
+  .info-box {
+    display: flex;
+    align-items: center;
+    background-color: rgba(255, 255, 255, 0.8);
+    border-radius: 50px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    font-weight: bold;
+    font-size: clamp(1.1rem, 0.4rem + 2.8vw, 1.8rem);
+    padding: clamp(8px, 0.5vh + 1vw, 12px) clamp(15px, 1rem + 2vw, 25px);
 
-  .icon {
-    width: clamp(24px, 1rem + 3vw, 38px);
-    height: clamp(24px, 1rem + 3vw, 38px);
-    margin-right: clamp(8px, 0.5rem + 1vw, 12px);
-  }
-}
-
-.profile-info {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  
-  .profile-pic {
-    width: clamp(60px, 5rem + 8vw, 100px);
-    height: clamp(60px, 5rem + 8vw, 100px);
-    border-radius: 50%;
-    margin-bottom: 5px;
+    .icon {
+      width: clamp(24px, 1rem + 3vw, 38px);
+      height: clamp(24px, 1rem + 3vw, 38px);
+      margin-right: clamp(8px, 0.5rem + 1vw, 12px);
+    }
   }
 
-  .profile-name {
-    font-size: clamp(1.2rem, 0.5rem + 2.5vw, 2rem);
-    font-weight: 900;
+  .profile-info {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    .profile-pic {
+      width: clamp(60px, 5rem + 8vw, 100px);
+      height: clamp(60px, 5rem + 8vw, 100px);
+      border-radius: 50%;
+      margin-bottom: 5px;
+    }
+
+    .profile-name {
+      font-size: clamp(1.2rem, 0.5rem + 2.5vw, 2rem);
+      font-weight: 900;
+    }
   }
-}
 
   .main-content {
     display: flex;
@@ -66,7 +66,7 @@
       display: flex;
       flex-direction: column;
       align-items: center;
-      background-color: white;
+      background-color: rgba(255, 255, 255, 0);
       border-radius: 20px;
       padding: 20px;
       box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);

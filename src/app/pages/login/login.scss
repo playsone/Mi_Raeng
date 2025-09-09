@@ -1,85 +1,172 @@
+// นำเข้าฟอนต์ 'Nunito' จาก Google Fonts
+@import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;700;900&display=swap');
+
+// --- ⚙️ ตัวแปรหลัก ---
+:host {
+  --primary-color: #4a5a8a;
+  --bg-start: #e9f7ff;
+  --bg-end: #b3e0ff;
+  --font-main: 'Nunito', sans-serif;
+  --btn-green: #27d97b;
+  --btn-green-shadow: #1db968;
+  --input-bg: white;
+  --input-border-focus: var(--btn-green);
+}
+
+// --- 🎨 สไตล์หลักของ Component ---
 .login-container {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  height: 100vh;
-  background: linear-gradient(to bottom, #d6f2ff, #78d6ff);
-  font-family: Arial, sans-serif;
+  font-family: var(--font-main);
+  background: linear-gradient(to bottom, var(--bg-start), var(--bg-end));
+  color: var(--primary-color);
+  justify-content: space-between;
+  text-align: center;
+  overflow: hidden;
+}
+
+// --- 🌟 ส่วนหัวและปุ่มย้อนกลับ ---
+.login-header {
   position: relative;
-  padding-top: 50px;
+  width: 100%;
+  height: clamp(40px, 3rem + 2vw, 50px);
+  z-index: 10;
+}
+.back-btn {
+  position: absolute;
+  top: 50%;
+  left: 0;
+  transform: translateY(-50%);
+  background-color: var(--btn-green);
+  border: none;
+  border-radius: 50%;
+  width: clamp(40px, 3rem + 2vw, 50px);
+  height: clamp(40px, 3rem + 2vw, 50px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  transition: transform 0.2s;
+  color: white;
+  svg { width: 60%; height: 60%; }
+  &:hover { transform: translateY(-2px) scale(1.05); }
+}
 
-  .header {
-    text-align: center;
-    color: #4b0082;
-    margin-bottom: 40px;
+// --- 📝 ส่วนเนื้อหาหลัก ---
+.login-content {
+  width: 100%;
+  max-width: 450px;
+  margin: 0 auto;
+  z-index: 1;
+}
+
+.welcome-text {
+  margin-bottom: clamp(1.5rem, 5vh, 2.5rem);
+  h1 {
+    font-size: clamp(2.2rem, 1rem + 5vw, 3.5rem);
+    font-weight: 900;
+    margin: 0;
   }
-
-  .back-btn {
-    position: absolute;
-    top: 20px;
-    left: 20px;
-    background-color: #27d97b;
-    border: none;
-    border-radius: 50%;
-    width: 40px;
-    height: 40px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-
-    img {
-      width: 20px;
-    }
-  }
-
-  form {
-    width: 80%;
-    max-width: 400px;
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
-  }
-
-  .input-group {
-    background-color: white;
-    border-radius: 50px;
-    padding: 15px 20px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-
-    input {
-      width: 100%;
-      border: none;
-      outline: none;
-      font-size: 1em;
-      color: #555;
-    }
-  }
-
-  .submit-btn {
-    background-color: #27d97b;
-    color: white;
-    border: none;
-    border-radius: 50px;
-    padding: 15px;
-    font-size: 1.2em;
-    font-weight: bold;
-    cursor: pointer;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    transition: transform 0.2s;
-
-    &:hover {
-      transform: translateY(-2px);
-    }
-  }
-
-  .yoga-image {
-    width: 100%;
-    height: auto;
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    z-index: 0;
+  p {
+    font-size: clamp(1rem, 0.8rem + 1vw, 1.3rem);
+    opacity: 0.8;
   }
 }
+
+.login-form {
+  display: flex;
+  flex-direction: column;
+  gap: clamp(15px, 2vh, 20px);
+}
+
+// ✨ โครงสร้างใหม่ของช่องกรอกข้อมูล
+.form-group {
+  position: relative;
+  background-color: var(--input-bg);
+  border-radius: 50px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+  height: clamp(55px, 4rem + 1vh, 65px);
+  display: flex;
+  align-items: center;
+  padding: 0 clamp(15px, 1rem + 2vw, 25px);
+}
+
+.icon-wrapper {
+  font-size: 1.5rem;
+  margin-right: 15px;
+  color: #b0c4de;
+}
+
+.input-wrapper {
+  position: relative;
+  flex-grow: 1;
+  height: 100%;
+
+  label {
+    position: absolute;
+    top: 50%;
+    left: 0;
+    transform: translateY(-50%);
+    font-size: clamp(1rem, 0.8rem + 1vw, 1.2rem);
+    color: var(--primary-color);
+    opacity: 0.7;
+    transition: all 0.2s ease;
+    pointer-events: none;
+  }
+
+  input {
+    width: 100%;
+    height: 100%;
+    border: none;
+    outline: none;
+    background: none;
+    font-size: clamp(1rem, 0.8rem + 1vw, 1.2rem);
+    font-family: var(--font-main);
+    color: var(--primary-color);
+    padding-top: 15px; // เพิ่ม padding เพื่อให้มีที่สำหรับ label ลอย
+  }
+
+  // ✨ เวทมนตร์ของ Floating Label ✨
+  input:focus + label,
+  input:not(:placeholder-shown) + label {
+    top: 25%;
+    font-size: 0.75rem;
+    opacity: 1;
+  }
+}
+
+.toggle-password {
+  cursor: pointer;
+  font-size: 1.5rem;
+}
+
+// --- 🚀 ปุ่มเข้าสู่ระบบ ---
+.submit-btn {
+  background-color: var(--btn-green);
+  color: white;
+  border: none;
+  border-radius: 50px;
+  padding: clamp(15px, 2vh, 20px);
+  font-size: clamp(1.2rem, 0.8rem + 2vw, 1.5rem);
+  font-weight: 900;
+  cursor: pointer;
+  box-shadow: 0 5px 0 var(--btn-green-shadow);
+  transition: all 0.1s ease-in-out;
+  margin-top: 1rem;
+
+  &:active {
+    transform: translateY(3px);
+    box-shadow: 0 2px 0 var(--btn-green-shadow);
+  }
+}
+
+// --- 🖼️ รูปภาพประกอบด้านล่าง ---
+.footer-image {
+  width: 100%;
+  max-width: 500px;
+  height: auto;
+  margin: 0 auto;
+  object-fit: contain;
+  object-position: bottom;
+  align-self: center;
+}
+

@@ -1,22 +1,46 @@
-<div class="login-container">
-  <div class="header">
-<button class="back-btn" type="button" onclick="history.back()">
-    <span>⬅️</span>
-  </button>
-    <h1>ยินดีต้อนรับ</h1>
-    <p>กรุณาเข้าสู่ระบบเพื่อใช้งาน</p>
-  </div>
+<!-- 
+  Container หลัก ใช้ Bootstrap จัดการ Layout 
+  - vh-100: สูงเต็มหน้าจอ
+  - d-flex flex-column: จัดเรียงเนื้อหาจากบนลงล่าง
+-->
+<div class="login-container container-fluid d-flex flex-column vh-100 p-3 p-md-4">
+  
+  <header class="login-header">
+    <button class="back-btn" type="button" onclick="history.back()">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+        <path d="M10.8284 12.0007L15.7782 16.9504L14.364 18.3646L8 12.0007L14.364 5.63672L15.7782 7.05093L10.8284 12.0007Z"></path>
+      </svg>
+    </button>
+  </header>
 
-<form (submit)="login($event)">
-  <div class="input-group">
-    <input type="text" placeholder="เบอร์โทร">
-  </div>
-  <div class="input-group">
-    <input type="password" placeholder="รหัสผ่าน">
-  </div>
-  <button type="submit" class="submit-btn">เข้าสู่ระบบ</button>
-</form>
+  <main class="login-content">
+    <div class="welcome-text">
+      <h1>ยินดีต้อนรับ</h1>
+      <p>กรุณาเข้าสู่ระบบเพื่อใช้งาน</p>
+    </div>
 
-
-  <img src="assets/images/yoka.png" alt="Yoga" class="yoga-image">
+    <form class="login-form">
+      <!-- ✨ โครงสร้างใหม่สำหรับช่องกรอกข้อมูล ✨ -->
+      <div class="form-group">
+        <div class="icon-wrapper">👤</div>
+        <div class="input-wrapper">
+          <input type="tel" id="phone" placeholder=" " required>
+          <label for="phone">เบอร์โทร</label>
+        </div>
+      </div>
+      
+      <div class="form-group">
+        <div class="icon-wrapper">🔒</div>
+        <div class="input-wrapper">
+          <input type="password" id="password" placeholder=" " required>
+          <label for="password">รหัสผ่าน</label>
+        </div>
+      </div>
+      
+      <button type="submit" class="submit-btn">เข้าสู่ระบบ</button>
+    </form>
+  </main>
+  
+  <img src="assets/images/yoka.png" alt="Elderly exercising" class="footer-image">
 </div>
+

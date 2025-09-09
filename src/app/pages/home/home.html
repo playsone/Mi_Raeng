@@ -1,18 +1,28 @@
 <div class="home-container">
-  <div class="header-info">
-    <div class="score">
-      <img src="assets/images/time.png" alt="Heart">
-      <span>90</span>
+   <!-- === ส่วนหัว: แสดงคะแนนและโปรไฟล์ === -->
+  <header class="row justify-content-between align-items-center mb-3">
+    <!-- กล่องคะแนนเวลา (ซ้าย) -->
+    <div class="col-auto">
+      <div class="info-box">
+        <img src="assets/images/time.png" alt="Time Icon" class="icon">
+        <span>90</span>
+      </div>
     </div>
-    <div class="profile">
-      <img src="assets/images/profilefm.png" alt="Profile">
-      <span>สมศรี</span>
+    
+    <!-- โปรไฟล์ (กลาง) -->
+    <div class="col text-center profile-info">
+      <img src="assets/images/profilefm.png" alt="Profile Picture" class="profile-pic">
+      <span class="profile-name">สมศรี</span>
     </div>
-    <div class="score">
-      <span>550</span>
-      <img src="assets/images/star.png" alt="Star">
+
+    <!-- กล่องคะแนนดาว (ขวา) -->
+    <div class="col-auto">
+      <div class="info-box">
+        <img src="assets/images/star.png" alt="Star Icon" class="icon">
+        <span>550</span>
+      </div>
     </div>
-  </div>
+  </header>
 
   <div class="main-content">
     <img src="assets/images/treelogo.png" alt="Tree Logo" class="tree-logo">

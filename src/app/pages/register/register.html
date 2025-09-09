@@ -1,51 +1,77 @@
-<div class="register-container">
-  <button class="back-btn" type="button" onclick="history.back()">
-    <span>⬅️</span>
-  </button>
-  <div class="header">
-    <h1>สมัครสมาชิก</h1>
-  </div>
 
-  <form>
-    <div class="input-group">
-      <span>👤</span>
-      <input type="text" placeholder="ชื่อ-นามสกุล">
-    </div>
-    
-    <div class="input-group">
-      <span>📞</span>
-      <input type="tel" placeholder="เบอร์โทร">
-    </div>
-    
-    <div class="input-group">
-      <span>🔒</span>
-      <input type="password" placeholder="รหัสผ่าน">
-      <span>👁️</span>
-    </div>
-    
-    <div class="input-group">
-      <span>🔒</span>
-      <input type="password" placeholder="ยืนยันรหัสผ่าน">
-      <span>👁️</span>
-    </div>
+<div class="register-container container-fluid d-flex flex-column vh-100 p-3 p-md-4">
+  
+  <header class="register-header">
+    <button class="back-btn" type="button" onclick="history.back()">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+        <path d="M10.8284 12.0007L15.7782 16.9504L14.364 18.3646L8 12.0007L14.364 5.63672L15.7782 7.05093L10.8284 12.0007Z"></path>
+      </svg>
+    </button>
+  </header>
 
-    <div class="select-group">
-      <div>
-        <span>🎂</span>
-       <input type="number" placeholder="อายุ" min="1" max="120">
+  <h1>สมัครสมาชิก</h1>
 
+  <form class="register-form">
+    
+    <!-- ✨ โครงสร้างใหม่สำหรับแต่ละช่องกรอกข้อมูล ✨ -->
+    <div class="form-group">
+      <div class="icon-wrapper">👤</div>
+      <div class="input-wrapper">
+        <input type="text" id="fullName" placeholder=" " required>
+        <label for="fullName">ชื่อ-นามสกุล</label>
       </div>
-      <div>
-        <span>🚻</span>
-        <select>
-          <option disabled selected>เพศ</option>
-          <option>ชาย</option>
-          <option>หญิง</option>
-          <option>อื่นๆ</option>
-        </select>
+    </div>
+    
+    <div class="form-group">
+      <div class="icon-wrapper">📞</div>
+      <div class="input-wrapper">
+        <input type="tel" id="phone" placeholder=" " required>
+        <label for="phone">เบอร์โทร</label>
+      </div>
+    </div>
+    
+    <div class="form-group">
+      <div class="icon-wrapper">🔒</div>
+      <div class="input-wrapper">
+        <input type="password" id="password" placeholder=" " required>
+        <label for="password">รหัสผ่าน</label>
+        <span class="toggle-password">👁️</span>
+      </div>
+    </div>
+    
+    <div class="form-group">
+      <div class="icon-wrapper">🔒</div>
+      <div class="input-wrapper">
+        <input type="password" id="confirmPassword" placeholder=" " required>
+        <label for="confirmPassword">ยืนยันรหัสผ่าน</label>
+        <span class="toggle-password">👁️</span>
+      </div>
+    </div>
+
+    <!-- ใช้ Grid สำหรับ อายุ และ เพศ -->
+    <div class="form-row">
+      <div class="form-group">
+        <div class="icon-wrapper">🎂</div>
+        <div class="input-wrapper">
+          <input type="number" id="age" min="1" max="120" placeholder=" " required>
+          <label for="age">อายุ</label>
+        </div>
+      </div>
+      <div class="form-group">
+        <div class="icon-wrapper">🚻</div>
+        <div class="input-wrapper">
+          <select id="gender" required>
+            <option value="" disabled selected></option>
+            <option value="male">ชาย</option>
+            <option value="female">หญิง</option>
+            <option value="other">อื่นๆ</option>
+          </select>
+          <label for="gender">เพศ</label>
+        </div>
       </div>
     </div>
     
     <button type="submit" class="submit-btn">สมัครสมาชิก</button>
   </form>
 </div>
+

@@ -1,117 +1,167 @@
+// นำเข้าฟอนต์ 'Nunito' จาก Google Fonts
+@import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;700;900&display=swap');
+
+// --- ⚙️ ตัวแปรหลัก ---
+:host {
+  --primary-color: #4a5a8a;
+  --bg-start: #e9f7ff;
+  --bg-end: #b3e0ff;
+  --font-main: 'Nunito', sans-serif;
+  --btn-green: #27d97b;
+  --btn-green-shadow: #1db968;
+  --input-border: #d0e1ec;
+  --input-border-focus: var(--btn-green);
+}
+
+// --- 🎨 สไตล์หลักของ Component ---
 .register-container {
+  font-family: var(--font-main);
+  background: linear-gradient(to bottom, var(--bg-start), var(--bg-end));
+  color: var(--primary-color);
+  justify-content: flex-start;
+  padding-top: clamp(10rem, 5vh, 3rem);
+}
+
+// --- 🌟 ส่วนหัวและปุ่มย้อนกลับ ---
+.register-header {
+  position: relative;
+  width: 100%;
+  height: clamp(40px, 3rem + 2vw, 50px);
+  margin-bottom: 4rem;
+}
+h1 {
+  text-align: center;
+  font-size: clamp(2rem, 1rem + 4vw, 3rem);
+  font-weight: 900;
+  margin: 0;
+  margin-bottom: clamp(1rem, 5vh, 2rem);
+}
+.back-btn {
+  position: absolute;
+  top: 50%;
+  left: 0;
+  transform: translateY(-50%);
+  background-color: var(--btn-green);
+  border: none;
+  border-radius: 50%;
+  width: clamp(40px, 3rem + 2vw, 50px);
+  height: clamp(40px, 3rem + 2vw, 50px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  transition: transform 0.2s;
+  color: white;
+  svg { width: 60%; height: 60%; }
+  &:hover { transform: translateY(-2px) scale(1.05); }
+}
+
+// --- 📝 ฟอร์ม ---
+.register-form {
   display: flex;
   flex-direction: column;
+  gap: clamp(15px, 2vh, 25px);
+  width: 100%;
+  max-width: 500px;
+  margin: 0 auto;
+}
+
+// ✨ โครงสร้างหลักของแต่ละช่องกรอกข้อมูล
+.form-group {
+  display: flex;
   align-items: center;
-  height: 100vh;
-  background: linear-gradient(to bottom, #d6f2ff, #78d6ff);
-  font-family: Arial, sans-serif;
-  padding-top: 50px;
-  position: relative;
+  gap: 15px;
+}
 
-  .header {
-    text-align: center;
-    color: #4b0082;
-    margin-bottom: 30px;
+.icon-wrapper {
+  font-size: clamp(1.8rem, 1rem + 3vw, 2.5rem);
+}
 
-    h1 {
-      font-size: 2.5em;
-      font-weight: bold;
-    }
-  }
+// ✨ ส่วนสำคัญ: กล่องสำหรับ Input และ Label
+.input-wrapper {
+  position: relative; // ทำให้ label ลอยอยู่ข้างในได้
+  flex-grow: 1;
 
-  .back-btn {
+  // สไตล์ของ Label
+  label {
     position: absolute;
-    top: 20px;
-    left: 20px;
-    background-color: #27d97b;
+    top: 50%;
+    left: 0;
+    transform: translateY(-50%);
+    font-size: clamp(1rem, 0.8rem + 1vw, 1.2rem);
+    color: var(--primary-color);
+    opacity: 0.7;
+    transition: all 0.2s ease;
+    // ป้องกันไม่ให้ label บังการคลิก input
+    pointer-events: none; 
+  }
+
+  // สไตล์ของ Input และ Select
+  input, select {
+    width: 100%;
     border: none;
-    border-radius: 50%;
-    width: 40px;
-    height: 40px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-    
-    img {
-      width: 20px;
-    }
+    border-bottom: 2px solid var(--input-border);
+    background: none;
+    outline: none;
+    font-size: clamp(1rem, 0.8rem + 1vw, 1.2rem);
+    font-family: var(--font-main);
+    color: var(--primary-color);
+    padding: 10px 0;
+    height: 50px;
+  }
+  
+  // ✨ เวทมนตร์ของ Floating Label ✨
+  // เมื่อ input ถูก focus หรือ มีข้อความอยู่ข้างใน...
+  input:focus + label,
+  input:not(:placeholder-shown) + label,
+  select:focus + label,
+  select:valid + label { // select:valid จะทำงานเมื่อมีการเลือก option
+    // ...ให้ label ลอยขึ้นไปข้างบน
+    top: -5px;
+    font-size: 0.8rem;
+    color: var(--input-border-focus);
   }
 
-  form {
-    width: 80%;
-    max-width: 400px;
-    display: flex;
-    flex-direction: column;
-    gap: 15px;
-    margin-bottom: 20px;
-  }
-
-  .input-group,
-  .select-group {
-    background-color: white;
-    border-radius: 50px;
-    padding: 15px 20px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    display: flex;
-    align-items: center;
-
-    input,
-    select {
-      width: 100%;
-      border: none;
-      outline: none;
-      font-size: 1em;
-      color: #555;
-    }
-
-    img {
-      width: 20px;
-      margin-right: 10px;
-    }
-  }
-
-  .select-group {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 10px;
-    padding: 0;
-    box-shadow: none;
-
-    div {
-        background-color: white;
-        border-radius: 50px;
-        padding: 15px 20px;
-        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-        display: flex;
-        align-items: center;
-
-        img {
-            width: 20px;
-            margin-right: 10px;
-        }
-
-        select {
-            // style for select elements if needed
-        }
-    }
-  }
-
-  .submit-btn {
-    background-color: #27d97b;
-    color: white;
-    border: none;
-    border-radius: 50px;
-    padding: 15px;
-    font-size: 1.2em;
-    font-weight: bold;
-    cursor: pointer;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    transition: transform 0.2s;
-
-    &:hover {
-      transform: translateY(-2px);
-    }
+  // เมื่อ input ถูก focus ให้เปลี่ยนสีเส้นขอบล่าง
+  input:focus, select:focus {
+    border-bottom-color: var(--input-border-focus);
   }
 }
+
+// Grid สำหรับแถวที่มี 2 คอลัมน์
+.form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: clamp(15px, 4vw, 25px);
+}
+
+.toggle-password {
+  position: absolute;
+  top: 50%;
+  right: 0;
+  transform: translateY(-50%);
+  cursor: pointer;
+  font-size: 1.5rem;
+}
+
+// --- 🚀 ปุ่มสมัครสมาชิก ---
+.submit-btn {
+  background-color: var(--btn-green);
+  color: white;
+  border: none;
+  border-radius: 50px;
+  padding: clamp(15px, 2vh, 20px);
+  font-size: clamp(1.2rem, 0.8rem + 2vw, 1.5rem);
+  font-weight: 900;
+  cursor: pointer;
+  box-shadow: 0 5px 0 var(--btn-green-shadow);
+  transition: all 0.1s ease-in-out;
+  margin-top: 1rem;
+
+  &:active {
+    transform: translateY(3px);
+    box-shadow: 0 2px 0 var(--btn-green-shadow);
+  }
+}
+

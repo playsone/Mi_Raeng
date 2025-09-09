@@ -1,0 +1,150 @@
+// นำเข้าฟอนต์ 'Nunito' จาก Google Fonts
+@import url('https://fonts.googleapis.com/css2?family=Nunito:wght@700;900&display=swap');
+
+// --- ⚙️ ตัวแปรหลัก (Custom Properties) ---
+:host {
+  --primary-color: #3b5998;
+  --bg-start: #d6f2ff;
+  --bg-end: #78d6ff;
+  --font-main: 'Nunito', sans-serif;
+  --table-bg: #e0f8e1;      // สีพื้นหลังตาราง
+  --table-border: #a7d7a9; // สีเส้นขอบตาราง
+  --table-header-text: #ffffff; // สีตัวอักษรหัวตาราง
+  --highlight-bg: #fff9c4; // สีแถวที่ไฮไลท์
+}
+
+// --- 🎨 สไตล์หลักของ Component ---
+.ranking-container {
+  font-family: var(--font-main); 
+  color: var(--primary-color);
+  background: linear-gradient(to bottom, var(--bg-start), var(--bg-end)); 
+  // ทำให้เนื้อหา scroll ได้ถ้าไม่พอดีหน้าจอ
+  overflow-y: auto;
+}
+
+// --- 🌟 ส่วนหัว (Header) ---
+.info-box {
+  display: flex;
+  align-items: center;
+  background-color: rgba(255, 255, 255, 0.8);
+  border-radius: 50px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  font-weight: bold;
+  font-size: clamp(1.1rem, 0.4rem + 2.8vw, 1.5rem);
+  padding: clamp(8px, 0.5vh + 1vw, 12px) clamp(15px, 1rem + 2vw, 25px);
+
+  .icon {
+    width: clamp(24px, 1rem + 3vw, 32px);
+    height: clamp(24px, 1rem + 3vw, 32px);
+    margin-right: clamp(8px, 0.5rem + 1vw, 12px);
+  }
+}
+
+// --- 🏆 ส่วน Podium ---
+.podium {
+  position: relative; // ทำให้เป็นกรอบอ้างอิงสำหรับ .place
+  width: 100%;
+  max-width: 450px;
+  margin: 1rem auto;
+  text-align: center;
+
+  .podium-image {
+    width: 100%;
+    height: auto;
+  }
+
+  .place {
+    position: absolute;
+    width: 33%;
+    font-weight: 900;
+    font-size: clamp(0.8rem, 0.5rem + 2vw, 1.5rem);
+    color: var(--primary-color);
+    text-shadow: 0 1px 2px rgba(255,255,255,0.7);
+  }
+
+  // ตำแหน่งของผู้ชนะแต่ละคน
+  .place-1 {
+    top: -5%;
+    left: 52%;
+    transform: translateX(-50%);
+  }
+  .place-2 {
+    top: 45%;
+    left: 5%;
+  }
+  .place-3 {
+    top: 52%;
+    right: 4%;
+  }
+}
+
+// --- 📊 ส่วนตาราง ---
+.table-container {
+  flex-grow: 1; // ทำให้ตารางขยายเต็มพื้นที่ที่เหลือ
+  overflow-y: auto; // ทำให้ตาราง scroll ได้ถ้าเนื้อหายาว
+  width: 100%;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.ranking-table {
+  width: 100%;
+  border-collapse: separate; // ใช้ separate เพื่อให้ border-radius ทำงาน
+  border-spacing: 0;
+  background-color: var(--table-bg);
+  border-radius: 15px;
+  overflow: hidden; // ซ่อนส่วนที่เกินขอบมน
+
+  th, td {
+    padding: clamp(8px, 1.5vw, 12px);
+    text-align: center;
+    vertical-align: middle;
+    font-size: clamp(0.9rem, 0.7rem + 1vw, 1.2rem);
+    border-bottom: 2px solid var(--table-border);
+  }
+
+  // แถวสุดท้ายไม่ต้องมีเส้นขอบล่าง
+  tr:last-child td {
+    border-bottom: none;
+  }
+
+  thead th {
+    background-color: var(--table-border);
+    color: var(--table-header-text);
+    font-weight: 900;
+  }
+
+  td:first-child {
+    width: 60px; // กำหนดความกว้างคอลัมน์อันดับ
+    img {
+      width: clamp(30px, 2rem + 2vw, 45px);
+      height: auto;
+    }
+  }
+
+  // สไตล์สำหรับแถวที่ไฮไลท์
+  tbody tr.highlight {
+    background-color: var(--highlight-bg);
+    font-weight: bold;
+  }
+}
+// --- ✨ อันดับดาวพร้อมตัวเลข ---
+.rank-icon-container {
+  position: relative; // 1. เป็นกรอบอ้างอิง
+  display: inline-flex; // ทำให้ขนาดพอดีกับเนื้อหา
+  align-items: center;
+  justify-content: center;
+
+  .rank-number {
+    position: absolute; // 2. ทำให้ตัวเลข "ลอย"
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%); // 3. จัดให้อยู่กลางเป๊ะๆ
+    
+    color: var(--primary-color);
+    font-weight: 900;
+    font-size: clamp(0.8rem, 0.6rem + 1vw, 1rem);
+    // เพิ่มเงาให้ตัวหนังสือเด่นขึ้น
+    text-shadow: 0 0 2px white, 0 0 2px white; 
+  }
+}

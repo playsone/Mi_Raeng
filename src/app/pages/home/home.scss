@@ -1,48 +1,25 @@
-.home-container {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  height: 100vh;
-  background: linear-gradient(to bottom, #d6f2ff, #78d6ff);
-  font-family: Arial, sans-serif;
-  padding: 20px;
+// นำเข้าฟอนต์ 'Nunito' จาก Google Fonts
+@import url('https://fonts.googleapis.com/css2?family=Nunito:wght@700;900&display=swap');
+
+// --- ⚙️ ตัวแปรหลัก ---
+:host {
+  --primary-color: #3b5998;
+  --bg-start: #d6f2ff;
+  --bg-end: #78d6ff;
+  --font-main: 'Nunito', sans-serif;
 }
-  // --- 🌟 ส่วนหัว (Header) ---
 
-  .info-box {
-    display: flex;
-    align-items: center;
-    background-color: rgba(255, 255, 255, 0.8);
-    border-radius: 50px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    font-weight: bold;
-    font-size: clamp(1.1rem, 0.4rem + 2.8vw, 1.8rem);
-    padding: clamp(8px, 0.5vh + 1vw, 12px) clamp(15px, 1rem + 2vw, 25px);
+// --- 🎨 สไตล์หลักของ Component ---
+:host {
+  display: block; 
+  min-height: 100vh; 
+  background: linear-gradient(to bottom, var(--bg-start), var(--bg-end)); 
+  font-family: var(--font-main); 
+  color: var(--primary-color); 
+}
 
-    .icon {
-      width: clamp(24px, 1rem + 3vw, 38px);
-      height: clamp(24px, 1rem + 3vw, 38px);
-      margin-right: clamp(8px, 0.5rem + 1vw, 12px);
-    }
-  }
-
-  .profile-info {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-
-    .profile-pic {
-      width: clamp(60px, 5rem + 8vw, 100px);
-      height: clamp(60px, 5rem + 8vw, 100px);
-      border-radius: 50%;
-      margin-bottom: 5px;
-    }
-
-    .profile-name {
-      font-size: clamp(1.2rem, 0.5rem + 2.5vw, 2rem);
-      font-weight: 900;
-    }
-
+// --- 🌟 ส่วนหัว (Header) ---
+// (สไตล์ส่วนนี้จะเหมือนกับหน้า exercise)
 .info-box {
   display: flex;
   align-items: center;
@@ -50,12 +27,12 @@
   border-radius: 50px;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   font-weight: bold;
-  font-size: clamp(1.1rem, 0.4rem + 2.8vw, 1.8rem);
-  padding: clamp(8px, 0.5vh + 1vw, 12px) clamp(15px, 1rem + 2vw, 25px);
+  font-size: clamp(1rem, 0.4rem + 2.8vw, 1.5rem);
+  padding: clamp(6px, 0.5vh + 1vw, 10px) clamp(12px, 1rem + 2vw, 20px);
 
   .icon {
-    width: clamp(24px, 1rem + 3vw, 38px);
-    height: clamp(24px, 1rem + 3vw, 38px);
+    width: clamp(22px, 1rem + 3vw, 32px);
+    height: clamp(22px, 1rem + 3vw, 32px);
     margin-right: clamp(8px, 0.5rem + 1vw, 12px);
   }
 }
@@ -66,60 +43,64 @@
   align-items: center;
   
   .profile-pic {
-    width: clamp(60px, 5rem + 8vw, 100px);
-    height: clamp(60px, 5rem + 8vw, 100px);
+    width: clamp(50px, 5rem + 8vw, 80px);
+    height: clamp(50px, 5rem + 8vw, 80px);
     border-radius: 50%;
-    margin-bottom: 5px;
   }
 
   .profile-name {
-    font-size: clamp(1.2rem, 0.5rem + 2.5vw, 2rem);
+    font-size: clamp(1rem, 0.5rem + 2.5vw, 1.5rem);
     font-weight: 900;
   }
 }
 
-  .main-content {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    flex-grow: 1;
+// --- 🌳 ส่วนกลาง (Main Content) ---
+.tree-logo {
+  // ทำให้ขนาดต้นไม้ยืดหยุ่นตามความสูงหน้าจอ
+  max-height: clamp(25vh, 10vh + 10vw, 35vh);
+  width: auto;
+}
 
-    .tree-logo {
-      width: 250px;
-      height: auto;
-      margin-bottom: 40px;
-    }
+// --- 📱 Grid เมนูหลัก ---
+.menu-grid {
+  display: grid;
+  // ✨ หัวใจหลัก: สร้างคอลัมน์อัตโนมัติ
+  // บอกให้สร้างคอลัมน์ให้มากที่สุดเท่าที่จะพอดี โดยแต่ละคอลัมน์กว้างอย่างน้อย 120px
+  // และสามารถขยายได้เท่าๆ กัน (1fr)
+  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  gap: clamp(15px, 1rem + 2vw, 25px); // ระยะห่างระหว่างปุ่ม
+  width: 100%;
+  max-width: 600px; // จำกัดความกว้างสูงสุดของ grid บนจอใหญ่
+}
+
+.menu-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  
+  background-color: rgba(255, 255, 255, 0);
+  border-radius: 20px;
+  padding: clamp(15px, 1rem + 2vh, 25px);
+
+  
+  cursor: pointer;
+  text-decoration: none;
+  color: var(--primary-color);
+  border: none;
+  transition: transform 0.2s ease-in-out;
+  font-weight: 700;
+  text-align: center;
+  font-size: clamp(0.9rem, 0.5rem + 1.5vw, 1.2rem);
+
+  img {
+    // ขนาดไอคอนในปุ่ม
+    width: clamp(150px, 3rem + 5vw, 220px);
+    height: auto;
+    margin-bottom: 10px;
   }
 
-  .menu-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    grid-template-rows: 1fr 1fr;
-    gap: 30px;
-
-    .menu-item {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      background-color: rgba(255, 255, 255, 0);
-      border-radius: 20px;
-      padding: 20px;
-      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-      cursor: pointer;
-      text-decoration: none;
-      color: #333;
-      border: none;
-      transition: transform 0.2s;
-
-      &:hover {
-        transform: translateY(-5px);
-      }
-
-      img {
-        width: 60px;
-        height: 60px;
-        margin-bottom: 10px;
-      }
-    }
+  &:hover {
+    transform: translateY(-5px);
   }
 }

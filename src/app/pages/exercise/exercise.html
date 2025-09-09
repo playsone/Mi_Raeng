@@ -1,19 +1,96 @@
-<div class="exercise-container">
-  <div class="header-info">
+<!-- 
+  Container หลัก ใช้ Bootstrap จัดการ Layout 
+  - vh-100: สูงเต็มหน้าจอ
+  - d-flex flex-column: จัดเรียงเนื้อหาจากบนลงล่าง
+  - p-3 p-md-4: กำหนด padding ให้เหมาะสมกับจอมือถือและจอใหญ่
+-->
+<div class="container-fluid page-container d-flex flex-column vh-100 p-3 p-md-4">
+
+  <!-- === ส่วนหัว: แสดงคะแนนและโปรไฟล์ === -->
+  <header class="row justify-content-between align-items-center mb-3">
+    <!-- กล่องคะแนนเวลา (ซ้าย) -->
+    <div class="col-auto">
+      <div class="info-box">
+        <img src="assets/images/time.png" alt="Time Icon" class="icon">
+        <span>90</span>
+      </div>
+    </div>
+    
+    <!-- โปรไฟล์ (กลาง) -->
+    <div class="col text-center profile-info">
+      <img src="assets/images/profilefm.png" alt="Profile Picture" class="profile-pic">
+      <span class="profile-name">สมศรี</span>
     </div>
 
-  <h1>เลือกเพลงออกกำลังกาย</h1>
-  
-  <div class="song-buttons">
-    <button class="song-btn">
-      <img src="assets/images/bt1.png" alt="Button 1" class="btn-image">
-      <span>เพลงที่ 1</span>
-    </button>
-    <button class="song-btn">
-      <img src="assets/images/bt2.png" alt="Button 2" class="btn-image">
-      <span>เพลงที่ 2</span>
-    </button>
+    <!-- กล่องคะแนนดาว (ขวา) -->
+    <div class="col-auto">
+      <div class="info-box">
+        <img src="assets/images/star.png" alt="Star Icon" class="icon">
+        <span>550</span>
+      </div>
     </div>
-    <button routerLink="/home" class="back-home-btn">กลับสู่หน้าหลัก</button>
- 
+  </header>
+
+  <!-- === ส่วนกลาง: เลือกเพลง === -->
+  <main class="text-center mt-3">
+    <h1>เลือกเพลงออกกำลังกาย</h1>
+
+    <!-- รายการเพลง -->
+    <div class="song-list-container mt-4">
+      
+      <!-- เพลงที่ 1 -->
+      <div class="song-item">
+        <div class="song-name">
+          <div class="song-button">
+            <img src="assets/images/2yellow.png" alt="Yellow Button">
+          </div>
+          <!-- ✨ การเปลี่ยนแปลง: ห่อข้อความด้วย span -->
+          <span class="song-title">เพลงที่ 1</span>
+        </div>
+      </div>
+
+      <!-- เพลงที่ 2 -->
+      <div class="song-item">
+        <div class="song-name">
+          <div class="song-button">
+            <img src="assets/images/5orange.png" alt="Orange Button">
+          </div>
+          <span class="song-title">เพลงที่ 2</span>
+        </div>
+      </div>
+
+       <!-- เพลงที่ 3 -->
+      <div class="song-item">
+        <div class="song-name">
+          <div class="song-button">
+            <img src="assets/images/1red.png" alt="Red Button">
+          </div>
+          <span class="song-title">เพลงที่ 3</span>
+        </div>
+      </div>
+
+       <!-- เพลงที่ 4 -->
+      <div class="song-item">
+        <div class="song-name">
+          <div class="song-button">
+            <img src="assets/images/4blue.png" alt="Blue Button">
+          </div>
+          <span class="song-title">เพลงที่ 4</span>
+        </div>
+      </div>
+
+       <!-- เพลงที่ 5 -->
+      <div class="song-item">
+        <div class="song-name">
+          <div class="song-button">
+            <img src="assets/images/3green.png" alt="Green Button">
+          </div>
+          <span class="song-title">เพลงที่ 5</span>
+        </div>
+      </div>
+
+    </div>
+  </main>
+
 </div>
+

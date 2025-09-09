@@ -1,1 +1,50 @@
-<p>my-tree works!</p>
+<!-- Container หลักที่ครอบทุกอย่างไว้ -->
+<div class="container-fluid page-container d-flex flex-column vh-100 p-3 p-md-4">
+
+  <!-- === ส่วนหัว: แสดงคะแนน (แก้ไขแล้ว) === -->
+  <!-- 
+    ใช้ Bootstrap class 'row' เพื่อจัดให้ .info-box อยู่ในแถวเดียวกัน
+    และ 'justify-content-between' เพื่อดันไปอยู่ริมซ้าย-ขวา
+  -->
+  <header class="row justify-content-between align-items-center mb-3">
+    <!-- col-auto ทำให้ความกว้างพอดีกับเนื้อหา -->
+    <div class="col-auto">
+      <div class="info-box">
+        <img src="assets/images/time.png" alt="Time Icon" class="icon">
+        <span>{{ timeScore }}</span>
+      </div>
+    </div>
+    <div class="col-auto">
+      <div class="info-box">
+        <img src="assets/images/star.png" alt="Star Icon" class="icon">
+        <span>{{ starScore }}</span>
+      </div>
+    </div>
+  </header>
+
+  <!-- === ส่วนกลาง: แสดงต้นไม้ (โค้ดเดิม) === -->
+  <main class="row flex-grow-1">
+    <div class="col-12 text-center tree-container">
+      <div class="watering-info">
+        <p>คลิกเพื่อเอาน้ำมารดน้ำ</p>
+        <img [src]="'assets/images/' + wateringCanImage" alt="Watering Can" class="watering-can">
+      </div>
+      <img *ngIf="treeImageName" [src]="'assets/images/' + treeImageName" alt="Tree" class="tree-logo">
+    </div>
+  </main>
+
+  <!-- === ส่วนท้าย: แสดง Progress (โค้ดเดิม) === -->
+  <footer class="row mt-auto">
+    <div class="col-12 footer-container">
+      <div class="progress-bar-wrapper">
+        <div class="progress-bar-container">
+          <div class="progress-bar-fill" [style.width.%]="progressPercentage"></div>
+        </div>
+        <span class="progress-text">{{ currentProgress }}/{{ maxProgress }}</span>
+      </div>
+      <p class="accumulated-text">จำนวนต้นสะสม {{ accumulatedTrees }} ต้น</p>
+    </div>
+  </footer>
+
+</div>
+

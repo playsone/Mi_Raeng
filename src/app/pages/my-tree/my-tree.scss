@@ -1,0 +1,135 @@
+// นำเข้าฟอนต์ 'Nunito' จาก Google Fonts
+@import url('https://fonts.googleapis.com/css2?family=Nunito:wght@700&display=swap');
+
+// --- ⚙️ ตัวแปรหลัก (Custom Properties) ---
+:host {
+  --primary-color: #3b5998;
+  --bg-start: #d6f2ff;
+  --bg-end: #78d6ff;
+  --font-main: 'Nunito', sans-serif;
+}
+
+// --- 🎨 สไตล์หลักของ Component ---
+:host {
+  display: block; 
+  min-height: 100vh; 
+  background: linear-gradient(to bottom, var(--bg-start), var(--bg-end)); 
+  font-family: var(--font-main); 
+  color: var(--primary-color); 
+}
+
+// --- 🌟 ส่วนหัว (Header) ---
+.info-box {
+  display: flex;
+  align-items: center;
+  background-color: rgba(255, 255, 255, 0.7);
+  border-radius: 50px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  font-weight: bold;
+  
+  // เป้าหมาย: โทรศัพท์ (430px) ~1.1rem | ไอแพด (820px) ~2.0rem
+  font-size: clamp(1.1rem, 0.4rem + 2.8vw, 2.0rem);
+  // เป้าหมาย: โทรศัพท์ padding ~15px | ไอแพด padding ~30px
+  padding: clamp(8px, 0.5vh + 1vw, 12px) clamp(15px, 1rem + 2vw, 30px);
+
+  .icon {
+    // เป้าหมาย: โทรศัพท์ ~24px | ไอแพด ~38px
+    width: clamp(24px, 1rem + 3vw, 38px);
+    height: clamp(24px, 1rem + 3vw, 38px);
+    margin-right: clamp(8px, 0.5rem + 1vw, 12px);
+  }
+}
+
+// --- ส่วนกลาง (ต้นไม้) ---
+.tree-container {
+  position: relative; 
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+
+.tree-logo {
+  // บนไอแพด เราต้องการให้ต้นไม้สูงขึ้นเล็กน้อย
+ max-height: clamp(50vh, 40vh + 10vw, 75vh); 
+  height: auto;
+  width: auto; // width: auto จะปรับความกว้างตามความสูงที่เปลี่ยนไปเอง
+}
+
+.watering-info {
+  position: absolute;
+  top: 5%;
+  right: 0;
+  text-align: center;
+  
+  // เป้าหมาย: โทรศัพท์ ~0.9rem | ไอแพด ~1.3rem
+  font-size: clamp(0.9rem, 0.5rem + 1.5vw, 1.3rem);
+  
+  p {
+    margin-bottom: 5px;
+  }
+
+  .watering-can {
+    // เป้าหมาย: โทรศัพท์ ~100px | ไอแพด ~160px
+    width: clamp(100px, 10vw + 50px, 160px);
+    animation: float 3s ease-in-out infinite;
+  }
+}
+
+// --- ✨ Animation ---
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-10px); }
+}
+
+// --- 📊 ส่วนท้าย (Footer) ---
+.footer-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+}
+
+.progress-bar-wrapper {
+  position: relative;
+  width: 100%;
+  margin-bottom: 10px;
+}
+
+.progress-bar-container {
+  width: 100%;
+  // เป้าหมาย: โทรศัพท์ ~25px | ไอแพด ~35px
+  height: clamp(25px, 20px + 2vw, 35px);
+  background-color: rgba(255, 255, 255, 0.7);
+  border-radius: 50px;
+  border: 3px solid white;
+  overflow: hidden;
+  box-shadow: inset 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.progress-bar-fill {
+  height: 100%;
+  background: linear-gradient(to right, #a1ff6e, #5bcc24);
+  border-radius: 50px;
+  transition: width 0.5s ease-in-out;
+}
+
+.progress-text {
+  position: absolute;
+  right: 20px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-weight: bold;
+  color: var(--primary-color);
+  text-shadow: 0 1px 1px white;
+  // เป้าหมาย: โทรศัพท์ ~0.9rem | ไอแพด ~1.4rem
+  font-size: clamp(0.9rem, 0.4rem + 2vw, 1.4rem);
+}
+
+.accumulated-text {
+  font-weight: bold;
+  margin: 0;
+  // เป้าหมาย: โทรศัพท์ ~1rem | ไอแพด ~1.5rem
+  font-size: clamp(1rem, 0.5rem + 2vw, 1.5rem);
+}
+

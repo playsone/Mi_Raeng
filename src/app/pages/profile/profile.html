@@ -1,1 +1,52 @@
-<p>profile works!</p>
+<div class="register-container">
+  <button class="back-btn" type="button" onclick="history.back()">
+    <span>⬅️</span>
+  </button>
+  <div class="header">
+    <h1>ข้อมูลของฉัน</h1>
+  </div>
+
+  <form>
+    <div class="input-group">
+      <span>👤</span>
+      <input type="text" placeholder="ชื่อ-นามสกุล">
+    </div>
+    
+    <div class="input-group">
+      <span>📞</span>
+      <input type="tel" placeholder="เบอร์โทร">
+    </div>
+    
+    <div class="input-group">
+      <span>🔒</span>
+      <input type="password" placeholder="รหัสผ่าน">
+      <span>👁️</span>
+    </div>
+    
+    <div class="input-group">
+      <span>🔒</span>
+      <input type="password" placeholder="ยืนยันรหัสผ่าน">
+      <span>👁️</span>
+    </div>
+
+    <div class="select-group">
+      <div>
+        <span>🎂</span>
+       <input type="number" placeholder="อายุ" min="1" max="120">
+
+      </div>
+      <div>
+        <span>🚻</span>
+        <select>
+          <option disabled selected>เพศ</option>
+          <option>ชาย</option>
+          <option>หญิง</option>
+          <option>อื่นๆ</option>
+        </select>
+      </div>
+    </div>
+    
+    <button type="submit" class="submit-btn">แก้ไขข้อมูล</button>
+     <button type="submit" class="submit-btn">ออกจากระบบ</button>
+  </form>
+</div>

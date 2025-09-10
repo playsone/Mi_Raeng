@@ -9,6 +9,7 @@ import { Ranking } from './pages/ranking/ranking';
 import { MyTree } from './pages/my-tree/my-tree';
 import { Quiz } from './pages/quiz/quiz';
 import { Profile } from './pages/profile/profile';
+import { Dance } from './pages/dance/dance';
 
 export const routes: Routes = [
   { path: '', redirectTo: '/quiz', pathMatch: 'full' },
@@ -21,7 +22,8 @@ export const routes: Routes = [
   { path: 'mytree', component: MyTree },
   { path: 'quiz', component: Quiz },
   { path: 'profile', component: Profile },
-  { path: '', redirectTo: '/welcome', pathMatch: 'full' }
+  { path: '', redirectTo: '/welcome', pathMatch: 'full' },
+  { path: 'dance', component: Dance },
 
 ];
 

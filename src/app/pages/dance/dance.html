@@ -1,1 +1,45 @@
-<p>dance works!</p>
+<!-- 
+  Container หลัก ใช้ Bootstrap จัดการ Layout 
+-->
+<div class="dance-container container-fluid d-flex flex-column vh-100 p-3 p-md-4">
+  
+  <!-- === ส่วนหัว === -->
+  <header class="row justify-content-between align-items-center mb-3">
+    <div class="col-auto">
+      <button class="back-btn" type="button" (click)="goBack()">
+        <span class="material-symbols-outlined">arrow_back</span>
+      </button>
+    </div>
+    <div class="col text-center">
+      <h1>Let's Dance!</h1>
+    </div>
+    <div class="col-auto" style="min-width: 50px;"></div>
+  </header>
+
+  <!-- === ส่วนแสดงผลวิดีโอ === -->
+  <main class="video-content-wrapper">
+    <!-- ตัวโหลดขณะรอเปิดกล้อง -->
+    <div *ngIf="isLoading" class="loading-overlay">
+      <div class="spinner"></div>
+      <p>กำลังเปิดกล้อง...</p>
+    </div>
+
+    <!-- 
+      - <video> จะถูกซ่อนไว้ ใช้สำหรับรับภาพจากกล้องเท่านั้น
+      - <canvas> คือสิ่งที่เราจะเห็นจริงๆ ซึ่งจะวาดภาพจาก video และเส้นต่างๆ ทับลงไป
+    -->
+    <video #videoElement class="input_video" style="display: none;"></video>
+    <canvas #canvasElement class="output_canvas"></canvas>
+
+  </main>
+
+  <!-- === ส่วนควบคุม === -->
+  <footer class="controls mt-3">
+    <button class="control-btn" (click)="toggleWebcam()">
+      <span class="material-symbols-outlined">
+        {{ webcamRunning ? 'videocam_off' : 'videocam' }}
+      </span>
+      {{ webcamRunning ? 'ปิดกล้อง' : 'เริ่มการตรวจจับ' }}
+    </button>
+  </footer>
+</div>

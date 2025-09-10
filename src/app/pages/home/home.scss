@@ -55,8 +55,8 @@
 
 // --- 🌳 ส่วนกลาง (Main Content) ---
 .tree-logo {
-  // ✨ 1. เพิ่มขนาดต้นไม้สูงสุดสำหรับจอใหญ่ (จาก 35vh เป็น 45vh)
-  max-height: clamp(30vh, 10vh + 10vw, 45vh);
+  min-height: 20vh; /* เล็กสุดเวลาหน้าจอแคบ */
+  max-height: clamp(40vh, 20vh + 40vw, 90vh); /* ใหญ่สุดเต็มเกือบจอ */
   width: auto;
 }
 
@@ -88,7 +88,12 @@
   transition: transform 0.2s ease-in-out;
   font-weight: 700;
   text-align: center;
-  font-size: clamp(0.9rem, 0.5rem + 1.5vw, 1.2rem);
+  font-size: clamp(1rem, 1.5rem + 1.5vw, 2rem);
+
+line-height: 1.4;
+white-space: nowrap;
+  overflow: visible;
+text-overflow: ellipsis;
 
   img {
     // ขนาดไอคอนในปุ่ม

@@ -20,7 +20,9 @@ export const routes: Routes = [
   { path: 'ranking', component: Ranking } ,
   { path: 'mytree', component: MyTree },
   { path: 'quiz', component: Quiz },
-  { path: 'profile', component: Profile }
+  { path: 'profile', component: Profile },
+  { path: '', redirectTo: '/welcome', pathMatch: 'full' }
+
 ];
 
 @NgModule({

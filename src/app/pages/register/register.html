@@ -1,10 +1,19 @@
-
-<div class="register-container container-fluid d-flex flex-column vh-100 p-3 p-md-4">
-  
+<!-- 
+  Container หลัก ใช้ Bootstrap จัดการ Layout 
+-->
+<div
+  class="register-container container-fluid d-flex flex-column vh-100 p-3 p-md-4"
+>
   <header class="register-header">
     <button class="back-btn" type="button" onclick="history.back()">
-      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
-        <path d="M10.8284 12.0007L15.7782 16.9504L14.364 18.3646L8 12.0007L14.364 5.63672L15.7782 7.05093L10.8284 12.0007Z"></path>
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        viewBox="0 0 24 24"
+        fill="currentColor"
+      >
+        <path
+          d="M10.8284 12.0007L15.7782 16.9504L14.364 18.3646L8 12.0007L14.364 5.63672L15.7782 7.05093L10.8284 12.0007Z"
+        ></path>
       </svg>
     </button>
   </header>
@@ -12,55 +21,74 @@
   <h1>สมัครสมาชิก</h1>
 
   <form class="register-form">
-    
-    <!-- ✨ โครงสร้างใหม่สำหรับแต่ละช่องกรอกข้อมูล ✨ -->
     <div class="form-group">
-      <div class="icon-wrapper">👤</div>
+      <!-- ใช้ Material Symbols แทน emoji -->
+      <span class="material-symbols-outlined icon-wrapper">person</span>
       <div class="input-wrapper">
-        <input type="text" id="fullName" placeholder=" " required>
+        <input type="text" id="fullName" placeholder=" " required />
         <label for="fullName">ชื่อ-นามสกุล</label>
       </div>
     </div>
-    
+
     <div class="form-group">
-      <div class="icon-wrapper">📞</div>
+      <span class="material-symbols-outlined icon-wrapper">call</span>
       <div class="input-wrapper">
-        <input type="tel" id="phone" placeholder=" " required>
+        <input type="tel" id="phone" placeholder=" " required />
         <label for="phone">เบอร์โทร</label>
       </div>
     </div>
-    
+
     <div class="form-group">
-      <div class="icon-wrapper">🔒</div>
+      <span class="material-symbols-outlined icon-wrapper">lock</span>
       <div class="input-wrapper">
-        <input type="password" id="password" placeholder=" " required>
+        <!-- [type] จะเปลี่ยนค่าตามตัวแปร passwordFieldType -->
+        <input
+          [type]="passwordFieldType"
+          id="password"
+          placeholder=" "
+          required
+        />
         <label for="password">รหัสผ่าน</label>
-        <span class="toggle-password">👁️</span>
-      </div>
-    </div>
-    
-    <div class="form-group">
-      <div class="icon-wrapper">🔒</div>
-      <div class="input-wrapper">
-        <input type="password" id="confirmPassword" placeholder=" " required>
-        <label for="confirmPassword">ยืนยันรหัสผ่าน</label>
-        <span class="toggle-password">👁️</span>
+        <!-- (click) จะเรียกฟังก์ชันสลับการแสดงผล -->
       </div>
     </div>
 
-    <!-- ใช้ Grid สำหรับ อายุ และ เพศ -->
+    <div class="form-group">
+      <span class="material-symbols-outlined icon-wrapper">lock</span>
+      <div class="input-wrapper">
+        <!-- [type] จะเปลี่ยนค่าตามตัวแปร confirmPasswordFieldType -->
+        <input
+          [type]="confirmPasswordFieldType"
+          id="confirmPassword"
+          placeholder=" "
+          required
+        />
+        <label for="confirmPassword">ยืนยันรหัสผ่าน</label>
+        <!-- (click) จะเรียกฟังก์ชันสลับการแสดงผล -->
+      </div>
+    </div>
+
+    <!-- Grid สำหรับ อายุ และ เพศ -->
     <div class="form-row">
       <div class="form-group">
-        <div class="icon-wrapper">🎂</div>
+        <span class="material-symbols-outlined icon-wrapper">cake</span>
         <div class="input-wrapper">
-          <input type="number" id="age" min="1" max="120" placeholder=" " required>
+          <input
+            type="number"
+            id="age"
+            min="1"
+            max="120"
+            placeholder=" "
+            required
+          />
           <label for="age">อายุ</label>
         </div>
       </div>
       <div class="form-group">
-        <div class="icon-wrapper">🚻</div>
+        <span class="material-symbols-outlined icon-wrapper">wc</span>
         <div class="input-wrapper">
           <select id="gender" required>
+            <!-- option แรกมีไว้สำหรับ placeholder ของ floating label -->
             <option value="" disabled selected></option>
             <option value="male">ชาย</option>
             <option value="female">หญิง</option>
@@ -70,8 +98,7 @@
         </div>
       </div>
     </div>
-    
+
     <button type="submit" class="submit-btn">สมัครสมาชิก</button>
   </form>
 </div>
-

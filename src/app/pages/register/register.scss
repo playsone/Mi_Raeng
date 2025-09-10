@@ -18,8 +18,8 @@
   font-family: var(--font-main);
   background: linear-gradient(to bottom, var(--bg-start), var(--bg-end));
   color: var(--primary-color);
-  justify-content: flex-start;
-  padding-top: clamp(10rem, 5vh, 3rem);
+  justify-content: flex-start; // จัดให้อยู่ข้างบน
+  padding-top: clamp(1rem, 5vh, 2rem); // เพิ่ม padding ด้านบน
 }
 
 // --- 🌟 ส่วนหัวและปุ่มย้อนกลับ ---
@@ -27,13 +27,14 @@
   position: relative;
   width: 100%;
   height: clamp(40px, 3rem + 2vw, 50px);
-  margin-bottom: 4rem;
+   margin-bottom: clamp(1rem, 5vh, 2rem);
+
 }
 h1 {
   text-align: center;
   font-size: clamp(2rem, 1rem + 4vw, 3rem);
   font-weight: 900;
-  margin: 0;
+  
   margin-bottom: clamp(1rem, 5vh, 2rem);
 }
 .back-btn {
@@ -67,23 +68,23 @@ h1 {
   margin: 0 auto;
 }
 
-// ✨ โครงสร้างหลักของแต่ละช่องกรอกข้อมูล
 .form-group {
   display: flex;
   align-items: center;
   gap: 15px;
 }
 
+// ✨ ปรับสไตล์สำหรับ Material Symbols ✨
 .icon-wrapper {
   font-size: clamp(1.8rem, 1rem + 3vw, 2.5rem);
+  color: #b0c4de;
+  user-select: none;
 }
 
-// ✨ ส่วนสำคัญ: กล่องสำหรับ Input และ Label
 .input-wrapper {
-  position: relative; // ทำให้ label ลอยอยู่ข้างในได้
+  position: relative;
   flex-grow: 1;
 
-  // สไตล์ของ Label
   label {
     position: absolute;
     top: 50%;
@@ -93,11 +94,9 @@ h1 {
     color: var(--primary-color);
     opacity: 0.7;
     transition: all 0.2s ease;
-    // ป้องกันไม่ให้ label บังการคลิก input
     pointer-events: none; 
   }
 
-  // สไตล์ของ Input และ Select
   input, select {
     width: 100%;
     border: none;
@@ -111,38 +110,56 @@ h1 {
     height: 50px;
   }
   
-  // ✨ เวทมนตร์ของ Floating Label ✨
-  // เมื่อ input ถูก focus หรือ มีข้อความอยู่ข้างใน...
   input:focus + label,
   input:not(:placeholder-shown) + label,
   select:focus + label,
-  select:valid + label { // select:valid จะทำงานเมื่อมีการเลือก option
-    // ...ให้ label ลอยขึ้นไปข้างบน
+  select:valid + label {
     top: -5px;
     font-size: 0.8rem;
     color: var(--input-border-focus);
   }
 
-  // เมื่อ input ถูก focus ให้เปลี่ยนสีเส้นขอบล่าง
   input:focus, select:focus {
     border-bottom-color: var(--input-border-focus);
   }
+
+  // ✨ จัดตำแหน่งไอคอนดวงตา ✨
+  .toggle-password {
+    position: absolute;
+    top: 50%;
+    right: 0;
+    transform: translateY(-50%);
+    cursor: pointer;
+    font-size: clamp(1.5rem, 1rem + 2vw, 1.8rem);
+    color: #b0c4de;
+    transition: color 0.2s;
+    user-select: none;
+    &:hover {
+      color: var(--primary-color);
+    }
+  }
+
+  // กันที่ให้ไอคอนดวงตา
+  input#password, input#confirmPassword {
+    padding-right: 40px;
+  }
 }
 
-// Grid สำหรับแถวที่มี 2 คอลัมน์
+// จัดการลูกศรของ Select box
+.input-wrapper select {
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%234a5a8a'%3E%3Cpath d='M12 16L6 10H18L12 16Z'%3E%3C/path%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 0.5rem center;
+  background-size: 1.5em;
+  padding-right: 2.5rem;
+}
+
+
 .form-row {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: clamp(15px, 4vw, 25px);
-}
-
-.toggle-password {
-  position: absolute;
-  top: 50%;
-  right: 0;
-  transform: translateY(-50%);
-  cursor: pointer;
-  font-size: 1.5rem;
 }
 
 // --- 🚀 ปุ่มสมัครสมาชิก ---

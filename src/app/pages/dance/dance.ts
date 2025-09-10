@@ -13,6 +13,9 @@ import {
   styleUrls: ['./dance.scss']
 })
 export class Dance implements AfterViewInit, OnDestroy {
+toggleWebcam() {
+throw new Error('Method not implemented.');
+}
   @ViewChild('video') videoRef!: ElementRef<HTMLVideoElement>;
   @ViewChild('canvas') canvasRef!: ElementRef<HTMLCanvasElement>;
 
@@ -38,6 +41,9 @@ export class Dance implements AfterViewInit, OnDestroy {
   private backOkThresh = 165;
   private backBadFrames = 6;
   private backBadCount = 0;
+statusMessage: any;
+isLoading: any;
+webcamRunning: any;
 
   constructor(private zone: NgZone) {}
 
@@ -57,15 +63,15 @@ export class Dance implements AfterViewInit, OnDestroy {
   private async initCamera() {
     const video = this.videoRef.nativeElement;
     const stream = await navigator.mediaDevices.getUserMedia({
-      video: { facingMode: 'user', width: 720, height: 540 },
+      video: { facingMode: 'user', width: 1080, height: 1080 },
       audio: false
     });
     video.srcObject = stream;
     await video.play();
 
     const canvas = this.canvasRef.nativeElement;
-    canvas.width = video.videoWidth || 720;
-    canvas.height = video.videoHeight || 540;
+    canvas.width = video.videoWidth || 1080;
+    canvas.height = video.videoHeight || 1080;
   }
 
   private async loadPose() {

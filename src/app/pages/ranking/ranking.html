@@ -5,24 +5,20 @@
   - p-3 p-md-4: กำหนด padding ให้เหมาะสม
 -->
 <div class="ranking-container container-fluid d-flex flex-column vh-100 p-3 p-md-4">
-  
-  <!-- === ส่วนหัว: แสดงคะแนน === -->
-  <header class="row justify-content-between align-items-center mb-3">
-    <!-- กล่องคะแนนเวลา (ซ้าย) -->
-    <div class="col-auto">
-      <div class="info-box">
-        <img src="assets/images/time.png" alt="Time Icon" class="icon">
-        <span>120</span>
-      </div>
-    </div>
-    <!-- กล่องคะแนนดาว (ขวา) -->
-    <div class="col-auto">
-      <div class="info-box">
-        <img src="assets/images/star.png" alt="Star Icon" class="icon">
-        <span>910</span>
-      </div>
-    </div>
+   <header class="back-header">
+    <button class="back-btn" type="button" onclick="history.back()">
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        viewBox="0 0 24 24"
+        fill="currentColor"
+      >
+        <path
+          d="M10.8284 12.0007L15.7782 16.9504L14.364 18.3646L8 12.0007L14.364 5.63672L15.7782 7.05093L10.8284 12.0007Z"
+        ></path>
+      </svg>
+    </button>
   </header>
+
 
   <!-- === ส่วน Podium: แสดง 3 อันดับแรก === -->
   <div class="podium">

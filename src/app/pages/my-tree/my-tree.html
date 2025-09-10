@@ -1,11 +1,19 @@
 <!-- Container หลักที่ครอบทุกอย่างไว้ -->
 <div class="container-fluid page-container d-flex flex-column vh-100 p-3 p-md-4">
 
-  <!-- === ส่วนหัว: แสดงคะแนน (แก้ไขแล้ว) === -->
-  <!-- 
-    ใช้ Bootstrap class 'row' เพื่อจัดให้ .info-box อยู่ในแถวเดียวกัน
-    และ 'justify-content-between' เพื่อดันไปอยู่ริมซ้าย-ขวา
-  -->
+  <header class="back-header">
+    <button class="back-btn" type="button" onclick="history.back()">
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        viewBox="0 0 24 24"
+        fill="currentColor"
+      >
+        <path
+          d="M10.8284 12.0007L15.7782 16.9504L14.364 18.3646L8 12.0007L14.364 5.63672L15.7782 7.05093L10.8284 12.0007Z"
+        ></path>
+      </svg>
+    </button>
+  </header>
   <header class="row justify-content-between align-items-center mb-3">
     <!-- col-auto ทำให้ความกว้างพอดีกับเนื้อหา -->
     <div class="col-auto">
@@ -13,6 +21,11 @@
         <img src="assets/images/time.png" alt="Time Icon" class="icon">
         <span>{{ timeScore }}</span>
       </div>
+    </div>
+     <!-- โปรไฟล์ (กลาง) -->
+    <div class="col text-center profile-info">
+      <img src="assets/images/profilefm.png" alt="Profile Picture" class="profile-pic">
+      <span class="profile-name">สมศรี</span>
     </div>
     <div class="col-auto">
       <div class="info-box">

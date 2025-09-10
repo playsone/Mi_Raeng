@@ -7,8 +7,8 @@
   --bg-start: #d6f2ff;
   --bg-end: #78d6ff;
   --font-main: 'Nunito', sans-serif;
-  --song-box-bg: #fce4ec; // สีชมพูอ่อนสำหรับกล่องชื่อเพลง
-  --profile-border-color: #ff80ab; // สีขอบโปรไฟล์
+  --song-box-bg: #fce4ec;
+  --btn-green: #27d97b; // ✨ เพิ่มตัวแปรสีเขียวสำหรับปุ่ม
 }
 
 // --- 🎨 สไตล์หลักของ Component ---
@@ -19,6 +19,43 @@
   font-family: var(--font-main); 
   color: var(--primary-color); 
 }
+
+// --- ✨ สไตล์สำหรับปุ่มย้อนกลับ (เพิ่มเข้ามาใหม่) ✨ ---
+.back-header {
+  // ทำให้ header นี้เป็นแค่ container ว่างๆ สำหรับจัดตำแหน่งปุ่ม
+  position: relative;
+  width: 100%;
+  height: clamp(40px, 3rem + 2vw, 50px); // กำหนดความสูงให้พอดีกับปุ่ม
+}
+
+.back-btn {
+  position: absolute; // ทำให้ปุ่มลอยอยู่ได้
+  top: 0;
+  left: 0;
+  background-color: var(--btn-green);
+  border: none;
+  border-radius: 50%; // ทำให้เป็นวงกลม
+  width: clamp(40px, 3rem + 2vw, 50px);
+  height: clamp(40px, 3rem + 2vw, 50px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  transition: transform 0.2s;
+  color: white; // สีของ SVG ข้างใน
+  z-index: 100; // ให้อยู่หน้าสุดเสมอ
+
+  svg {
+    width: 60%;
+    height: 60%;
+  }
+
+  &:hover {
+    transform: translateY(-2px) scale(1.05);
+  }
+}
+
 
 // --- 🌟 ส่วนหัว (Header) ---
 .info-box {
@@ -74,37 +111,33 @@ h1 {
 }
 
 // --- ✨ Layout แบบซ้อนทับ (Overlapping) ---
-
 .song-name {
   position: relative;
+  display: flex;
+  align-items: center;
   background-color: var(--song-box-bg);
   border-radius: 50px;
+  font-weight: 700;
   box-shadow: 0 4px 6px rgba(0,0,0,0.1);
   transition: filter 0.2s ease;
   cursor: pointer;
   min-height: clamp(60px, 10vh, 90px);
-
-  // ✨ การเปลี่ยนแปลง: จัดให้ .song-title อยู่กลาง
-  display: flex;
-  align-items: center;
-  justify-content: center;
 
   &:hover {
     filter: brightness(0.95);
   }
 }
 
-// ✨ การเปลี่ยนแปลง: เพิ่มสไตล์สำหรับตัวหนังสือโดยเฉพาะ
 .song-title {
+  width: 100%;
+  text-align: center;
   font-size: clamp(1.2rem, 0.8rem + 2vw, 2.2rem);
-  font-weight: 700;
-  // ทำให้ข้อความไม่ถูกปุ่มกดทับ
-  position: relative;
-  z-index: 5;
 }
 
+.song-item:nth-child(even) .song-name {
+  justify-content: flex-end;
+}
 
-// สไตล์สำหรับปุ่มยังคงเหมือนเดิม
 .song-button {
   position: absolute;
   z-index: 10;

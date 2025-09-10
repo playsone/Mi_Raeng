@@ -1,20 +1,24 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms'; // <-- สำคัญมาก! ต้อง import FormsModule
+import { FormsModule } from '@angular/forms';
+import { MatIconModule } from '@angular/material/icon';
+import { Router } from '@angular/router'; // 👈 เพิ่มเข้ามา
 
 @Component({
   selector: 'app-profile',
   standalone: true,
-  imports: [CommonModule, FormsModule], // <-- และเพิ่ม FormsModule ที่นี่
+  imports: [CommonModule, FormsModule, MatIconModule],
   templateUrl: './profile.html',
   styleUrls: ['./profile.scss']
 })
 export class Profile {
 
-  // ตัวแปรสำหรับสลับโหมด (true = โหมดแก้ไข, false = โหมดแสดงผล)
-  isEditing = false;
+  constructor(private router: Router) {} // 👈 inject Router
 
-  // สมมติว่านี่คือข้อมูลผู้ใช้ที่ดึงมาจาก Server
+  isEditing = false;
+  passwordFieldType: string = 'password';
+  passwordIcon: string = 'visibility';
+
   userData = {
     fullName: 'สมศรี รักดี',
     phone: '081-234-5678',
@@ -22,24 +26,35 @@ export class Profile {
     age: 28,
     gender: 'หญิง'
   };
+  
+  goBack(): void {
+    history.back();
+  }
 
-  // ฟังก์ชันสำหรับสลับโหมด
   toggleEdit(): void {
     this.isEditing = !this.isEditing;
   }
 
-  // ฟังก์ชันสำหรับบันทึกข้อมูล
   saveChanges(): void {
-    // --- ในอนาคต คุณสามารถใส่โค้ดสำหรับส่งข้อมูลไปบันทึกที่ Server ตรงนี้ ---
     console.log('ข้อมูลที่บันทึก:', this.userData);
-
-    // หลังจากบันทึกเสร็จ ให้สลับกลับไปโหมดแสดงผล
     this.isEditing = false;
   }
+  
+  togglePasswordVisibility(): void {
+    if (this.passwordFieldType === 'password') {
+      this.passwordFieldType = 'text';
+      this.passwordIcon = 'visibility_off';
+    } else {
+      this.passwordFieldType = 'password';
+      this.passwordIcon = 'visibility';
+    }
+  }
 
-  // ฟังก์ชันสำหรับออกจากระบบ
   logout(): void {
-    // --- ใส่โค้ดออกจากระบบของคุณที่นี่ ---
-    console.log('ออกจากระบบแล้ว');
+    // ล้างข้อมูล session/token
+    localStorage.clear();
+
+    // ไปหน้า welcome
+    this.router.navigate(['/welcome']);
   }
 }

@@ -7,10 +7,11 @@
   --bg-start: #d6f2ff;
   --bg-end: #78d6ff;
   --font-main: 'Nunito', sans-serif;
-  --table-bg: #e0f8e1;      // สีพื้นหลังตาราง
-  --table-border: #a7d7a9; // สีเส้นขอบตาราง
-  --table-header-text: #ffffff; // สีตัวอักษรหัวตาราง
-  --highlight-bg: #fff9c4; // สีแถวที่ไฮไลท์
+  --table-bg: #e0f8e1;
+  --table-border: #a7d7a9;
+  --table-header-text: #ffffff;
+  --highlight-bg: #fff9c4;
+  --btn-green: #27d97b; // ✨ เพิ่มตัวแปรสีเขียวสำหรับปุ่ม
 }
 
 // --- 🎨 สไตล์หลักของ Component ---
@@ -18,8 +19,43 @@
   font-family: var(--font-main); 
   color: var(--primary-color);
   background: linear-gradient(to bottom, var(--bg-start), var(--bg-end)); 
-  // ทำให้เนื้อหา scroll ได้ถ้าไม่พอดีหน้าจอ
   overflow-y: auto;
+}
+
+// --- ✨ สไตล์สำหรับปุ่มย้อนกลับ (เพิ่มเข้ามาใหม่) ✨ ---
+.back-header {
+  position: relative;
+  width: 100%;
+  height: clamp(40px, 3rem + 2vw, 50px);
+  margin-bottom: 3rem;
+}
+
+.back-btn {
+  position: absolute;
+  top: 0;
+  left: 0;
+  background-color: var(--btn-green);
+  border: none;
+  border-radius: 50%;
+  width: clamp(40px, 3rem + 2vw, 50px);
+  height: clamp(40px, 3rem + 2vw, 50px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  transition: transform 0.2s;
+  color: white;
+  z-index: 100;
+
+  svg {
+    width: 60%;
+    height: 60%;
+  }
+
+  &:hover {
+    transform: translateY(-2px) scale(1.05);
+  }
 }
 
 // --- 🌟 ส่วนหัว (Header) ---
@@ -42,7 +78,7 @@
 
 // --- 🏆 ส่วน Podium ---
 .podium {
-  position: relative; // ทำให้เป็นกรอบอ้างอิงสำหรับ .place
+  position: relative;
   width: 100%;
   max-width: 450px;
   margin: 1rem auto;
@@ -62,7 +98,6 @@
     text-shadow: 0 1px 2px rgba(255,255,255,0.7);
   }
 
-  // ตำแหน่งของผู้ชนะแต่ละคน
   .place-1 {
     top: -5%;
     left: 52%;
@@ -80,8 +115,8 @@
 
 // --- 📊 ส่วนตาราง ---
 .table-container {
-  flex-grow: 1; // ทำให้ตารางขยายเต็มพื้นที่ที่เหลือ
-  overflow-y: auto; // ทำให้ตาราง scroll ได้ถ้าเนื้อหายาว
+  flex-grow: 1;
+  overflow-y: auto;
   width: 100%;
   max-width: 600px;
   margin: 0 auto;
@@ -89,11 +124,11 @@
 
 .ranking-table {
   width: 100%;
-  border-collapse: separate; // ใช้ separate เพื่อให้ border-radius ทำงาน
+  border-collapse: separate;
   border-spacing: 0;
   background-color: var(--table-bg);
   border-radius: 15px;
-  overflow: hidden; // ซ่อนส่วนที่เกินขอบมน
+  overflow: hidden;
 
   th, td {
     padding: clamp(8px, 1.5vw, 12px);
@@ -103,7 +138,6 @@
     border-bottom: 2px solid var(--table-border);
   }
 
-  // แถวสุดท้ายไม่ต้องมีเส้นขอบล่าง
   tr:last-child td {
     border-bottom: none;
   }
@@ -115,36 +149,35 @@
   }
 
   td:first-child {
-    width: 60px; // กำหนดความกว้างคอลัมน์อันดับ
+    width: 60px;
     img {
       width: clamp(30px, 2rem + 2vw, 45px);
       height: auto;
     }
   }
 
-  // สไตล์สำหรับแถวที่ไฮไลท์
   tbody tr.highlight {
     background-color: var(--highlight-bg);
     font-weight: bold;
   }
 }
+
 // --- ✨ อันดับดาวพร้อมตัวเลข ---
 .rank-icon-container {
-  position: relative; // 1. เป็นกรอบอ้างอิง
-  display: inline-flex; // ทำให้ขนาดพอดีกับเนื้อหา
+  position: relative;
+  display: inline-flex;
   align-items: center;
   justify-content: center;
 
   .rank-number {
-    position: absolute; // 2. ทำให้ตัวเลข "ลอย"
+    position: absolute;
     top: 50%;
     left: 50%;
-    transform: translate(-50%, -50%); // 3. จัดให้อยู่กลางเป๊ะๆ
-    
+    transform: translate(-50%, -50%);
     color: var(--primary-color);
     font-weight: 900;
     font-size: clamp(0.8rem, 0.6rem + 1vw, 1rem);
-    // เพิ่มเงาให้ตัวหนังสือเด่นขึ้น
     text-shadow: 0 0 2px white, 0 0 2px white; 
   }
 }
+

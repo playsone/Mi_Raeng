@@ -7,6 +7,7 @@
   --bg-start: #d6f2ff;
   --bg-end: #78d6ff;
   --font-main: 'Nunito', sans-serif;
+  --btn-green: #27d97b;
 }
 
 // --- 🎨 สไตล์หลักของ Component ---
@@ -17,29 +18,76 @@
   font-family: var(--font-main); 
   color: var(--primary-color); 
 }
+// --- ✨ สไตล์สำหรับปุ่มย้อนกลับ (เพิ่มเข้ามาใหม่) ✨ ---
+.back-header {
+  // ทำให้ header นี้เป็นแค่ container ว่างๆ สำหรับจัดตำแหน่งปุ่ม
+  position: relative;
+  width: 100%;
+  height: clamp(40px, 3rem + 2vw, 50px); // กำหนดความสูงให้พอดีกับปุ่ม
+}
 
+.back-btn {
+  position: absolute; // ทำให้ปุ่มลอยอยู่ได้
+  top: 0;
+  left: 0;
+  background-color: var(--btn-green);
+  border: none;
+  border-radius: 50%; // ทำให้เป็นวงกลม
+  width: clamp(40px, 3rem + 2vw, 50px);
+  height: clamp(40px, 3rem + 2vw, 50px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  transition: transform 0.2s;
+  color: white; // สีของ SVG ข้างใน
+  z-index: 100; // ให้อยู่หน้าสุดเสมอ
+
+  svg {
+    width: 60%;
+    height: 60%;
+  }
+
+  &:hover {
+    transform: translateY(-2px) scale(1.05);
+  }
+}
 // --- 🌟 ส่วนหัว (Header) ---
 .info-box {
   display: flex;
   align-items: center;
-  background-color: rgba(255, 255, 255, 0.7);
+  background-color: rgba(255, 255, 255, 0.8);
   border-radius: 50px;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   font-weight: bold;
-  
-  // เป้าหมาย: โทรศัพท์ (430px) ~1.1rem | ไอแพด (820px) ~2.0rem
-  font-size: clamp(1.1rem, 0.4rem + 2.8vw, 2.0rem);
-  // เป้าหมาย: โทรศัพท์ padding ~15px | ไอแพด padding ~30px
-  padding: clamp(8px, 0.5vh + 1vw, 12px) clamp(15px, 1rem + 2vw, 30px);
+  font-size: clamp(1.1rem, 0.4rem + 2.8vw, 1.8rem);
+  padding: clamp(8px, 0.5vh + 1vw, 12px) clamp(15px, 1rem + 2vw, 25px);
 
   .icon {
-    // เป้าหมาย: โทรศัพท์ ~24px | ไอแพด ~38px
     width: clamp(24px, 1rem + 3vw, 38px);
     height: clamp(24px, 1rem + 3vw, 38px);
     margin-right: clamp(8px, 0.5rem + 1vw, 12px);
   }
 }
 
+.profile-info {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  
+  .profile-pic {
+    width: clamp(60px, 5rem + 8vw, 100px);
+    height: clamp(60px, 5rem + 8vw, 100px);
+    border-radius: 50%;
+    margin-bottom: 5px;
+  }
+
+  .profile-name {
+    font-size: clamp(1.2rem, 0.5rem + 2.5vw, 2rem);
+    font-weight: 900;
+  }
+}
 // --- ส่วนกลาง (ต้นไม้) ---
 .tree-container {
   position: relative; 

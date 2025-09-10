@@ -1,4 +1,4 @@
-import { Component, ViewChild, ElementRef, OnInit, OnDestroy } from '@angular/core';
+import { Component, ViewChild, ElementRef, AfterViewInit, OnDestroy, NgZone } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatIconModule } from '@angular/material/icon';
 import { Pose, Results as PoseResults, POSE_CONNECTIONS } from '@mediapipe/pose';
@@ -11,18 +11,37 @@ import { drawConnectors, drawLandmarks } from '@mediapipe/drawing_utils';
   templateUrl: './dance.html',
   styleUrls: ['./dance.scss']
 })
-export class Dance implements OnInit, OnDestroy {
+// ✨ 1. ใช้ชื่อคลาสที่ถูกต้องตามมาตรฐาน
+export class Dance implements AfterViewInit, OnDestroy {
   @ViewChild('videoElement') videoElement!: ElementRef<HTMLVideoElement>;
   @ViewChild('canvasElement') canvasElement!: ElementRef<HTMLCanvasElement>;
 
   isLoading = false;
+  statusMessage = 'คลิก "เปิดกล้อง" เพื่อเริ่ม';
   webcamRunning = false;
-  
+
   private pose!: Pose;
   private canvasCtx!: CanvasRenderingContext2D;
   private videoStream: MediaStream | null = null;
+  private animationFrameId: number | null = null;
+  
+  // Inject NgZone เพื่อให้แน่ใจว่าการอัปเดต UI จะเกิดขึ้นอย่างถูกต้อง
+  constructor(private zone: NgZone) {}
 
-  ngOnInit(): void {
+  ngAfterViewInit(): void {
+    // เตรียม MediaPipe ไว้ แต่ยังไม่เริ่มทำงาน
+    this.initializeMediaPipe();
+    this.canvasCtx = this.canvasElement.nativeElement.getContext('2d')!;
+  }
+
+  ngOnDestroy(): void {
+    this.stopWebcam();
+    if (this.pose) {
+      this.pose.close();
+    }
+  }
+
+  initializeMediaPipe(): void {
     this.pose = new Pose({
       locateFile: (file) => `https://cdn.jsdelivr.net/npm/@mediapipe/pose/${file}`,
     });
@@ -30,19 +49,18 @@ export class Dance implements OnInit, OnDestroy {
     this.pose.setOptions({
       modelComplexity: 1,
       smoothLandmarks: true,
-      enableSegmentation: false,
       minDetectionConfidence: 0.5,
       minTrackingConfidence: 0.5
     });
 
-    this.pose.onResults(this.onResults.bind(this));
+    this.pose.onResults((results) => {
+        // ✨ 2. ใช้ NgZone เพื่อให้ Angular รู้ว่ามีการเปลี่ยนแปลง
+        this.zone.run(() => {
+            this.onResults(results);
+        });
+    });
   }
-
-  ngOnDestroy(): void {
-    this.stopWebcam();
-    this.pose.close();
-  }
-
+  
   async toggleWebcam(): Promise<void> {
     if (this.webcamRunning) {
       this.stopWebcam();
@@ -50,110 +68,82 @@ export class Dance implements OnInit, OnDestroy {
       await this.startWebcam();
     }
   }
-
-  private async startWebcam(): Promise<void> {
+  
+  async startWebcam(): Promise<void> {
     this.isLoading = true;
+    this.statusMessage = 'กรุณากด "อนุญาต" (Allow) เพื่อใช้กล้อง';
     try {
       this.videoStream = await navigator.mediaDevices.getUserMedia({
         video: { width: 1280, height: 720 },
       });
-      this.videoElement.nativeElement.srcObject = this.videoStream;
-      this.videoElement.nativeElement.play();
-      this.webcamRunning = true;
-
-      this.videoElement.nativeElement.onloadedmetadata = () => {
+      
+      this.statusMessage = 'กำลังโหลดวิดีโอ...';
+      const video = this.videoElement.nativeElement;
+      video.srcObject = this.videoStream;
+      
+      video.onloadedmetadata = () => {
+        video.play();
+        this.webcamRunning = true;
         this.isLoading = false;
-        // ปรับขนาด canvas ให้เท่ากับ video
-        this.canvasElement.nativeElement.width = this.videoElement.nativeElement.videoWidth;
-        this.canvasElement.nativeElement.height = this.videoElement.nativeElement.videoHeight;
-        this.canvasCtx = this.canvasElement.nativeElement.getContext('2d')!;
+        this.statusMessage = '';
+        
+        const canvas = this.canvasElement.nativeElement;
+        canvas.width = video.videoWidth;
+        canvas.height = video.videoHeight;
+        
         this.predictionLoop();
       };
+
     } catch (err) {
-      console.error("Error accessing webcam:", err);
+      console.error("ERROR: ไม่สามารถเข้าถึงกล้องได้!", err);
       this.isLoading = false;
-      alert("ไม่สามารถเข้าถึงกล้องได้ กรุณาตรวจสอบการอนุญาต");
+      this.webcamRunning = false;
+      this.statusMessage = 'ไม่สามารถเปิดกล้องได้! โปรดตรวจสอบการตั้งค่า';
+      alert(this.statusMessage);
     }
   }
 
-  private stopWebcam(): void {
+  stopWebcam(): void {
+    if (this.animationFrameId) {
+      cancelAnimationFrame(this.animationFrameId);
+      this.animationFrameId = null;
+    }
     if (this.videoStream) {
       this.videoStream.getTracks().forEach(track => track.stop());
     }
+    this.videoStream = null;
     this.webcamRunning = false;
+    this.statusMessage = 'คลิก "เปิดกล้อง" เพื่อเริ่ม';
   }
 
   private predictionLoop(): void {
-    if (this.webcamRunning) {
+    if (this.webcamRunning && this.videoElement.nativeElement.readyState >= 3) {
       this.pose.send({ image: this.videoElement.nativeElement });
-      requestAnimationFrame(this.predictionLoop.bind(this));
     }
+    this.animationFrameId = requestAnimationFrame(() => this.predictionLoop());
   }
 
   private onResults(results: PoseResults): void {
+    if (!this.canvasCtx || !this.webcamRunning) return;
+
     this.canvasCtx.save();
     this.canvasCtx.clearRect(0, 0, this.canvasElement.nativeElement.width, this.canvasElement.nativeElement.height);
     
-    // พลิกภาพแนวนอน (mirror) ให้เหมือนกล้องส่องกระจก
     this.canvasCtx.translate(this.canvasElement.nativeElement.width, 0);
     this.canvasCtx.scale(-1, 1);
     this.canvasCtx.drawImage(results.image, 0, 0, this.canvasElement.nativeElement.width, this.canvasElement.nativeElement.height);
-    
-    // พลิกภาพกลับเพื่อวาด skeleton ให้ถูกต้อง
-    this.canvasCtx.translate(this.canvasElement.nativeElement.width, 0);
-    this.canvasCtx.scale(-1, 1);
+    this.canvasCtx.restore();
 
     if (results.poseLandmarks) {
-      // วาดเส้นเชื่อม
-      drawConnectors(this.canvasCtx, results.poseLandmarks, POSE_CONNECTIONS, { color: '#00FF00', lineWidth: 4 });
-      // วาดจุด
-      drawLandmarks(this.canvasCtx, results.poseLandmarks, { color: '#FF0000', lineWidth: 2 });
-
-      // คำนวณและแสดงผล (เหมือนใน Python)
-      const landmarks = results.poseLandmarks;
-      const h = this.canvasElement.nativeElement.height;
-      const w = this.canvasElement.nativeElement.width;
-
-      const getCoords = (id: number) => [landmarks[id].x * w, landmarks[id].y * h];
-
-      // มุมเข่าซ้าย
-      const leftHip = getCoords(23);
-      const leftKnee = getCoords(25);
-      const leftAnkle = getCoords(27);
-      const leftKneeAngle = this.calcAngle(leftHip, leftKnee, leftAnkle);
-      
-      this.drawLabel(`Knee Angle (L): ${leftKneeAngle.toFixed(1)}`, {x: 10, y: 30}, leftKneeAngle > 160);
-
-      // มุมเข่าขวา
-      const rightHip = getCoords(24);
-      const rightKnee = getCoords(26);
-      const rightAnkle = getCoords(28);
-      const rightKneeAngle = this.calcAngle(rightHip, rightKnee, rightAnkle);
-      this.drawLabel(`Knee Angle (R): ${rightKneeAngle.toFixed(1)}`, {x: 10, y: 60}, rightKneeAngle > 160);
+      const mirroredLandmarks = results.poseLandmarks.map(lm => ({...lm, x: 1 - lm.x }));
+      drawConnectors(this.canvasCtx, mirroredLandmarks, POSE_CONNECTIONS, { color: '#00FF00', lineWidth: 4 });
+      drawLandmarks(this.canvasCtx, mirroredLandmarks, { color: '#FF0000', lineWidth: 2 });
     }
-    this.canvasCtx.restore();
-  }
-
-  // --- Helper Functions (แปลงมาจาก Python) ---
-  private calcAngle(a: number[], b: number[], c: number[]): number {
-    const rad = Math.atan2(c[1] - b[1], c[0] - b[0]) - Math.atan2(a[1] - b[1], a[0] - b[0]);
-    let angle = Math.abs(rad * 180.0 / Math.PI);
-    if (angle > 180.0) {
-      angle = 360 - angle;
-    }
-    return angle;
-  }
-  
-  private drawLabel(text: string, org: {x: number, y: number}, good: boolean): void {
-    const color = good ? 'rgb(0, 200, 0)' : 'rgb(220, 0, 0)';
-    this.canvasCtx.font = 'bold 24px Nunito';
-    this.canvasCtx.fillStyle = 'rgba(255, 255, 255, 0.8)';
-    this.canvasCtx.fillRect(org.x - 5, org.y - 25, 300, 35);
-    this.canvasCtx.fillStyle = color;
-    this.canvasCtx.fillText(text, org.x, org.y);
   }
 
   goBack() {
+    this.stopWebcam();
     history.back();
   }
 }
+

@@ -18,10 +18,10 @@
 
   <!-- === ส่วนแสดงผลวิดีโอ === -->
   <main class="video-content-wrapper">
-    <!-- ตัวโหลดขณะรอเปิดกล้อง -->
-    <div *ngIf="isLoading" class="loading-overlay">
-      <div class="spinner"></div>
-      <p>กำลังเปิดกล้อง...</p>
+    <!-- ✨ เพิ่มการแสดง statusMessage ✨ -->
+    <div *ngIf="isLoading || statusMessage" class="loading-overlay">
+      <div *ngIf="isLoading" class="spinner"></div>
+      <p>{{ statusMessage }}</p>
     </div>
 
     <!-- 
@@ -39,7 +39,8 @@
       <span class="material-symbols-outlined">
         {{ webcamRunning ? 'videocam_off' : 'videocam' }}
       </span>
-      {{ webcamRunning ? 'ปิดกล้อง' : 'เริ่มการตรวจจับ' }}
+      {{ webcamRunning ? 'ปิดกล้อง' : 'เปิดกล้อง' }}
     </button>
   </footer>
 </div>
+

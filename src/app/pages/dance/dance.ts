@@ -61,7 +61,6 @@ webcamRunning: any;
   }
 
   private async initCamera() {
-<<<<<<< HEAD
   const video = this.videoRef.nativeElement;
   const stream = await navigator.mediaDevices.getUserMedia({
     video: {
@@ -79,20 +78,6 @@ webcamRunning: any;
   canvas.height = video.videoHeight || window.innerHeight;
 }
 
-=======
-    const video = this.videoRef.nativeElement;
-    const stream = await navigator.mediaDevices.getUserMedia({
-      video: { facingMode: 'user', width: 1080, height: 1080 },
-      audio: false
-    });
-    video.srcObject = stream;
-    await video.play();
-
-    const canvas = this.canvasRef.nativeElement;
-    canvas.width = video.videoWidth || 1080;
-    canvas.height = video.videoHeight || 1080;
-  }
->>>>>>> b8cd4f3e248eb5e7121611bf00b443d96be79624
 
   private async loadPose() {
     // โหลดจาก CDN เพื่อลดขั้นตอน setup

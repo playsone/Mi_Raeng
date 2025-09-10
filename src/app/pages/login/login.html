@@ -25,27 +25,30 @@
     </div>
 
     <form class="login-form" (ngSubmit)="login()">
-      <div class="form-group">
-        <span class="material-symbols-outlined icon-wrapper">call</span>
-        <div class="input-wrapper">
-          <input type="tel" id="phone" placeholder=" " required />
-          <label for="phone">เบอร์โทร</label>
-        </div>
-      </div>
+  <div class="form-group">
+    <span class="material-symbols-outlined icon-wrapper">call</span>
+    <div class="input-wrapper">
+      <input type="tel" id="phone" name="phone" [(ngModel)]="phoneNumber" placeholder=" " required />
+      <label for="phone">เบอร์โทร</label>
+    </div>
+  </div>
 
-      <div class="form-group">
-        <span class="material-symbols-outlined icon-wrapper">lock</span>
-        <div class="input-wrapper">
-          <input
-            [type]="passwordFieldType"
-            id="password"
-            placeholder=" "
-            required
-          />
-          <label for="password">รหัสผ่าน</label>
-        </div>
-      </div>
+  <div class="form-group">
+    <span class="material-symbols-outlined icon-wrapper">lock</span>
+    <div class="input-wrapper">
+       <input
+        [type]="passwordFieldType"
+        id="password"
+        name="password"
+        [(ngModel)]="passwordValue"
+        placeholder=" "
+        required
+      />
+      <label for="password">รหัสผ่าน</label>
+    </div>
+  </div>
 
+      <!-- ✨ แก้ไข: เอา (click) ออกจากปุ่ม เพราะ form จะจัดการเอง ✨ -->
       <button type="submit" class="submit-btn">เข้าสู่ระบบ</button>
     </form>
   </main>

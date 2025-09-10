@@ -1,43 +1,35 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { MatIconModule } from '@angular/material/icon';
-import { CommonModule } from '@angular/common'; // ✨ 1. Import CommonModule เข้ามา
+import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms'; // ✨ 1. Import FormsModule
 
 @Component({
   selector: 'app-login',
   standalone: true,
-  imports: [MatIconModule, CommonModule], // ✨ 2. เพิ่ม CommonModule ใน imports array
+  imports: [
+    MatIconModule,
+    CommonModule,
+    FormsModule // ✨ 2. Add FormsModule here
+  ],
   templateUrl: './login.html',
   styleUrls: ['./login.scss']
 })
 export class Login {
 
-  // ✨ 3. เพิ่ม Property ที่หายไปกลับเข้ามา ✨
+   phoneNumber: string = '';
+  passwordValue: string = '';
   passwordFieldType: string = 'password';
   passwordIcon: string = 'visibility';
 
   constructor(private router: Router) {}
 
-  // ฟังก์ชันสำหรับปุ่มย้อนกลับ (เผื่อเปลี่ยนจาก onclick มาใช้)
   goBack(): void {
     history.back();
   }
 
-  // ฟังก์ชันสลับการแสดงรหัสผ่าน
-  togglePasswordVisibility(): void {
-    if (this.passwordFieldType === 'password') {
-      this.passwordFieldType = 'text';
-      this.passwordIcon = 'visibility_off';
-    } else {
-      this.passwordFieldType = 'password';
-      this.passwordIcon = 'visibility';
-    }
-  }
-
-  // ฟังก์ชัน login ทำงานถูกต้องแล้ว
   login() {
-    console.log('Login successful!');
+    console.log('Login button clicked, navigating...'); // For debugging
     this.router.navigate(['/home']);
   }
 }
-

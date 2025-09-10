@@ -55,18 +55,23 @@ export class Dance implements AfterViewInit, OnDestroy {
   }
 
   private async initCamera() {
-    const video = this.videoRef.nativeElement;
-    const stream = await navigator.mediaDevices.getUserMedia({
-      video: { facingMode: 'user', width: 720, height: 540 },
-      audio: false
-    });
-    video.srcObject = stream;
-    await video.play();
+  const video = this.videoRef.nativeElement;
+  const stream = await navigator.mediaDevices.getUserMedia({
+    video: {
+      facingMode: 'user',
+      width: { ideal: window.innerWidth },
+      height: { ideal: window.innerHeight }
+    },
+    audio: false
+  });
+  video.srcObject = stream;
+  await video.play();
 
-    const canvas = this.canvasRef.nativeElement;
-    canvas.width = video.videoWidth || 720;
-    canvas.height = video.videoHeight || 540;
-  }
+  const canvas = this.canvasRef.nativeElement;
+  canvas.width = video.videoWidth || window.innerWidth;
+  canvas.height = video.videoHeight || window.innerHeight;
+}
+
 
   private async loadPose() {
     // โหลดจาก CDN เพื่อลดขั้นตอน setup

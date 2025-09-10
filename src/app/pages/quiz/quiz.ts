@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-quiz',
@@ -10,31 +11,75 @@ import { FormsModule } from '@angular/forms';
   styleUrls: ['./quiz.scss'],
 })
 export class Quiz {
-  questions: string[] = [
-    "1. คุณเคยได้รับทาบทามจากแพทย์ว่าเป็นโรคเกี่ยวกับโรคหัวใจหรือความดันโลหิตสูง",
-    "2. คุณรู้สึกเจ็บที่หน้าอกในขณะพัก หรือระหว่างมีกิจกรรมในชีวิตประจำวัน หรือระหว่างออกกำลังกาย",
-    "3. ในรอบ 12 เดือนที่ผ่านมา คุณเคยเวียนศีรษะจนจะเสียการทรงตัว หรือเป็นลมไปรู้สึกตัว หรือไม่",
-    "4. คุณได้รับการวินิจฉัยว่าเป็นโรคเรื้อรังนอกเหนือจากโรคหัวใจหรือโรคความดันโลหิตสูง หรือไม่",
-    "5. ปัจจุบันคุณได้รับประทานยาเพื่อรักษาโรคเรื้อรัง หรือไม่",
-    "6. ปัจจุบัน หรือ ในรอบ 12 เดือนที่ผ่านมา คุณมีปัญหาเรื่องกระดูกและข้อหรือกล้ามเนื้อเส้นเอ็น ซึ่งอาการจะแย่ลงเมื่อมีกิจกรรมทางกายเพิ่มขึ้นหรือไม่",
-    "7. แพทย์เคยบอกคุณว่า คุณควรได้รับคำแนะนำก่อนที่จะมีกิจกรรมทางกายหรือออกกำลังกาย"
+  // --- Properties ---
+ questions: string[] = [
+    "1. แพทย์เคยบอกหรือไม่ว่าท่านมีภาวะโรคหัวใจ และท่านควรทำกิจกรรมทางกายตามคำแนะนำของแพทย์เท่านั้น",
+    "2. ท่านรู้สึกเจ็บหน้าอกขณะทำกิจกรรมทางกายหรือไม่",
+    "3. ในเดือนที่ผ่านมา ท่านมีอาการเจ็บหน้าอกขณะที่ไม่ได้ทำกิจกรรมทางกายหรือไม่",
+    "4. ท่านเคยมีประวัติการหมดสติ หรือล้มจากอาการเวียนศีรษะหรือไม่",
+    "5. ท่านมีปัญหาเรื่องกระดูกหรือข้อต่อ (เช่น หลัง เข่า หรือสะโพก) ที่อาจจะมีอาการแย่ลงจากการทำกิจกรรมทางกายหรือไม่",
+    "6. แพทย์เคยสั่งยาสำหรับภาวะความดันโลหิตสูงหรือโรคหัวใจหรือไม่",
+    "7. ท่านมีเหตุผลอื่นใดที่ท่านไม่ควรทำกิจกรรมทางกายหรือไม่"
   ];
 
+  initialAnswers: ('yes' | 'no' | null)[];
+  answers: ('yes' | 'no' | null)[];
   currentIndex = 0;
-  answers: ('yes' | 'no' | null)[] = Array(this.questions.length).fill(null);
+  isQuizFinished = false;
+  quizResult: 'passed' | 'failed' | null = null;
+
+  constructor(private router: Router) {
+    this.initialAnswers = Array(this.questions.length).fill(null);
+    this.answers = [...this.initialAnswers];
+  }
 
   get currentQuestion(): string {
     return this.questions[this.currentIndex];
   }
 
-  onNext() {
-    if (!this.answers[this.currentIndex]) return; // ต้องเลือกก่อน
+  onBack(): void {
+    if (this.currentIndex > 0) {
+      this.currentIndex--;
+    }
+  }
+
+  onNext(): void {
+    if (!this.answers[this.currentIndex]) return;
+
     if (this.currentIndex < this.questions.length - 1) {
       this.currentIndex++;
     } else {
-      // ถึงข้อสุดท้ายแล้ว
-      console.log('คำตอบทั้งหมด:', this.answers);
-      alert('ทำแบบประเมินเสร็จแล้ว ขอบคุณครับ');
+      this.finishQuiz();
     }
+  }
+
+  /**
+   * REVERSED LOGIC: Check for 'yes' answers to fail the quiz.
+   */
+  finishQuiz(): void {
+    // Check if any answer is 'yes'. If so, the user has a health risk.
+    const hasFailed = this.answers.includes('yes'); // <-- The main logic change is here!
+
+    if (hasFailed) {
+      // If there is even one 'yes', the user fails and should consult a doctor.
+      this.quizResult = 'failed';
+    } else {
+      // If all answers are 'no', the user passes and is ready.
+      this.quizResult = 'passed';
+      
+      // Navigate to the welcome page after a short delay.
+      setTimeout(() => {
+        this.router.navigate(['/welcome']);
+      }, 2500); 
+    }
+
+    this.isQuizFinished = true;
+  }
+
+  restartQuiz(): void {
+    this.currentIndex = 0;
+    this.answers = [...this.initialAnswers];
+    this.isQuizFinished = false;
+    this.quizResult = null;
   }
 }

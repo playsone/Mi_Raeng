@@ -11,7 +11,7 @@ import { Quiz } from './pages/quiz/quiz';
 import { Profile } from './pages/profile/profile';
 
 export const routes: Routes = [
-  { path: '', redirectTo: '/welcome', pathMatch: 'full' },
+  { path: '', redirectTo: '/quiz', pathMatch: 'full' },
   { path: 'welcome', component: Welcome },
   { path: 'login', component: Login },
   { path: 'register', component: Register },

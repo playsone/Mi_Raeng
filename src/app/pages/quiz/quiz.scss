@@ -1,19 +1,22 @@
-/* --- CSS ที่ยังคงไว้สำหรับดีไซน์เฉพาะ --- */
+/* --- Previous styles remain the same --- */
+
 :host {
   display: block;
+  min-height: 100vh;
   background-color: #e0f2fe;
-  font-family: "Sarabun", sans-serif;
+  font-family: 'Sarabun', sans-serif;
   background-image: url("/assets/images/bgquiz.png");
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
   background-attachment: fixed;
-
-  /* เต็มหน้าจอแบบที่ body เคยทำ */
-  min-height: 100vh;
 }
 
-/* ดีไซน์ของ Custom Radio Button ที่เป็นเอกลักษณ์ของคุณ */
+h1 {
+  color: #0d47a1;
+  font-weight: 700;
+}
+
 .option-label {
   display: flex;
   flex-direction: column;
@@ -33,54 +36,32 @@
   position: relative;
 }
 
-.option-label.green .custom-checkbox {
-  border-color: #4caf50;
-}
-.option-label.red .custom-checkbox {
-  border-color: #f44336;
-}
-
-input[type="radio"] {
-  position: absolute;
-  opacity: 0;
-}
-
-input[type="radio"]:checked + .custom-checkbox {
-  transform: scale(1.1);
-}
-
-.option-label.green input[type="radio"]:checked + .custom-checkbox {
-  background-color: #4caf50;
-}
-.option-label.red input[type="radio"]:checked + .custom-checkbox {
-  background-color: #f44336;
-}
-
+.option-label.green .custom-checkbox { border-color: #4caf50; }
+.option-label.red .custom-checkbox { border-color: #f44336; }
+input[type="radio"] { position: absolute; opacity: 0; }
+input[type="radio"]:checked + .custom-checkbox { transform: scale(1.1); }
+.option-label.green input[type="radio"]:checked + .custom-checkbox { background-color: #4caf50; }
+.option-label.red input[type="radio"]:checked + .custom-checkbox { background-color: #f44336; }
 input[type="radio"]:checked + .custom-checkbox::after {
-  content: "✔";
-  color: white;
-  font-size: 30px;
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
+  content: "✔"; color: white; font-size: 30px; position: absolute;
+  top: 50%; left: 50%; transform: translate(-50%, -50%);
 }
 
-/* ปรับแต่งสี Heading เพิ่มเติม */
-h1 {
-  color: #0d47a1;
-  font-weight: 700;
+.finished-card {
+    animation: fadeIn 0.5s ease-in-out;
 }
 
-/* สไตล์ของ SVG Icon */
-.icon-container svg {
-  width: 150px;
-  height: auto;
-  stroke: #2196f3;
-  stroke-width: 4;
-  fill: transparent;
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
 }
-.icon-container .heart {
-  fill: #f44336;
-  stroke: #f44336;
+
+/* --- New styles for result icons --- */
+.icon-container svg.success {
+  stroke: #4caf50; /* Green color for success */
 }
+
+.icon-container svg.failed {
+  stroke: #f44336; /* Red color for failed */
+}
+

@@ -317,3 +317,4 @@ function drawSkeleton(ctx: CanvasRenderingContext2D, lm: Array<{x:number,y:numbe
   });
   ctx.restore();
 }
+

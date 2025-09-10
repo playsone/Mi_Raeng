@@ -2,9 +2,39 @@
   <video #video autoplay playsinline muted></video>
   <canvas #canvas></canvas>
 
+<<<<<<< HEAD
   <div class="hud">
     <div>State: {{ state }}</div>
     <div>Reps: {{ reps }}</div>
     <div *ngIf="warnBack">⚠️ โปรดตั้งหลังให้ตรง</div>
   </div>
+=======
+  <!-- === ส่วนแสดงผลวิดีโอ === -->
+  <main class="video-content-wrapper">
+    <!-- ✨ เพิ่มการแสดง statusMessage ✨ -->
+    <div *ngIf="isLoading || statusMessage" class="loading-overlay">
+      <div *ngIf="isLoading" class="spinner"></div>
+      <p>{{ statusMessage }}</p>
+    </div>
+
+    <!-- 
+      - <video> จะถูกซ่อนไว้ ใช้สำหรับรับภาพจากกล้องเท่านั้น
+      - <canvas> คือสิ่งที่เราจะเห็นจริงๆ ซึ่งจะวาดภาพจาก video และเส้นต่างๆ ทับลงไป
+    -->
+    <video #videoElement class="input_video" style="display: none;"></video>
+    <canvas #canvasElement class="output_canvas"></canvas>
+
+  </main>
+
+  <!-- === ส่วนควบคุม === -->
+  <footer class="controls mt-3">
+    <button class="control-btn" (click)="toggleWebcam()">
+      <span class="material-symbols-outlined">
+        {{ webcamRunning ? 'videocam_off' : 'videocam' }}
+      </span>
+      {{ webcamRunning ? 'ปิดกล้อง' : 'เปิดกล้อง' }}
+    </button>
+  </footer>
+>>>>>>> d2975f62de7990b54de45fed91a05f57c2990a81
 </div>
+

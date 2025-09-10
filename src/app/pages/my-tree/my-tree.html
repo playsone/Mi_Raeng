@@ -39,7 +39,7 @@
   <main class="row flex-grow-1">
     <div class="col-12 text-center tree-container">
       <div class="watering-info">
-        <p>คลิกเพื่อเอาน้ำมารดน้ำ</p>
+        <p>คลิกเพื่อรดน้ำ</p>
         <img [src]="'assets/images/' + wateringCanImage" alt="Watering Can" class="watering-can">
       </div>
       <img *ngIf="treeImageName" [src]="'assets/images/' + treeImageName" alt="Tree" class="tree-logo">
@@ -55,7 +55,7 @@
         </div>
         <span class="progress-text">{{ currentProgress }}/{{ maxProgress }}</span>
       </div>
-      <p class="accumulated-text">จำนวนต้นสะสม {{ accumulatedTrees }} ต้น</p>
+      <p class="accumulated-text">จำนวนต้นไม้สะสม {{ accumulatedTrees }} ต้น</p>
     </div>
   </footer>
 

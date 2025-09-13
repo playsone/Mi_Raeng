@@ -1,11 +1,6 @@
-<!-- 
-  Container หลัก ใช้ Bootstrap จัดการ Layout 
--->
-<div
-  class="login-container container-fluid d-flex flex-column vh-100 p-3 p-md-4"
->
+<div class="login-container container-fluid d-flex flex-column vh-100 p-3 p-md-4">
   <header class="login-header">
-    <button class="back-btn" type="button" onclick="history.back()">
+    <button class="back-btn" type="button" (click)="goBack()">
       <svg
         xmlns="http://www.w3.org/2000/svg"
         viewBox="0 0 24 24"
@@ -25,30 +20,45 @@
     </div>
 
     <form class="login-form" (ngSubmit)="login()">
-  <div class="form-group">
-    <span class="material-symbols-outlined icon-wrapper">call</span>
-    <div class="input-wrapper">
-      <input type="tel" id="phone" name="phone" [(ngModel)]="phoneNumber" placeholder=" " required />
-      <label for="phone">เบอร์โทร</label>
-    </div>
-  </div>
+      <div class="form-group">
+        <span class="material-symbols-outlined icon-wrapper">call</span>
+        <div class="input-wrapper">
+          <input
+            type="tel"
+            id="phone"
+            name="phone"
+            [(ngModel)]="phoneNumber"
+            placeholder=" "
+            required
+            autocomplete="tel"
+          />
+          <label for="phone">เบอร์โทร</label>
+        </div>
+      </div>
 
-  <div class="form-group">
-    <span class="material-symbols-outlined icon-wrapper">lock</span>
-    <div class="input-wrapper">
-       <input
-        [type]="passwordFieldType"
-        id="password"
-        name="password"
-        [(ngModel)]="passwordValue"
-        placeholder=" "
-        required
-      />
-      <label for="password">รหัสผ่าน</label>
-    </div>
-  </div>
+      <div class="form-group">
+        <span class="material-symbols-outlined icon-wrapper">lock</span>
+        <div class="input-wrapper">
+          <input
+            [type]="passwordFieldType"
+            id="password"
+            name="password"
+            [(ngModel)]="passwordValue"
+            placeholder=" "
+            required
+            autocomplete="current-password"
+          />
+          <label for="password">รหัสผ่าน</label>
+          <mat-icon class="toggle-password" >
+            {{ passwordIcon }}
+          </mat-icon>
+        </div>
+      </div>
 
-      <!-- ✨ แก้ไข: เอา (click) ออกจากปุ่ม เพราะ form จะจัดการเอง ✨ -->
+      <p *ngIf="errorMessage" class="error-message">
+        {{ errorMessage }}
+      </p>
+
       <button type="submit" class="submit-btn">เข้าสู่ระบบ</button>
     </form>
   </main>

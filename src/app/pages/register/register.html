@@ -1,94 +1,66 @@
-<!-- 
-  Container หลัก ใช้ Bootstrap จัดการ Layout 
--->
-<div
-  class="register-container container-fluid d-flex flex-column vh-100 p-3 p-md-4"
->
+<div class="register-container container-fluid d-flex flex-column vh-100 p-3 p-md-4">
   <header class="register-header">
-    <button class="back-btn" type="button" onclick="history.back()">
-      <svg
-        xmlns="http://www.w3.org/2000/svg"
-        viewBox="0 0 24 24"
-        fill="currentColor"
-      >
-        <path
-          d="M10.8284 12.0007L15.7782 16.9504L14.364 18.3646L8 12.0007L14.364 5.63672L15.7782 7.05093L10.8284 12.0007Z"
-        ></path>
+    <button class="back-btn" type="button" (click)="goBack()">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+        <path d="M10.8284 12.0007L15.7782 16.9504L14.364 18.3646L8 12.0007L14.364 5.63672L15.7782 7.05093L10.8284 12.0007Z"></path>
       </svg>
     </button>
   </header>
 
   <h1>สมัครสมาชิก</h1>
 
-  <form class="register-form">
+  <form class="register-form" (ngSubmit)="onRegister()">
+    <!-- ชื่อ-นามสกุล -->
     <div class="form-group">
-      <!-- ใช้ Material Symbols แทน emoji -->
       <span class="material-symbols-outlined icon-wrapper">person</span>
       <div class="input-wrapper">
-        <input type="text" id="fullName" placeholder=" " required />
+        <input type="text" id="fullName" name="fullName" [(ngModel)]="registerData.name" placeholder=" " required />
         <label for="fullName">ชื่อ-นามสกุล</label>
       </div>
     </div>
 
+    <!-- เบอร์โทร -->
     <div class="form-group">
       <span class="material-symbols-outlined icon-wrapper">call</span>
       <div class="input-wrapper">
-        <input type="tel" id="phone" placeholder=" " required />
+        <input type="tel" id="phone" name="phone" [(ngModel)]="registerData.phone" placeholder=" " required />
         <label for="phone">เบอร์โทร</label>
       </div>
     </div>
 
+    <!-- รหัสผ่าน -->
     <div class="form-group">
       <span class="material-symbols-outlined icon-wrapper">lock</span>
       <div class="input-wrapper">
-        <!-- [type] จะเปลี่ยนค่าตามตัวแปร passwordFieldType -->
-        <input
-          [type]="passwordFieldType"
-          id="password"
-          placeholder=" "
-          required
-        />
+        <input [type]="passwordFieldType" id="password" name="password" [(ngModel)]="registerData.password" placeholder=" " required />
         <label for="password">รหัสผ่าน</label>
-        <!-- (click) จะเรียกฟังก์ชันสลับการแสดงผล -->
+        <mat-icon class="toggle-password" (click)="togglePasswordVisibility()">{{ passwordIcon }}</mat-icon>
       </div>
     </div>
 
+    <!-- ยืนยันรหัสผ่าน -->
     <div class="form-group">
       <span class="material-symbols-outlined icon-wrapper">lock</span>
       <div class="input-wrapper">
-        <!-- [type] จะเปลี่ยนค่าตามตัวแปร confirmPasswordFieldType -->
-        <input
-          [type]="confirmPasswordFieldType"
-          id="confirmPassword"
-          placeholder=" "
-          required
-        />
+        <input [type]="confirmPasswordFieldType" id="confirmPassword" name="confirmPassword" [(ngModel)]="registerData.confirmPassword" placeholder=" " required />
         <label for="confirmPassword">ยืนยันรหัสผ่าน</label>
-        <!-- (click) จะเรียกฟังก์ชันสลับการแสดงผล -->
+        <mat-icon class="toggle-password" (click)="toggleConfirmPasswordVisibility()">{{ confirmPasswordIcon }}</mat-icon>
       </div>
     </div>
 
-    <!-- Grid สำหรับ อายุ และ เพศ -->
+    <!-- อายุ และ เพศ -->
     <div class="form-row">
       <div class="form-group">
         <span class="material-symbols-outlined icon-wrapper">cake</span>
         <div class="input-wrapper">
-          <input
-            type="number"
-            id="age"
-            min="1"
-            max="120"
-            placeholder=" "
-            required
-          />
+          <input type="number" id="age" name="age" [(ngModel)]="registerData.age" min="1" max="120" placeholder=" " />
           <label for="age">อายุ</label>
         </div>
       </div>
       <div class="form-group">
         <span class="material-symbols-outlined icon-wrapper">wc</span>
         <div class="input-wrapper">
-          <select id="gender" required>
-            <!-- option แรกมีไว้สำหรับ placeholder ของ floating label -->
+          <select id="gender" name="gender" [(ngModel)]="registerData.gender">
             <option value="" disabled selected></option>
             <option value="male">ชาย</option>
             <option value="female">หญิง</option>
@@ -98,7 +70,13 @@
         </div>
       </div>
     </div>
+    
+    <!-- ส่วนแสดงข้อความแจ้งเตือน -->
+    <p *ngIf="errorMessage" class="error-message">{{ errorMessage }}</p>
+    <p *ngIf="successMessage" class="success-message">{{ successMessage }}</p>
 
-    <button type="submit" class="submit-btn">สมัครสมาชิก</button>
+    <button type="submit" class="submit-btn" [disabled]="isLoading">
+      {{ isLoading ? 'กำลังสมัคร...' : 'สมัครสมาชิก' }}
+    </button>
   </form>
 </div>

@@ -1,67 +1,51 @@
-<!-- 
-  Container หลัก ใช้ Bootstrap จัดการ Layout 
-  - vh-100: สูงเต็มหน้าจอ
-  - d-flex flex-column: จัดเรียงเนื้อหาจากบนลงล่าง
--->
-<div class="home-container d-flex flex-column vh-100 p-3 p-md-4">
+<div *ngIf="userProfile; else loadingTemplate" class="home-container d-flex flex-column vh-100 p-3 p-md-4">
 
-  <!-- === ส่วนหัว: แสดงคะแนนและโปรไฟล์ === -->
   <header class="row justify-content-between align-items-center mb-3">
-    <!-- กล่องคะแนนเวลา (ซ้าย) -->
     <div class="col-auto">
       <div class="info-box">
         <img src="assets/images/time.png" alt="Time Icon" class="icon">
-        <span>90</span>
-      </div>
+        <span>{{ userProfile.minute }}</span> </div>
     </div>
     
-    <!-- โปรไฟล์ (กลาง) -->
     <div class="col text-center profile-info">
-      <img src="assets/images/profilefm.png" alt="Profile Picture" class="profile-pic">
-      <span class="profile-name">สมศรี</span>
-    </div>
+      <img [src]="profilePictureUrl" alt="Profile Picture" class="profile-pic"> <span class="profile-name">{{ userProfile.name }}</span> </div>
 
-    <!-- กล่องคะแนนดาว (ขวา) -->
-    <div class="col-auto">
+    <div class="col-auto d-flex align-items-center">
       <div class="info-box">
         <img src="assets/images/star.png" alt="Star Icon" class="icon">
-        <span>550</span>
-      </div>
+        <span>{{ userProfile.score }}</span> </div>
+      <button class="logout-btn" (click)="logout()">
+        <mat-icon>logout</mat-icon>
+      </button>
     </div>
   </header>
 
-  <!-- === ส่วนกลาง: ต้นไม้และเมนู === -->
-  <!-- 
-    - flex-grow-1: ทำให้ส่วนนี้ขยายเต็มพื้นที่ที่เหลือ
-    - d-flex flex-column: จัดเรียงของข้างใน (ต้นไม้, เมนู) จากบนลงล่าง
-    - justify-content-center: จัดให้อยู่กลางแนวตั้ง
-  -->
   <main class="main-content flex-grow-1 d-flex flex-column justify-content-center align-items-center">
-
     <img src="assets/images/treelogo.png" alt="Tree Logo" class="tree-logo mb-4">
-
-    <!-- Grid สำหรับวางเมนู -->
     <div class="menu-grid">
       <button class="menu-item" (click)="goTo('/exercise')">
         <img src="assets/images/exer.png" alt="Exercise Icon">
         <span>ออกกำลังกาย</span>
       </button>
-
       <button class="menu-item" (click)="goTo('/ranking')">
         <img src="assets/images/graph.png" alt="Ranking Icon">
         <span>อันดับ</span>
       </button>
-
       <button class="menu-item" (click)="goTo('/mytree')">
         <img src="assets/images/tree.png" alt="My Tree Icon">
         <span>ต้นไม้ของฉัน</span>
       </button>
-
       <button class="menu-item" (click)="goTo('/profile')">
         <img src="assets/images/proflie.png" alt="Profile Icon">
         <span>ข้อมูลของฉัน</span>
       </button>
     </div>
-
   </main>
+
 </div>
+
+<ng-template #loadingTemplate>
+  <div class="loading-container">
+    <p>Loading profile...</p>
+    </div>
+</ng-template>

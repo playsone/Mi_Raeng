@@ -11,6 +11,9 @@ export interface UserProfile {
   phone: string;
   age: number;
   gender: string;
+  score: number;
+  minute: number;
+  number_tree: number; // <-- เพิ่ม field นี้
 }
 
 // สำหรับแสดงข้อมูลในหน้าจัดอันดับ

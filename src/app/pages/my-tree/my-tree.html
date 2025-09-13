@@ -1,63 +1,58 @@
-<!-- Container หลักที่ครอบทุกอย่างไว้ -->
 <div class="container-fluid page-container d-flex flex-column vh-100 p-3 p-md-4">
-
   <header class="back-header">
-    <button class="back-btn" type="button" onclick="history.back()">
-      <svg
-        xmlns="http://www.w3.org/2000/svg"
-        viewBox="0 0 24 24"
-        fill="currentColor"
-      >
-        <path
-          d="M10.8284 12.0007L15.7782 16.9504L14.364 18.3646L8 12.0007L14.364 5.63672L15.7782 7.05093L10.8284 12.0007Z"
-        ></path>
+    <button class="back-btn" type="button" (click)="goBack()">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+        <path d="M10.8284 12.0007L15.7782 16.9504L14.364 18.3646L8 12.0007L14.364 5.63672L15.7782 7.05093L10.8284 12.0007Z"></path>
       </svg>
     </button>
   </header>
-  <header class="row justify-content-between align-items-center mb-3">
-    <!-- col-auto ทำให้ความกว้างพอดีกับเนื้อหา -->
-    <div class="col-auto">
-      <div class="info-box">
-        <img src="assets/images/time.png" alt="Time Icon" class="icon">
-        <span>{{ timeScore }}</span>
-      </div>
-    </div>
-     <!-- โปรไฟล์ (กลาง) -->
-    <div class="col text-center profile-info">
-      <img src="assets/images/profilefm.png" alt="Profile Picture" class="profile-pic">
-      <span class="profile-name">สมศรี</span>
-    </div>
-    <div class="col-auto">
-      <div class="info-box">
-        <img src="assets/images/star.png" alt="Star Icon" class="icon">
-        <span>{{ starScore }}</span>
-      </div>
-    </div>
-  </header>
 
-  <!-- === ส่วนกลาง: แสดงต้นไม้ (โค้ดเดิม) === -->
-  <main class="row flex-grow-1">
-    <div class="col-12 text-center tree-container">
-      <div class="watering-info">
-        <p>คลิกเพื่อรดน้ำ</p>
-        <img [src]="'assets/images/' + wateringCanImage" alt="Watering Can" class="watering-can">
-      </div>
-      <img *ngIf="treeImageName" [src]="'assets/images/' + treeImageName" alt="Tree" class="tree-logo">
-    </div>
-  </main>
-
-  <!-- === ส่วนท้าย: แสดง Progress (โค้ดเดิม) === -->
-  <footer class="row mt-auto">
-    <div class="col-12 footer-container">
-      <div class="progress-bar-wrapper">
-        <div class="progress-bar-container">
-          <div class="progress-bar-fill" [style.width.%]="progressPercentage"></div>
+  <ng-container *ngIf="!isLoading && userProfile; else loadingTemplate">
+    <header class="row justify-content-between align-items-center mb-3">
+      <div class="col-auto">
+        <div class="info-box">
+          <img src="assets/images/time.png" alt="Time Icon" class="icon">
+          <span>{{ userProfile.minute }}</span>
         </div>
-        <span class="progress-text">{{ currentProgress }}/{{ maxProgress }}</span>
       </div>
-      <p class="accumulated-text">จำนวนต้นไม้สะสม {{ accumulatedTrees }} ต้น</p>
+      <div class="col text-center profile-info">
+        <img src="assets/images/profilefm.png" alt="Profile Picture" class="profile-pic">
+        <span class="profile-name">{{ userProfile.name }}</span>
+      </div>
+      <div class="col-auto">
+        <div class="info-box">
+          <img src="assets/images/star.png" alt="Star Icon" class="icon">
+          <span>{{ userProfile.score }}</span>
+        </div>
+      </div>
+    </header>
+
+    <main class="row flex-grow-1">
+      <div class="col-12 text-center tree-container">
+        <div class="watering-info" (click)="waterTree()" [class.disabled]="userProfile.minute === 0 && userProfile.minute < maxProgress">
+          <p>{{ userProfile.minute >= maxProgress ? 'คลิกเพื่อเก็บต้นไม้!' : 'คลิกเพื่อรดน้ำ' }}</p>
+          <img src="assets/images/water.png" alt="Watering Can" class="watering-can">
+        </div>
+        <img [src]="'assets/images/' + treeImageName" alt="Tree" class="tree-logo">
+      </div>
+    </main>
+
+    <footer class="row mt-auto">
+      <div class="col-12 footer-container">
+        <div class="progress-bar-wrapper">
+          <div class="progress-bar-container">
+            <div class="progress-bar-fill" [style.width.%]="progressPercentage"></div>
+          </div>
+          <span class="progress-text">{{ Math.min(userProfile.minute, maxProgress) }}/{{ maxProgress }}</span>
+        </div>
+        <p class="accumulated-text">จำนวนต้นไม้สะสม {{ userProfile.number_tree }} ต้น</p>
+      </div>
+    </footer>
+  </ng-container>
+
+  <ng-template #loadingTemplate>
+    <div class="loading-container">
+      <p>Loading your tree...</p>
     </div>
-  </footer>
-
+  </ng-template>
 </div>
-

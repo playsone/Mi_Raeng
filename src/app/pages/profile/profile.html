@@ -3,93 +3,93 @@
     <span class="material-symbols-outlined">arrow_back_ios</span>
   </button>
 
-  <div class="content-wrapper">
+  <div *ngIf="userProfile; else loadingTemplate" class="content-wrapper">
     <div class="header">
       <h1>ข้อมูลของฉัน</h1>
+      <p *ngIf="successMessage" class="success-message">{{ successMessage }}</p>
+      <p *ngIf="errorMessage" class="error-message">{{ errorMessage }}</p>
     </div>
 
-    <!-- ============================================= -->
-    <!-- V V V      โหมดแสดงผล (View Mode)      V V V -->
-    <!-- ============================================= -->
     <div *ngIf="!isEditing" class="view-mode">
       <div class="info-group">
-        <!-- ✨ Changed to Material Symbols ✨ -->
         <span class="material-symbols-outlined icon">person</span>
         <div class="text-content">
           <label>ชื่อ-นามสกุล</label>
-          <p>{{ userData.fullName }}</p>
+          <p>{{ userProfile.name }}</p>
         </div>
       </div>
       <div class="info-group">
         <span class="material-symbols-outlined icon">call</span>
         <div class="text-content">
           <label>เบอร์โทร</label>
-          <p>{{ userData.phone }}</p>
+          <p>{{ userProfile.phone }}</p>
         </div>
       </div>
       <div class="info-group">
         <span class="material-symbols-outlined icon">cake</span>
         <div class="text-content">
           <label>อายุ</label>
-          <p>{{ userData.age }} ปี</p>
+          <p>{{ userProfile.age }} ปี</p>
         </div>
       </div>
       <div class="info-group">
         <span class="material-symbols-outlined icon">wc</span>
         <div class="text-content">
           <label>เพศ</label>
-          <p>{{ userData.gender }}</p>
+          <p>{{ userProfile.gender }}</p>
         </div>
       </div>
 
       <div class="button-group">
         <button type="button" class="submit-btn" (click)="toggleEdit()">แก้ไขข้อมูล</button>
-<button type="button" class="logout-btn" (click)="logout()">ออกจากระบบ</button>
+        <button type="button" class="logout-btn" (click)="logout()">ออกจากระบบ</button>
       </div>
     </div>
 
-    <!-- ============================================= -->
-    <!-- V V V       โหมดแก้ไข (Edit Mode)       V V V -->
-    <!-- ============================================= -->
     <form *ngIf="isEditing" (ngSubmit)="saveChanges()">
       <div class="input-group">
         <span class="material-symbols-outlined icon">person</span>
-        <input type="text" placeholder="ชื่อ-นามสกุล" [(ngModel)]="userData.fullName" name="fullName">
+        <input type="text" placeholder="ชื่อ-นามสกุล" [(ngModel)]="editData.name" name="name">
       </div>
       
       <div class="input-group">
         <span class="material-symbols-outlined icon">call</span>
-        <input type="tel" placeholder="เบอร์โทร" [(ngModel)]="userData.phone" name="phone">
+        <input type="tel" placeholder="เบอร์โทร" [(ngModel)]="editData.phone" name="phone">
       </div>
       
       <div class="input-group">
         <span class="material-symbols-outlined icon">lock</span>
-        <input [type]="passwordFieldType" placeholder="รหัสผ่านใหม่ (ถ้าต้องการเปลี่ยน)">
-        <span class="material-symbols-outlined toggle-password" (click)="togglePasswordVisibility()">
-          {{ passwordIcon }}
-        </span>
+        <input [type]="passwordFieldType" placeholder="รหัสผ่านใหม่ (ถ้าต้องการเปลี่ยน)" [(ngModel)]="editData.password" name="password">
+        <span class="material-symbols-outlined toggle-password" (click)="togglePasswordVisibility()">{{ passwordIcon }}</span>
       </div>
       
       <div class="select-group">
         <div>
           <span class="material-symbols-outlined icon">cake</span>
-          <input type="number" placeholder="อายุ" min="1" max="120" [(ngModel)]="userData.age" name="age">
+          <input type="number" placeholder="อายุ" min="1" max="120" [(ngModel)]="editData.age" name="age">
         </div>
         <div>
           <span class="material-symbols-outlined icon">wc</span>
-          <select [(ngModel)]="userData.gender" name="gender">
-            <option>ชาย</option>
-            <option>หญิง</option>
-            <option>อื่นๆ</option>
+          <select [(ngModel)]="editData.gender" name="gender">
+            <option value="ชาย">ชาย</option>
+            <option value="หญิง">หญิง</option>
+            <option value="อื่นๆ">อื่นๆ</option>
           </select>
         </div>
       </div>
       
       <div class="button-group">
-        <button type="submit" class="submit-btn">บันทึก</button>
+        <button type="submit" class="submit-btn" [disabled]="isLoading">
+          {{ isLoading ? 'กำลังบันทึก...' : 'บันทึก' }}
+        </button>
         <button type="button" class="cancel-btn" (click)="toggleEdit()">ยกเลิก</button>
       </div>
     </form>
   </div>
-</div>
 
+  <ng-template #loadingTemplate>
+    <div class="loading-container">
+      <p>Loading profile...</p>
+    </div>
+  </ng-template>
+</div>

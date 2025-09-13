@@ -1,97 +1,65 @@
-<!-- 
-  Container หลัก ใช้ Bootstrap จัดการ Layout 
-  - vh-100: สูงเต็มหน้าจอ
-  - d-flex flex-column: จัดเรียงเนื้อหาจากบนลงล่าง
-  - p-3 p-md-4: กำหนด padding ให้เหมาะสม
--->
 <div class="ranking-container container-fluid d-flex flex-column vh-100 p-3 p-md-4">
-   <header class="back-header">
-    <button class="back-btn" type="button" onclick="history.back()">
-      <svg
-        xmlns="http://www.w3.org/2000/svg"
-        viewBox="0 0 24 24"
-        fill="currentColor"
-      >
-        <path
-          d="M10.8284 12.0007L15.7782 16.9504L14.364 18.3646L8 12.0007L14.364 5.63672L15.7782 7.05093L10.8284 12.0007Z"
-        ></path>
+  <header class="back-header">
+    <button class="back-btn" type="button" (click)="goBack()">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+        <path d="M10.8284 12.0007L15.7782 16.9504L14.364 18.3646L8 12.0007L14.364 5.63672L15.7782 7.05093L10.8284 12.0007Z"></path>
       </svg>
     </button>
   </header>
 
+  <ng-container *ngIf="!isLoading; else loadingTemplate">
 
-  <!-- === ส่วน Podium: แสดง 3 อันดับแรก === -->
-  <div class="podium">
-    <!-- รูปโพเดียมและถ้วยรางวัล -->
-    <img src="assets/images/aword.png" alt="Award Podium" class="podium-image">
-    
-    <!-- วางตำแหน่งผู้ชนะบนโพเดียม -->
-    <div class="place place-2">
-      <span class="name">สมชาย</span>
+    <div class="podium">
+      <img src="assets/images/aword.png" alt="Award Podium" class="podium-image">
+      
+      <div *ngIf="top2" class="place place-2">
+        <span class="name">{{ top2.name }}</span>
+      </div>
+      <div *ngIf="top1" class="place place-1">
+        <span class="name">{{ top1.name }}</span>
+      </div>
+      <div *ngIf="top3" class="place place-3">
+        <span class="name">{{ top3.name }}</span>
+      </div>
     </div>
-    <div class="place place-1">
-      <span class="name">สมศรี</span>
-    </div>
-    <div class="place place-3">
-      <span class="name">อลิซ</span>
-    </div>
-  </div>
 
-  <!-- === ส่วนตาราง: แสดงอันดับทั้งหมด === -->
-  <div class="table-container">
-    <table class="ranking-table">
-      <thead>
-        <tr>
-          <th>อันดับ</th>
-          <th>ชื่อ</th>
-          <th>ต้น</th>
-          <th>คะแนน</th>
-        </tr>
-      </thead>
-      <tbody>
-        <!-- คุณสามารถใช้ *ngFor วนลูปข้อมูลจริงตรงนี้ได้ -->
-        <tr class="highlight"> <!-- แถวของผู้ใช้ปัจจุบัน -->
-          <td><img src="assets/images/num1.png" alt="1st Place"></td>
-          <td>สมศรี</td>
-          <td>5</td>
-          <td>18520</td>
-        </tr>
-        <tr > 
-          <td><img src="assets/images/num2.png" alt="2nd Place"></td>
-          <td>สมชาย</td>
-          <td>5</td>
-          <td>17500</td>
-        </tr>
-        <tr>
-          <td><img src="assets/images/num3.png" alt="3rd Place"></td>
-          <td>อลิซ</td>
-          <td>4</td>
-          <td>15000</td>
-        </tr>
-        <!-- ✨ โครงสร้างใหม่สำหรับอันดับ 4 ลงไป ✨ -->
-        <tr>
-          <td>
-            <div class="rank-icon-container">
-              <img src="assets/images/starrank.png" alt="Rank Star">
-              <span class="rank-number">4</span>
-            </div>
-          </td>
-          <td>แสวง</td>
-          <td>3</td>
-          <td>12000</td>
-        </tr>
-        <tr>
-          <td>
-            <div class="rank-icon-container">
-              <img src="assets/images/starrank.png" alt="Rank Star">
-              <span class="rank-number">5</span>
-            </div>
-          </td>
-          <td>สว่าง</td>
-          <td>2</td>
-          <td>9000</td>
-        </tr>
-      </tbody>
-    </table>
-  </div>
+    <div class="table-container">
+      <table class="ranking-table">
+        <thead>
+          <tr>
+            <th>อันดับ</th>
+            <th>ชื่อ</th>
+            <th>ต้น</th>
+            <th>คะแนน</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let user of leaderboard">
+            <td>
+              <ng-container *ngIf="user.rank <= 3; else otherRanks">
+                <img *ngIf="user.rank === 1" src="assets/images/num1.png" alt="1st Place">
+                <img *ngIf="user.rank === 2" src="assets/images/num2.png" alt="2nd Place">
+                <img *ngIf="user.rank === 3" src="assets/images/num3.png" alt="3rd Place">
+              </ng-container>
+              <ng-template #otherRanks>
+                <div class="rank-icon-container">
+                  <img src="assets/images/starrank.png" alt="Rank Star">
+                  <span class="rank-number">{{ user.rank }}</span>
+                </div>
+              </ng-template>
+            </td>
+            <td>{{ user.name }}</td>
+            <td>{{ user.number_tree }}</td>
+            <td>{{ user.score }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </ng-container>
+
+  <ng-template #loadingTemplate>
+    <div class="loading-container">
+      <p>Loading leaderboard...</p>
+    </div>
+  </ng-template>
 </div>

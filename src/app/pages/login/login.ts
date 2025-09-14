@@ -50,14 +50,20 @@ export class Login {
     };
     
     // เรียกใช้ login method จาก ApiService
-    this.apiService.login(credentials).subscribe({
+   this.apiService.login(credentials).subscribe({
       next: (response) => {
-        // --- สำเร็จ ---
         console.log('Login successful!', response);
-        // เก็บ Token ไว้ใน Local Storage เพื่อใช้ยืนยันตัวตนครั้งต่อไป
+        
+        // เก็บ Token และ Role
         localStorage.setItem('authToken', response.token);
-        // นำทางไปยังหน้า home
-        this.router.navigate(['/home']);
+        localStorage.setItem('userRole', response.role); // ✨ เก็บ Role
+        
+        // ✨ เช็ค Role แล้วเปลี่ยนหน้า
+        if (response.role === 'admin') {
+          this.router.navigate(['/admin/dashboard']); // ไปหน้าแอดมิน
+        } else {
+          this.router.navigate(['/home']); // ไปหน้าผู้ใช้ทั่วไป
+        }
       },
       error: (err) => {
         // --- ไม่สำเร็จ ---

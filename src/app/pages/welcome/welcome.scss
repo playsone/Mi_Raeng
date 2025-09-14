@@ -1,79 +1,123 @@
+/* --- Global Variables and Fonts --- */
+:root {
+  --primary-color: #4b0082;
+  --secondary-color: #27d97b;
+  --bg-start: #d6f2ff;
+  --bg-end: #78d6ff;
+  --font-family: 'Nunito', Arial, sans-serif;
+  
+  /* Responsive sizing variables */
+  --logo-size: 25vw;
+  --text-h1-size: 6vw;
+  --text-p-size: 3.5vw;
+  --button-padding: 4vw;
+  --button-font-size: 4vw;
+  --button-width: 80vw;
+  --button-gap: 3vw;
+}
+
+@import url('https://fonts.googleapis.com/css2?family=Nunito:wght@700;900&display=swap');
+
+/* --- Welcome Container --- */
 .welcome-container {
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
   height: 100vh;
-  background: linear-gradient(to bottom, #d6f2ff, #78d6ff);
-  font-family: Arial, sans-serif;
+  background: linear-gradient(to bottom, var(--bg-start), var(--bg-end));
+  font-family: var(--font-family);
   position: relative;
   overflow: hidden;
+  padding: 20px;
+}
 
-  .logo {
-    width: 250px;
-    height: auto;
-    margin-bottom: 20px;
-    z-index: 2;
+/* --- Logo and Text Content --- */
+.logo {
+  max-width: 250px;
+  width: var(--logo-size);
+  height: auto;
+  margin-bottom: 20px;
+  z-index: 2;
+}
+
+.text-content {
+  text-align: center;
+  color: var(--primary-color);
+  margin-bottom: 40px;
+  z-index: 2;
+  
+  h1 {
+    font-size: clamp(1.8rem, var(--text-h1-size), 2.5rem);
+    font-weight: bold;
+    margin-bottom: 0.5rem;
   }
-
-  .text-content {
-    text-align: center;
-    color: #4b0082;
-    margin-bottom: 40px;
-    z-index: 2;
-
-    h1 {
-      font-size: 2.5em;
-      font-weight: bold;
-    }
-
-    p {
-      font-size: 1.2em;
-    }
+  
+  p {
+    font-size: clamp(1rem, var(--text-p-size), 1.2rem);
   }
+}
 
-  .button-group {
-    display: flex;
-    flex-direction: column;
-    gap: 15px;
-    width: 80%;
-    max-width: 300px;
-    z-index: 2;
-
-    .login-btn,
-    .register-btn {
-      padding: 15px;
-      border-radius: 50px;
-      border: none;
-      font-size: 1.2em;
-      font-weight: bold;
-      cursor: pointer;
-      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-      transition: transform 0.2s, background-color 0.2s;
-    }
-
-    .login-btn {
-      background-color: #27d97b;
-      color: white;
-    }
-
-    .register-btn {
-      background-color: white;
-      color: #27d97b;
-      border: 2px solid #27d97b;
-    }
-
-    .login-btn:hover,
-    .register-btn:hover {
-      transform: translateY(-2px);
-    }
+/* --- Button Group --- */
+.button-group {
+  display: flex;
+  flex-direction: column;
+  gap: var(--button-gap);
+  width: var(--button-width);
+  max-width: 300px;
+  z-index: 2;
+  
+  .login-btn,
+  .register-btn {
+    padding: clamp(12px, var(--button-padding), 18px);
+    border-radius: 50px;
+    border: none;
+    font-size: clamp(1rem, var(--button-font-size), 1.2rem);
+    font-weight: bold;
+    cursor: pointer;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    transition: transform 0.2s, background-color 0.2s;
   }
+  
+  .login-btn {
+    background-color: var(--secondary-color);
+    color: white;
+  }
+  
+  .register-btn {
+    background-color: white;
+    color: var(--secondary-color);
+    border: 2px solid var(--secondary-color);
+  }
+  
+  .login-btn:hover,
+  .register-btn:hover {
+    transform: translateY(-2px);
+  }
+}
 
-  .flowers {
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    width: 100%;
-    z-index: 1;
+/* --- Flowers background --- */
+.flowers {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  z-index: 1;
+}
+
+/* --- Media Queries for larger screens --- */
+@media (min-width: 768px) {
+  .welcome-container {
+    padding: 40px;
+  }
+  
+  :root {
+    --logo-size: 200px;
+    --text-h1-size: 2rem;
+    --text-p-size: 1.2rem;
+    --button-padding: 15px;
+    --button-font-size: 1.2rem;
+    --button-width: 300px;
+    --button-gap: 15px;
   }
 }

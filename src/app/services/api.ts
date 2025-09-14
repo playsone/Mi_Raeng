@@ -53,4 +53,14 @@ export class ApiService {
   addTree(): Observable<any> {
     return this.http.post(`${this.API_ENDPOINT}/profile/tree`, {}); // ไม่ต้องส่ง body
   }
+
+  // --- Admin Routes (ต้องใช้ Token และ Role 'admin') ---
+
+  /**
+   * ดึงข้อมูลสำหรับ Admin Dashboard
+   * @returns Observable with admin data
+   */
+  getAdminDashboardData(): Observable<any> {
+    return this.http.get(`${this.API_ENDPOINT}/admin/dashboard`);
+  }
 }

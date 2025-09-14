@@ -3,6 +3,7 @@ export interface LoginResponse {
   message: string;
   name: string;
   token: string;
+  role: 'member' | 'admin'; // ✨ เพิ่มบรรทัดนี้
 }
 
 // สำหรับแสดงข้อมูลโปรไฟล์

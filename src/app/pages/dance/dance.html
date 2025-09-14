@@ -5,17 +5,21 @@
 
     <div class="hud-overlay">
       <header class="hud-header">
-        <div class="hud-box">ท่าที่ {{ currentStepIndex + 1 }} / {{ routine.length }}</div>
+        <!-- <div class="hud-box">
+          <span class="material-symbols-outlined">timer</span>
+          <span>{{ timer | date:'mm:ss' }}</span>
+        </div> -->
+        <!-- <div class="hud-box">
+          <span class="material-symbols-outlined">star</span>
+          <span>{{ score }}</span>
+        </div> -->
       </header>
       <main class="hud-main">
-        <div *ngIf="!isLoading" class="state-display">
-          <p>{{ routine[currentStepIndex].instructions }}</p>
-          <h2 *ngIf="routine[currentStepIndex].type === 'hold'">
-            {{ progressCounter }} / {{ routine[currentStepIndex].target }} วินาที
-          </h2>
-          <h2 *ngIf="routine[currentStepIndex].type === 'reps'">
-            {{ progressCounter }} / {{ routine[currentStepIndex].target }} ครั้ง
-          </h2>
+        <div *ngIf="!isLoading && isMoving" class="state-display moving">
+          <p>ยอดเยี่ยม ขยับต่อไป!</p>
+        </div>
+        <div *ngIf="!isLoading && !isMoving" class="state-display not-moving">
+          <p>ลองขยับตัวดูสิ!</p>
         </div>
       </main>
       <footer class="hud-footer">
@@ -26,8 +30,23 @@
     <div *ngIf="isLoading" class="loading">
       {{ statusMessage }}
     </div>
-
   </div>
+  <div *ngIf="showPopup" class="popup-overlay">
+
+  <div class="popup-content">
+    <div class="stars">
+      <span>⭐</span>
+      <span>⭐</span>
+      <span>⭐</span>
+    </div>
+    <p class="reward-text">+ {{ workoutMinutes }} นาที</p>
+    <p class="reward-text">+ {{ score | number:'1.0-0' }} คะแนน</p>
+  </div>
+
+  <button class="home-btn" (click)="goHome()">หน้าหลัก</button>
+
+</div>
+
 
   <div class="youtube-container">
     <h2>วิดีโอต้นแบบ</h2>

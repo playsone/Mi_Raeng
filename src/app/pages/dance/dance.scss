@@ -99,3 +99,72 @@ canvas {
     box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
   }
 }
+
+// ✨ --- เพิ่มโค้ดสไตล์สำหรับ HUD Overlay --- ✨
+.hud-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 5; // ให้อยู่เหนือ canvas
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 10px;
+  color: white;
+  font-family: 'Nunito', sans-serif;
+  text-shadow: 1px 1px 3px rgba(0,0,0,0.7);
+  pointer-events: none; // ทำให้คลิกทะลุได้ (ยกเว้นปุ่ม)
+}
+
+.hud-header {
+  display: flex;
+  justify-content: space-between;
+}
+
+.hud-box {
+  background-color: rgba(0, 0, 0, 0.5);
+  padding: 5px 12px;
+  border-radius: 20px;
+  font-size: 1rem;
+  font-weight: bold;
+}
+
+.hud-main {
+  text-align: center;
+}
+
+.state-display {
+  background-color: rgba(0, 0, 0, 0.6);
+  padding: 10px 20px;
+  border-radius: 15px;
+  display: inline-block;
+  p {
+    margin: 0;
+    font-size: 1.5rem;
+    font-weight: 900;
+  }
+  h2 {
+    margin: 5px 0 0;
+    font-size: 1.2rem;
+    font-weight: bold;
+  }
+}
+
+.hud-footer {
+  text-align: center;
+}
+
+.finish-btn {
+  pointer-events: auto; // ทำให้ปุ่มคลิกได้
+  background-color: #ff4d4d;
+  color: white;
+  border: none;
+  padding: 8px 18px;
+  border-radius: 25px;
+  font-size: 1rem;
+  font-weight: bold;
+  cursor: pointer;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.3);
+}

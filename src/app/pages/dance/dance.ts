@@ -1,13 +1,10 @@
+import { Component, ElementRef, NgZone, OnDestroy, ViewChild, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import {
-  AfterViewInit,
-  Component,
-  ElementRef,
-  NgZone,
-  OnDestroy,
-  ViewChild,
-} from '@angular/core';
+import { Router } from '@angular/router';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
+import { ApiService } from '../../services/api';
+import { ROUTINE, ExerciseStep } from './routine';
+import * as visionModule from '@mediapipe/tasks-vision';
 
 @Component({
   selector: 'app-dance',
@@ -16,320 +13,367 @@ import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
   templateUrl: './dance.html',
   styleUrls: ['./dance.scss'],
 })
-export class Dance implements AfterViewInit, OnDestroy {
+export class Dance implements OnDestroy {
+  // --- Services and View Elements ---
+  private zone = inject(NgZone);
+  private router = inject(Router);
+  private apiService = inject(ApiService);
+  private sanitizer = inject(DomSanitizer);
   @ViewChild('video') videoRef!: ElementRef<HTMLVideoElement>;
   @ViewChild('canvas') canvasRef!: ElementRef<HTMLCanvasElement>;
 
-  // --- Properties for MediaPipe ---
+  // --- MediaPipe and Camera State ---
   private landmarker: any;
-  private filesetResolver: any;
-  private rafId = 0;
+  private vision: any;   // 👈 ใช้เก็บ vision module
   private running = false;
-  private lastTs = -1;
+  private rafId = 0;
 
-  // --- Properties for UI & State ---
-  state = 'up';
-  reps = 0;
-  warnBack = false;
+  // --- Exercise Engine State ---
+  routine = ROUTINE;
+  currentStepIndex = 0;
+
+  // UI State
   isLoading = true;
-  webcamRunning = false;
-  statusMessage: string | null = null;
+  statusMessage = 'กำลังโหลดโมเดล AI...';
   safeYouTubeUrl: SafeResourceUrl;
 
-  // --- Properties for Movement Logic ---
-  private kneeEMA = new EMA(0.25);
-  private backEMA = new EMA(0.25);
-  private bottomHold = 0;
-  private downThresh = 150;
-  private bottomThresh = 135;
-  private upThresh = 165;
-  private holdFrames = 3;
-  private backOkThresh = 165;
-  private backBadFrames = 6;
-  private backBadCount = 0;
+  // Progress Trackers
+  progressCounter = 0;
+  holdStartTime = 0;
+  totalWorkoutSeconds = 0;
+  repState = 'neutral';
 
-  constructor(private zone: NgZone, private sanitizer: DomSanitizer) {
-    // **เปลี่ยน ID วิดีโอ YouTube ของคุณที่นี่**
-    const videoUrl = 'https://www.youtube.com/embed/-rUD9jpq8Qo';
-    this.safeYouTubeUrl =
-      this.sanitizer.bypassSecurityTrustResourceUrl(videoUrl);
+  constructor() {
+    const videoUrl = 'https://www.youtube.com/embed/-rUD9jpq8Qo?autoplay=1&mute=1&controls=0&loop=1';
+    this.safeYouTubeUrl = this.sanitizer.bypassSecurityTrustResourceUrl(videoUrl);
+    this.init();
   }
 
-  async ngAfterViewInit() {
+  async init() {
     try {
+      await this.loadPoseLandmarker();
+      this.statusMessage = 'กำลังเปิดกล้อง...';
       await this.initCamera();
-      await this.loadPose();
-      this.running = true;
-      this.webcamRunning = true;
-      this.loop();
-    } catch (error: any) {
-      console.error('Failed to initialize component:', error);
       this.isLoading = false;
-      this.statusMessage =
-        'ไม่สามารถเริ่มกล้องได้ โปรดตรวจสอบว่าคุณได้อนุญาตการเข้าถึงกล้องในเบราว์เซอร์แล้ว';
+      this.running = true;
+      this.loop();
+      this.startTotalTimer();
+    } catch (error) {
+      console.error("Initialization failed:", error);
+      this.statusMessage = 'เกิดข้อผิดพลาดในการเริ่มต้น';
     }
   }
 
   ngOnDestroy() {
     this.running = false;
     cancelAnimationFrame(this.rafId);
-    if (this.videoRef?.nativeElement?.srcObject) {
-      const stream = this.videoRef.nativeElement.srcObject as MediaStream;
-      stream.getTracks().forEach((track) => track.stop());
+    const stream = this.videoRef?.nativeElement?.srcObject as MediaStream;
+    if (stream) {
+      stream.getTracks().forEach(track => track.stop());
     }
   }
 
   private async initCamera() {
-    this.statusMessage = 'กำลังขออนุญาตใช้กล้อง...';
-    const video = this.videoRef.nativeElement;
-    const stream = await navigator.mediaDevices.getUserMedia({
-      video: {
-        facingMode: 'user',
-        width: { ideal: 1280 },
-        height: { ideal: 720 },
-      },
-      audio: false,
-    });
-    video.srcObject = stream;
-    await new Promise((resolve) => {
-      video.onloadedmetadata = () => {
-        video.play();
-        resolve(true);
-      };
-    });
+  const video = this.videoRef.nativeElement;
+  const stream = await navigator.mediaDevices.getUserMedia({
+    video: { facingMode: 'user', width: { ideal: 1280 }, height: { ideal: 720 } },
+    audio: false
+  });
+  video.srcObject = stream;
 
-    const canvas = this.canvasRef.nativeElement;
-    canvas.width = video.videoWidth;
-    canvas.height = video.videoHeight;
-    this.statusMessage = null;
+  await new Promise((resolve) => {
+    video.onloadedmetadata = () => {
+      this.zone.run(() => {
+        this.statusMessage = '';    // 👈 เคลียร์ข้อความ
+        this.isLoading = false;     // 👈 ปิด loading state
+      });
+      resolve(null);
+    };
+  });
+
+  await video.play();
+  const canvas = this.canvasRef.nativeElement;
+  canvas.width = video.videoWidth;
+  canvas.height = video.videoHeight;
+}
+
+
+  private async loadPoseLandmarker() {
+  this.vision = visionModule; // ✅ เก็บไว้ใช้งาน
+
+  const filesetResolver = await this.vision.FilesetResolver.forVisionTasks(
+    // ใช้ path wasm จาก node_modules หรือ CDN ก็ได้
+    'https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.3/wasm'
+  );
+
+  this.landmarker = await this.vision.PoseLandmarker.createFromOptions(filesetResolver, {
+    baseOptions: {
+      modelAssetPath:
+        'https://storage.googleapis.com/mediapipe-models/pose_landmarker/pose_landmarker_full/float16/1/pose_landmarker_full.task',
+    },
+    runningMode: 'VIDEO',
+    numPoses: 1,
+    resultCallback: (results: any) => {
+      this.handleResults(results);
+    }
+  });
+}
+  handleResults(results: any) {
+    throw new Error('Method not implemented.');
   }
 
-  private async loadPose() {
-    this.isLoading = true;
-    this.statusMessage = 'กำลังโหลดโมเดล AI...';
-    // @ts-ignore
-    const vision = await import('https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@latest');
-    this.filesetResolver = await vision.FilesetResolver.forVisionTasks('https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@latest/wasm');
-
-    this.landmarker = await vision.PoseLandmarker.createFromOptions(
-      this.filesetResolver,
-      {
-        baseOptions: {
-          modelAssetPath:
-            'https://storage.googleapis.com/mediapipe-models/pose_landmarker/pose_landmarker_full/float16/latest/pose_landmarker_full.task',
-        },
-        runningMode: 'VIDEO',
-        numPoses: 1,
-        minPoseDetectionConfidence: 0.5,
-        minPosePresenceConfidence: 0.5,
-        minTrackingConfidence: 0.5,
+  private startTotalTimer() {
+    const interval = setInterval(() => {
+      if (!this.running) {
+        clearInterval(interval);
+        return;
       }
-    );
-    this.isLoading = false;
-    this.statusMessage = null;
+      this.totalWorkoutSeconds++;
+    }, 1000);
+  }
+
+  finishExercise() {
+    this.running = false;
+    const minutes = Math.ceil(this.totalWorkoutSeconds / 60);
+    const score = this.calculateScore();
+    this.statusMessage = `เยี่ยมมาก! คุณใช้เวลาไป ${minutes} นาที ได้ ${score} คะแนน`;
+    this.apiService.updateActivity({ minute: minutes, score: score }).subscribe({
+      next: () => {
+        console.log("Activity updated successfully!");
+        setTimeout(() => this.router.navigate(['/home']), 3000);
+      },
+      error: (err) => {
+        console.error("Failed to update activity", err);
+        setTimeout(() => this.router.navigate(['/home']), 3000);
+      }
+    });
+  }
+
+  private calculateScore(): number {
+    const baseScore = (this.currentStepIndex + 1) * 100;
+    const timePenalty = this.totalWorkoutSeconds;
+    return Math.max(0, baseScore - timePenalty);
   }
 
   private loop = () => {
     if (!this.running) return;
     this.rafId = requestAnimationFrame(this.loop);
-    this.zone.runOutsideAngular(() => this.process());
+    this.zone.runOutsideAngular(() => this.processFrame());
   };
 
-  private process() {
-    if (!this.landmarker || !this.videoRef) return;
+  private processFrame() {
+    if (!this.landmarker || !this.videoRef?.nativeElement || this.videoRef.nativeElement.readyState < 2) return;
     const video = this.videoRef.nativeElement;
-    if (video.readyState < 2) return;
-    const now = performance.now();
-    if (this.lastTs === now) return;
-    this.lastTs = now;
-    const res = this.landmarker.detectForVideo(video, now);
+    const results = this.landmarker.detectForVideo(video, performance.now());
     const canvas = this.canvasRef.nativeElement;
     const ctx = canvas.getContext('2d')!;
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
-    if (!res || !res.landmarks || res.landmarks.length === 0) return;
-    const lm = res.landmarks[0];
-    drawSkeleton(ctx, lm);
-    const w = canvas.width,
-      h = canvas.height;
-    const getPx = (i: number) => ({
-      x: lm[i].x * w,
-      y: lm[i].y * h,
-      v: lm[i].visibility ?? 1,
-    });
-    const IDX = {
-      LEFT_SHOULDER: 11,
-      RIGHT_SHOULDER: 12,
-      LEFT_HIP: 23,
-      RIGHT_HIP: 24,
-      LEFT_KNEE: 25,
-      RIGHT_KNEE: 26,
-      LEFT_ANKLE: 27,
-      RIGHT_ANKLE: 28,
+
+    if (results.landmarks && results.landmarks.length > 0) {
+      const lm = results.landmarks[0];
+      if (this.currentStepIndex < this.routine.length) {
+        const currentStep = this.routine[this.currentStepIndex];
+        this.detectPose(currentStep, lm);
+      }
+    }
+  }
+
+  private detectPose(step: ExerciseStep, lm: any[]) {
+    let isPoseCorrect = false;
+    const w = this.canvasRef.nativeElement.width, h = this.canvasRef.nativeElement.height;
+    const getPx = (i: number) => ({ x: lm[i].x * w, y: lm[i].y * h, visibility: lm[i].visibility });
+
+    const p = {
+      leftShoulder: getPx(11), rightShoulder: getPx(12),
+      leftElbow: getPx(13), rightElbow: getPx(14),
+      leftWrist: getPx(15), rightWrist: getPx(16),
+      leftHip: getPx(23), rightHip: getPx(24),
+      leftKnee: getPx(25), rightKnee: getPx(26),
+      leftAnkle: getPx(27), rightAnkle: getPx(28),
+      leftHeel: getPx(29), rightHeel: getPx(30),
+      leftFootIndex: getPx(31), rightFootIndex: getPx(32)
     };
-    const lp = {
-      left_shoulder: getPx(IDX.LEFT_SHOULDER),
-      right_shoulder: getPx(IDX.RIGHT_SHOULDER),
-      left_hip: getPx(IDX.LEFT_HIP),
-      right_hip: getPx(IDX.RIGHT_HIP),
-      left_knee: getPx(IDX.LEFT_KNEE),
-      right_knee: getPx(IDX.RIGHT_KNEE),
-      left_ankle: getPx(IDX.LEFT_ANKLE),
-      right_ankle: getPx(IDX.RIGHT_ANKLE),
-    };
-    const leftKnee = angle3(lp.left_hip, lp.left_knee, lp.left_ankle);
-    const rightKnee = angle3(lp.right_hip, lp.right_knee, lp.right_ankle);
-    const kneeRaw = minIgnoreNone(leftKnee, rightKnee);
-    const leftBack = angle3(lp.left_shoulder, lp.left_hip, lp.left_knee);
-    const rightBack = angle3(lp.right_shoulder, lp.right_hip, lp.right_knee);
-    const backRaw = maxIgnoreNone(leftBack, rightBack);
-    const kneeAngle = this.kneeEMA.update(kneeRaw ?? undefined);
-    const backAngle = this.backEMA.update(backRaw ?? undefined);
-    let nextState = this.state;
-    let nextReps = this.reps;
-    if (kneeAngle != null) {
-      if (this.state === 'up' && kneeAngle < this.downThresh)
-        nextState = 'down';
-      if (this.state === 'down' || this.state === 'bottom') {
-        if (kneeAngle < this.bottomThresh) {
-          this.bottomHold += 1;
-          nextState = 'bottom';
-        } else {
-          this.bottomHold = 0;
+
+    const detectorFunction = (this as any)[step.detector];
+    if (typeof detectorFunction === 'function') {
+      if (step.type === 'hold') {
+        isPoseCorrect = detectorFunction.call(this, p);
+      } else {
+        detectorFunction.call(this, p);
+      }
+    } else {
+      console.warn(`Detector function ${step.detector} not implemented! Skipping.`);
+      this.advanceToNextStep();
+    }
+
+    if (step.type === 'hold') {
+      if (isPoseCorrect) {
+        if (this.holdStartTime === 0) this.holdStartTime = performance.now();
+        const elapsedSeconds = Math.floor((performance.now() - this.holdStartTime) / 1000);
+        this.zone.run(() => this.progressCounter = elapsedSeconds);
+        if (this.progressCounter >= step.target) {
+          this.advanceToNextStep();
         }
-      }
-      if (
-        (this.state === 'down' || this.state === 'bottom') &&
-        kneeAngle > this.upThresh
-      ) {
-        if (this.bottomHold >= this.holdFrames) nextReps += 1;
-        nextState = 'up';
-        this.bottomHold = 0;
+      } else {
+        this.holdStartTime = 0;
+        this.zone.run(() => this.progressCounter = 0);
       }
     }
-    let warn = this.warnBack;
-    if (backAngle != null) {
-      if (backAngle < this.backOkThresh) this.backBadCount += 1;
-      else this.backBadCount = 0;
-      warn = this.backBadCount >= this.backBadFrames;
+  }
+
+  private advanceToNextStep() {
+    this.progressCounter = 0;
+    this.holdStartTime = 0;
+    this.repState = 'neutral';
+    if (this.currentStepIndex < this.routine.length - 1) {
+      this.currentStepIndex++;
+    } else {
+      this.finishExercise();
     }
-    const rows = [
-      `Knee: ${num(kneeAngle)}°`,
-      `Back: ${num(backAngle)}°`,
-      `State: ${nextState}`,
-      `Reps: ${nextReps}`,
-      warn ? `⚠ Back: keep straight` : `Back: OK`,
-    ];
-    drawPanel(ctx, rows);
-    this.zone.run(() => {
-      this.state = nextState;
-      this.reps = nextReps;
-      this.warnBack = warn;
-    });
+    this.zone.run(() => { });
   }
+
+  // --- Detector Functions (เหมือนเดิม) ---
+  private detectBodyStretchUp = (p: any): boolean => {
+    const leftShoulderAngle = angle3(p.leftHip, p.leftShoulder, p.leftElbow);
+    const rightShoulderAngle = angle3(p.rightHip, p.rightShoulder, p.rightElbow);
+    const leftElbowAngle = angle3(p.leftShoulder, p.leftElbow, p.leftWrist);
+    const rightElbowAngle = angle3(p.rightShoulder, p.rightElbow, p.rightWrist);
+    return leftShoulderAngle > 150 && rightShoulderAngle > 150 && leftElbowAngle > 150 && rightElbowAngle > 150;
+  }
+
+  private detectBodyStretchRight = (p: any): boolean => {
+    const isStretchingUp = this.detectBodyStretchUp(p);
+    const leftTorsoAngle = angle3(p.leftKnee, p.leftHip, p.leftShoulder);
+    return isStretchingUp && leftTorsoAngle < 165;
+  }
+
+  private detectBodyStretchLeft = (p: any): boolean => {
+    const isStretchingUp = this.detectBodyStretchUp(p);
+    const rightTorsoAngle = angle3(p.rightKnee, p.rightHip, p.rightShoulder);
+    return isStretchingUp && rightTorsoAngle < 165;
+  }
+  
+  private detectBodyStretchForward = (p: any): boolean => {
+    return this.detectBodyStretchUp(p) && p.leftWrist.y < p.leftShoulder.y && p.rightWrist.y < p.rightShoulder.y;
+  }
+
+  private detectRightLegStretchFront = (p: any): boolean => {
+    const hipAngle = angle3(p.rightShoulder, p.rightHip, p.rightKnee);
+    const kneeAngle = angle3(p.rightHip, p.rightKnee, p.rightAnkle);
+    return hipAngle < 120 && kneeAngle > 160;
+  }
+
+  private detectRightLegStretchSide = (p: any): boolean => {
+    const hipAngle = angle3(p.leftHip, p.rightHip, p.rightKnee);
+    const kneeAngle = angle3(p.rightHip, p.rightKnee, p.rightAnkle);
+    return hipAngle > 150 && kneeAngle > 160;
+  }
+
+  private detectRightLegStretchBack = (p: any): boolean => {
+    const hipAngle = angle3(p.rightShoulder, p.rightHip, p.rightKnee);
+    const kneeAngle = angle3(p.rightHip, p.rightKnee, p.rightAnkle);
+    return hipAngle > 190 && kneeAngle > 160;
+  }
+  
+  private detectLeftLegStretchFront = (p: any): boolean => {
+    const hipAngle = angle3(p.leftShoulder, p.leftHip, p.leftKnee);
+    const kneeAngle = angle3(p.leftHip, p.leftKnee, p.leftAnkle);
+    return hipAngle < 120 && kneeAngle > 160;
+  }
+
+  private detectLeftLegStretchSide = (p: any): boolean => {
+    const hipAngle = angle3(p.rightHip, p.leftHip, p.leftKnee);
+    const kneeAngle = angle3(p.leftHip, p.leftKnee, p.leftAnkle);
+    return hipAngle > 150 && kneeAngle > 160;
+  }
+
+  private detectLeftLegStretchBack = (p: any): boolean => {
+    const hipAngle = angle3(p.leftShoulder, p.leftHip, p.leftKnee);
+    const kneeAngle = angle3(p.leftHip, p.leftKnee, p.leftAnkle);
+    return hipAngle > 190 && kneeAngle > 160;
+  }
+
+  private detectMarchInPlace = (p: any) => {
+    const hipY = (p.leftHip.y + p.rightHip.y) / 2;
+    if (this.repState === 'neutral' && p.leftKnee.y < hipY) this.repState = 'left_up';
+    if (this.repState === 'left_up' && p.rightKnee.y < hipY) {
+      this.repState = 'neutral';
+      this.progressCounter++;
+      this.zone.run(() => {});
+      if (this.progressCounter >= this.routine[this.currentStepIndex].target) this.advanceToNextStep();
+    }
+  }
+  
+  private detectStepTouch = (p: any) => {
+    const ankleDist = Math.abs(p.leftAnkle.x - p.rightAnkle.x);
+    const shoulderDist = Math.abs(p.leftShoulder.x - p.rightShoulder.x);
+    const isWide = ankleDist > shoulderDist * 1.5;
+    const isNarrow = ankleDist < shoulderDist * 0.8;
+    
+    if (this.repState === 'neutral' && isWide) this.repState = 'out';
+    if (this.repState === 'out' && isNarrow) {
+        this.repState = 'neutral';
+        this.progressCounter++;
+        this.zone.run(() => {});
+        if (this.progressCounter >= this.routine[this.currentStepIndex].target) this.advanceToNextStep();
+    }
+  }
+
+  private detectLegCurl = (p: any) => {
+    const leftKneeAngle = angle3(p.leftHip, p.leftKnee, p.leftAnkle);
+    const rightKneeAngle = angle3(p.rightHip, p.rightKnee, p.rightAnkle);
+    const curlThreshold = 70;
+    if (this.repState === 'neutral' && leftKneeAngle < curlThreshold) this.repState = 'left_curled';
+    if (this.repState === 'left_curled' && rightKneeAngle < curlThreshold) {
+      this.repState = 'neutral';
+      this.progressCounter++;
+      this.zone.run(() => {});
+      if (this.progressCounter >= this.routine[this.currentStepIndex].target) this.advanceToNextStep();
+    }
+  }
+  
+  private detectHeelTouch = (p: any) => {
+    const isLeftHeelForward = p.leftHeel.y > p.rightAnkle.y;
+    const isRightHeelForward = p.rightHeel.y > p.leftAnkle.y;
+    if (this.repState === 'neutral' && isLeftHeelForward) this.repState = 'left_touched';
+    if (this.repState === 'left_touched' && isRightHeelForward) {
+      this.repState = 'neutral';
+      this.progressCounter++;
+      this.zone.run(() => {});
+      if (this.progressCounter >= this.routine[this.currentStepIndex].target) this.advanceToNextStep();
+    }
+  }
+
+  private detectSideTap = (p: any) => this.detectStepTouch(p);
+  private detectFrontTap = (p: any) => this.detectHeelTouch(p);
+
+  private detectBackTap = (p: any) => {
+    const isLeftFootBack = p.leftAnkle.y > p.rightAnkle.y;
+    const isRightFootBack = p.rightAnkle.y > p.leftAnkle.y;
+    if (this.repState === 'neutral' && isLeftFootBack) this.repState = 'left_tapped';
+    if (this.repState === 'left_tapped' && isRightFootBack) {
+      this.repState = 'neutral';
+      this.progressCounter++;
+      this.zone.run(() => {});
+      if (this.progressCounter >= this.routine[this.currentStepIndex].target) this.advanceToNextStep();
+    }
+  }
+  
+  private detectTwoStep = (p: any) => this.detectStepTouch(p);
 }
 
-// --- Helper Functions and Classes (วางไว้นอก Class แต่ในไฟล์เดียวกัน) ---
-
-class EMA {
-  private v: number | null = null;
-  constructor(private alpha = 0.2) {}
-  update(x?: number): number | null {
-    if (x == null) return this.v;
-    if (this.v == null) this.v = x;
-    else this.v = this.alpha * x + (1 - this.alpha) * this.v;
-    return this.v;
-  }
-}
-
-function angle3(
-  a?: { x: number; y: number },
-  b?: { x: number; y: number },
-  c?: { x: number; y: number }
-) {
-  if (!a || !b || !c) return null;
+/* --- Helper Functions --- */
+function angle3(a: { x: number, y: number }, b: { x: number, y: number }, c: { x: number, y: number }) {
+  if (!a || !b || !c) return 0;
   const ba = { x: a.x - b.x, y: a.y - b.y };
   const bc = { x: c.x - b.x, y: c.y - b.y };
-  const nba = Math.hypot(ba.x, ba.y);
-  const nbc = Math.hypot(bc.x, bc.y);
-  if (nba === 0 || nbc === 0) return null;
-  let cos = (ba.x * bc.x + ba.y * bc.y) / (nba * nbc);
+  const dotProduct = ba.x * bc.x + ba.y * bc.y;
+  const magnitudeBA = Math.hypot(ba.x, ba.y);
+  const magnitudeBC = Math.hypot(bc.x, bc.y);
+  if (magnitudeBA === 0 || magnitudeBC === 0) return 0;
+  let cos = dotProduct / (magnitudeBA * magnitudeBC);
   cos = Math.max(-1, Math.min(1, cos));
   return (Math.acos(cos) * 180) / Math.PI;
 }
-
-function minIgnoreNone(a: number | null, b: number | null) {
-  if (a == null) return b;
-  if (b == null) return a;
-  return Math.min(a, b);
-}
-
-function maxIgnoreNone(a: number | null, b: number | null) {
-  if (a == null) return b;
-  if (b == null) return a;
-  return Math.max(a, b);
-}
-
-function drawDot(ctx: CanvasRenderingContext2D, x: number, y: number) {
-  ctx.beginPath();
-  ctx.arc(x, y, 4, 0, Math.PI * 2);
-  ctx.fillStyle = 'white';
-  ctx.fill();
-  ctx.closePath();
-}
-
-function drawPanel(ctx: CanvasRenderingContext2D, lines: string[]) {
-  const x = 10,
-    y0 = 26;
-  ctx.save();
-  ctx.font = '16px system-ui, sans-serif';
-  const w = 260,
-    h = 28 * lines.length + 12;
-  ctx.fillStyle = 'rgba(255,255,255,0.9)';
-  ctx.fillRect(x - 6, y0 - 24, w, h);
-  ctx.fillStyle = '#111';
-  lines.forEach((t, i) => ctx.fillText(t, x, y0 + i * 28));
-  ctx.restore();
-}
-
-function num(v: number | null) {
-  return v == null ? '-' : v.toFixed(1);
-}
-
-const SKELETON_PAIRS: [number, number][] = [
-  [11, 13],
-  [13, 15],
-  [12, 14],
-  [14, 16],
-  [11, 12],
-  [11, 23],
-  [12, 24],
-  [23, 24],
-  [23, 25],
-  [25, 27],
-  [24, 26],
-  [26, 28],
-];
-
-function drawSkeleton(
-  ctx: CanvasRenderingContext2D,
-  lm: Array<{ x: number; y: number; visibility?: number }>
-) {
-  ctx.save();
-  ctx.lineWidth = 2;
-  ctx.strokeStyle = 'lime';
-  SKELETON_PAIRS.forEach(([a, b]) => {
-    const pa = lm[a],
-      pb = lm[b];
-    if (!pa || !pb) return;
-    const va = (pa.visibility ?? 1) > 0.3;
-    const vb = (pb.visibility ?? 1) > 0.3;
-    if (!va || !vb) return;
-    ctx.beginPath();
-    ctx.moveTo(pa.x * ctx.canvas.width, pa.y * ctx.canvas.height);
-    ctx.lineTo(pb.x * ctx.canvas.width, pb.y * ctx.canvas.height);
-    ctx.stroke();
-  });
-  ctx.restore();
-}
-

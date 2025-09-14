@@ -2,26 +2,37 @@
   <div class="webcam-container">
     <video #video autoplay playsinline muted></video>
     <canvas #canvas></canvas>
-    <div class="hud">
-      <div>State: {{ state }}</div>
-      <div>Reps: {{ reps }}</div>
-      <div *ngIf="warnBack" class="warning">⚠️ โปรดตั้งหลังให้ตรง</div>
+
+    <div class="hud-overlay">
+      <header class="hud-header">
+        <div class="hud-box">ท่าที่ {{ currentStepIndex + 1 }} / {{ routine.length }}</div>
+      </header>
+      <main class="hud-main">
+        <div *ngIf="!isLoading" class="state-display">
+          <p>{{ routine[currentStepIndex].instructions }}</p>
+          <h2 *ngIf="routine[currentStepIndex].type === 'hold'">
+            {{ progressCounter }} / {{ routine[currentStepIndex].target }} วินาที
+          </h2>
+          <h2 *ngIf="routine[currentStepIndex].type === 'reps'">
+            {{ progressCounter }} / {{ routine[currentStepIndex].target }} ครั้ง
+          </h2>
+        </div>
+      </main>
+      <footer class="hud-footer">
+        <button (click)="finishExercise()" class="finish-btn">จบ</button>
+      </footer>
     </div>
-    <div *ngIf="isLoading || statusMessage" class="status-overlay">
-      <p>{{ statusMessage || "กำลังโหลดโมเดล AI..." }}</p>
+
+    <div *ngIf="isLoading" class="loading">
+      {{ statusMessage }}
     </div>
+
   </div>
 
   <div class="youtube-container">
     <h2>วิดีโอต้นแบบ</h2>
-    <iframe
-      width="100%"
-      height="100%"
-      [src]="safeYouTubeUrl"
-      title="YouTube video player"
-      frameborder="0"
+    <iframe width="100%" height="100%" [src]="safeYouTubeUrl" title="YouTube video player" frameborder="0"
       allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-      allowfullscreen
-    ></iframe>
+      allowfullscreen></iframe>
   </div>
 </div>

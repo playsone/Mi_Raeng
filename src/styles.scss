@@ -1,53 +1,30 @@
-// --- ⚙️ Global Variables & Fonts ---
-// นำเข้าฟอนต์ Nunito ที่ใช้สำหรับทั้งแอป
-@import url('https://fonts.googleapis.com/css2?family=Nunito:wght@700;900&display=swap');
-
-// กำหนด root variables สำหรับสี, ฟอนต์ และระยะห่าง
-:root {
-  --primary-color: #3b5998;
-  --bg-start: #d6f2ff;
-  --bg-end: #78d6ff;
-  --font-main: 'Nunito', sans-serif;
-
-  // ตั้งค่าขนาดเริ่มต้นสำหรับมือถือ
-  --gap-small: 10px;
-  --gap-medium: 20px;
-  --gap-large: 40px;
-  --menu-item-size: 100px;
-  --menu-item-height: 130px;
-}
-
-// Include theming for Angular Material
 @use '@angular/material' as mat;
 
-html {
-  @include mat.theme((
-    color: (
-      primary: mat.$azure-palette,
-      tertiary: mat.$blue-palette,
-    ),
-    typography: Roboto,
-    density: 0,
-  ));
-}
+@include mat.core();
 
+$primary: mat.m2-define-palette(mat.$m2-indigo-palette, A400, A100, A700);
+$accent: mat.m2-define-palette(mat.$m2-pink-palette, A200, A100, A400);
+$warn: mat.m2-define-palette(mat.$m2-red-palette);
+
+$theme: mat.m2-define-light-theme((
+  color: (
+    primary: $primary,
+    accent: $accent,
+    warn: $warn
+  ),
+));
+
+@include mat.all-component-themes($theme);
+
+// --- Global Styles ---
 body {
-  // ตั้งค่า font หลักให้ใช้ Nunito ทั่วทั้งแอป
   font-family: var(--font-main), sans-serif;
-
-  color-scheme: light;
-  background-color: var(--mat-sys-surface);
-  color: var(--mat-sys-on-surface);
-  font: var(--mat-sys-body-medium);
   margin: 0;
+  height: 100%;
 }
 
-/* You can add global styles to this file, and also import other style files */
 
-html, body { height: 100%; }
-
-// --- 🚀 Reusable Classes for Layout ---
-// คลาสเหล่านี้จะใช้ได้กับทุก HTML ในโปรเจกต์
+// --- Layout Utilities ---
 .flex-center {
   display: flex;
   justify-content: center;
@@ -79,8 +56,7 @@ html, body { height: 100%; }
   text-overflow: ellipsis;
 }
 
-// --- 🌐 Media Queries (ปรับขนาด variables) ---
-// ส่วนนี้จะปรับค่า variables ตามขนาดหน้าจอ
+// --- Media Queries ---
 @media (min-width: 481px) {
   :root {
     --menu-item-size: 120px;
@@ -95,6 +71,7 @@ html, body { height: 100%; }
     --menu-item-height: 170px;
   }
 }
+
 @media (min-width: 1200px) {
   :root {
     --menu-item-size: 160px;

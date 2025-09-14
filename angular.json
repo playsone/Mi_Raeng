@@ -23,14 +23,23 @@
             ],
             "tsConfig": "tsconfig.app.json",
             "inlineStyleLanguage": "scss",
-            "assets": ["src/favicon.ico", "src/assets"],
+            "assets": [
+              "src/favicon.ico",
+              "src/assets"
+            ],
             "styles": [
               "node_modules/bootstrap/dist/css/bootstrap.min.css",
               "src/styles.scss"
             ],
             "scripts": [
               "node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"
-            ]
+            ],
+            "stylePreprocessorOptions": {
+              "includePaths": [
+                "src",
+                "node_modules"
+              ]
+            }
           },
           "configurations": {
             "production": {
@@ -51,13 +60,11 @@
                   "maximumWarning": "12kb",
                   "maximumError": "16kb"
                 }
-
               ],
-                        
               "optimization": {
                 "scripts": true,
                 "styles": true,
-                "fonts": { "inline": false }   
+                "fonts": { "inline": false }
               },
               "outputHashing": "all"
             },
@@ -103,7 +110,13 @@
             ],
             "scripts": [
               "node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"
-            ]
+            ],
+            "stylePreprocessorOptions": {
+              "includePaths": [
+                "src",
+                "node_modules"
+              ]
+            }
           }
         }
       }

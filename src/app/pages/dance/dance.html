@@ -1,10 +1,27 @@
-<div class="pose-wrap">
-  <video #video autoplay playsinline muted></video>
-  <canvas #canvas></canvas>
+<div class="page-container">
+  <div class="webcam-container">
+    <video #video autoplay playsinline muted></video>
+    <canvas #canvas></canvas>
+    <div class="hud">
+      <div>State: {{ state }}</div>
+      <div>Reps: {{ reps }}</div>
+      <div *ngIf="warnBack" class="warning">⚠️ โปรดตั้งหลังให้ตรง</div>
+    </div>
+    <div *ngIf="isLoading || statusMessage" class="status-overlay">
+      <p>{{ statusMessage || "กำลังโหลดโมเดล AI..." }}</p>
+    </div>
+  </div>
 
-  <div class="hud">
-    <div>State: {{ state }}</div>
-    <div>Reps: {{ reps }}</div>
-    <div *ngIf="warnBack">⚠️ โปรดตั้งหลังให้ตรง</div>
+  <div class="youtube-container">
+    <h2>วิดีโอต้นแบบ</h2>
+    <iframe
+      width="100%"
+      height="100%"
+      [src]="safeYouTubeUrl"
+      title="YouTube video player"
+      frameborder="0"
+      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+      allowfullscreen
+    ></iframe>
   </div>
 </div>

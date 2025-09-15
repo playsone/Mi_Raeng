@@ -4,5 +4,5 @@ import { Injectable } from '@angular/core';
   providedIn: 'root',
 })
 export class Constants {
-  public readonly API_ENDPOINT: string = 'http://localhost:8080';
+  public readonly API_ENDPOINT: string = 'https://api-meerank.onrender.com';
 }

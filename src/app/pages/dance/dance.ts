@@ -1,7 +1,13 @@
-import { Component, ElementRef, NgZone, OnDestroy, ViewChild, inject } from '@angular/core';
+import {
+  Component,
+  ElementRef,
+  NgZone,
+  OnDestroy,
+  ViewChild,
+  inject,
+} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
-import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { ApiService } from '../../services/api';
 import * as visionModule from '@mediapipe/tasks-vision';
 
@@ -16,9 +22,10 @@ export class Dance implements OnDestroy {
   private zone = inject(NgZone);
   private router = inject(Router);
   private apiService = inject(ApiService);
-  private sanitizer = inject(DomSanitizer);
   @ViewChild('video') videoRef!: ElementRef<HTMLVideoElement>;
   @ViewChild('canvas') canvasRef!: ElementRef<HTMLCanvasElement>;
+
+  videoSourceUrl: string = 'assets/video/Rizz.mp4';
 
   private vision: any;
   private landmarker: any;
@@ -27,34 +34,25 @@ export class Dance implements OnDestroy {
 
   isLoading = true;
   statusMessage = 'กำลังโหลดโมเดล AI...';
-  safeYouTubeUrl: SafeResourceUrl;
 
-  // --- UI ---
-  timer: number = 1* 10; // 12 นาที
+  timer: number = 5 * 60;
   score: number = 0;
   isMoving: boolean = false;
   showPopup = false;
   workoutMinutes = 0;
 
-
-  // --- Movement ---
   private lastLandmarks: any[] | null = null;
-  private movementThreshold = 0.03;  // 1% ของ frame
-  private pointsMultiplier = 2;      // ยิ่งขยับมาก ยิ่งได้คะแนนเยอะ
+  private movementThreshold = 0.07;
+  private pointsMultiplier = 2;
 
-  // --- Standing Box ---
-  private standingBox = {
-    x: this.videoRef?.nativeElement?.videoWidth * 0.15 || 150,
-    y: this.videoRef?.nativeElement?.videoHeight * 0.05 || 50,
-    width: this.videoRef?.nativeElement?.videoWidth * 0.7 || 900,
-    height: this.videoRef?.nativeElement?.videoHeight * 0.9 || 650
-  };
-
-
+  private standingBox: {
+    x: number;
+    y: number;
+    width: number;
+    height: number;
+  } | null = null;
 
   constructor() {
-    const videoUrl = 'https://www.youtube.com/embed/-rUD9jpq8Qo?autoplay=1&mute=1&controls=0&loop=1';
-    this.safeYouTubeUrl = this.sanitizer.bypassSecurityTrustResourceUrl(videoUrl);
     this.init();
   }
 
@@ -68,7 +66,7 @@ export class Dance implements OnDestroy {
       this.loop();
       this.startWorkoutTimer();
     } catch (error) {
-      console.error("Initialization failed:", error);
+      console.error('Initialization failed:', error);
       this.statusMessage = 'เกิดข้อผิดพลาดในการเริ่มต้น';
     }
   }
@@ -77,19 +75,22 @@ export class Dance implements OnDestroy {
     this.running = false;
     cancelAnimationFrame(this.rafId);
     const stream = this.videoRef?.nativeElement?.srcObject as MediaStream;
-    if (stream) stream.getTracks().forEach(track => track.stop());
+    if (stream) stream.getTracks().forEach((track) => track.stop());
   }
 
   goHome() {
     this.router.navigate(['/home']);
   }
 
-
   private async initCamera() {
     const video = this.videoRef.nativeElement;
     const stream = await navigator.mediaDevices.getUserMedia({
-      video: { facingMode: 'user', width: { ideal: 1280 }, height: { ideal: 720 } },
-      audio: false
+      video: {
+        facingMode: 'user',
+        width: { ideal: 360 }, // ✅ ลดความกว้างลง
+        height: { ideal: 480 }, // ✅ ลดความสูงลง
+      },
+      audio: false,
     });
     video.srcObject = stream;
 
@@ -107,6 +108,13 @@ export class Dance implements OnDestroy {
     const canvas = this.canvasRef.nativeElement;
     canvas.width = video.videoWidth;
     canvas.height = video.videoHeight;
+
+    this.standingBox = {
+      x: video.videoWidth * 0.1,
+      y: video.videoHeight * 0.1,
+      width: video.videoWidth * 0.8,
+      height: video.videoHeight * 0.8,
+    };
   }
 
   private async loadPoseLandmarker() {
@@ -115,15 +123,18 @@ export class Dance implements OnDestroy {
       'https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.3/wasm'
     );
 
-    this.landmarker = await this.vision.PoseLandmarker.createFromOptions(filesetResolver, {
-      baseOptions: {
-        modelAssetPath:
-          'https://storage.googleapis.com/mediapipe-models/pose_landmarker/pose_landmarker_full/float16/1/pose_landmarker_full.task',
-      },
-      runningMode: 'VIDEO',
-      numPoses: 1,
-      resultCallback: (results: any) => { }
-    });
+    this.landmarker = await this.vision.PoseLandmarker.createFromOptions(
+      filesetResolver,
+      {
+        baseOptions: {
+          modelAssetPath:
+            'https://storage.googleapis.com/mediapipe-models/pose_landmarker/pose_landmarker_full/float16/1/pose_landmarker_full.task',
+        },
+        runningMode: 'VIDEO',
+        numPoses: 1,
+        resultCallback: (results: any) => {},
+      }
+    );
   }
 
   private startWorkoutTimer() {
@@ -132,9 +143,7 @@ export class Dance implements OnDestroy {
         clearInterval(interval);
         return;
       }
-
       this.timer--;
-
       if (this.timer <= 0) {
         clearInterval(interval);
         this.finishExercise();
@@ -144,15 +153,16 @@ export class Dance implements OnDestroy {
 
   finishExercise() {
     this.running = false;
-    this.workoutMinutes = 12; // หรือใช้ this.timer
-    this.showPopup = true; // แสดงป็อปอัพ
+    this.workoutMinutes = 12;
+    this.showPopup = true;
 
-    this.apiService.updateActivity({ minute: 12, score: this.score }).subscribe({
-      next: () => console.log("Activity updated successfully!"),
-      error: (err) => console.error("Failed to update activity", err)
-    });
+    this.apiService
+      .updateActivity({ minute: 12, score: this.score })
+      .subscribe({
+        next: () => console.log('Activity updated successfully!'),
+        error: (err) => console.error('Failed to update activity', err),
+      });
   }
-
 
   private loop = () => {
     if (!this.running) return;
@@ -161,7 +171,13 @@ export class Dance implements OnDestroy {
   };
 
   private processFrame() {
-    if (!this.landmarker || !this.videoRef?.nativeElement || this.videoRef.nativeElement.readyState < 3) return;
+    if (
+      !this.landmarker ||
+      !this.videoRef?.nativeElement ||
+      this.videoRef.nativeElement.readyState < 3
+    )
+      return;
+
     const video = this.videoRef.nativeElement;
     const results = this.landmarker.detectForVideo(video, performance.now());
     const canvas = this.canvasRef.nativeElement;
@@ -169,39 +185,67 @@ export class Dance implements OnDestroy {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
 
-    // --- วาดกรอบยืน ---
-    ctx.strokeStyle = 'red';
-    ctx.lineWidth = 4;
-    ctx.strokeRect(
-      this.standingBox.x,
-      this.standingBox.y,
-      this.standingBox.width,
-      this.standingBox.height
-    );
-    ctx.fillStyle = 'red';
-    ctx.font = '20px Arial';
-    ctx.fillText('ยืนในกรอบนี้!', this.standingBox.x + 10, this.standingBox.y - 10);
+    // ✅ --- คำนวณขนาด Font และระยะขอบให้เป็นแบบ Responsive ---
+    const margin = canvas.width * 0.04; // ระยะขอบ 4%
+    const mainFontSize = canvas.width * 0.05; // Font หลัก 5%
+    const smallFontSize = canvas.width * 0.04; // Font เล็ก 4%
+
+    if (this.standingBox) {
+      ctx.strokeStyle = 'red';
+      ctx.lineWidth = 4;
+      ctx.strokeRect(
+        this.standingBox.x,
+        this.standingBox.y,
+        this.standingBox.width,
+        this.standingBox.height
+      );
+      ctx.fillStyle = 'red';
+      // ✅ ใช้ขนาด font ที่คำนวณไว้
+      ctx.font = `${smallFontSize}px Kanit, Arial`;
+      ctx.fillText(
+        'ยืนในกรอบนี้!',
+        this.standingBox.x + 10,
+        this.standingBox.y - 10
+      );
+    }
 
     if (results.landmarks && results.landmarks.length > 0) {
       const currentLandmarks = results.landmarks[0];
       this.detectMovement(currentLandmarks, ctx);
       this.lastLandmarks = currentLandmarks;
 
+      // ✅ --- ตั้งค่าการจัดวางและวาดคะแนน ---
+      ctx.textAlign = 'right';
+      ctx.textBaseline = 'top';
       ctx.fillStyle = 'yellow';
-      ctx.font = '28px Arial';
-      ctx.fillText(`Score: ${Math.floor(this.score)}`, 20, 40);
+      ctx.font = `${mainFontSize}px Kanit, Arial`;
+      ctx.fillText(
+        `Score: ${Math.floor(this.score)}`,
+        canvas.width - margin, // ✅ ใช้ระยะขอบที่คำนวณไว้
+        margin
+      );
     }
 
-    // วาดเวลาที่เหลือ
-    ctx.fillStyle = 'lime'; // สีเขียวสด
-    ctx.font = '28px Arial';
+    // ✅ --- วาดเวลา ---
+    ctx.textAlign = 'right';
+    ctx.textBaseline = 'top';
+    ctx.fillStyle = 'lime';
+    ctx.font = `${mainFontSize}px Kanit, Arial`;
     const minutes = Math.floor(this.timer / 60);
     const seconds = this.timer % 60;
-    ctx.fillText(`Time: ${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`, 20, 80);
-
+    ctx.fillText(
+      `Time: ${minutes.toString().padStart(2, '0')}:${seconds
+        .toString()
+        .padStart(2, '0')}`,
+      canvas.width - margin, // ✅ ใช้ระยะขอบที่คำนวณไว้
+      margin + mainFontSize * 1.2 // ✅ จัดตำแหน่งให้อยู่ใต้คะแนน
+    );
   }
 
-  private detectMovement(currentLandmarks: any[], ctx: CanvasRenderingContext2D) {
+  private detectMovement(
+    currentLandmarks: any[],
+    ctx: CanvasRenderingContext2D
+  ) {
     if (!this.lastLandmarks) {
       this.isMoving = false;
       return;
@@ -216,6 +260,7 @@ export class Dance implements OnDestroy {
         const px = point.x * this.videoRef.nativeElement.videoWidth;
         const py = point.y * this.videoRef.nativeElement.videoHeight;
         if (
+          this.standingBox &&
           px >= this.standingBox.x &&
           px <= this.standingBox.x + this.standingBox.width &&
           py >= this.standingBox.y &&
@@ -229,9 +274,16 @@ export class Dance implements OnDestroy {
 
     if (!insideBox) {
       this.isMoving = false;
+      // ✅ ทำให้ข้อความแจ้งเตือน Responsive ด้วย
+      const smallFontSize = ctx.canvas.width * 0.04;
       ctx.fillStyle = 'orange';
-      ctx.font = '24px Arial';
-      ctx.fillText('อยู่ในกรอบเพื่อให้คะแนน', 50, 60);
+      ctx.font = `${smallFontSize}px Kanit, Arial`;
+      ctx.textAlign = 'center';
+      ctx.fillText(
+        'อยู่ในกรอบเพื่อให้คะแนน',
+        ctx.canvas.width / 2, // จัดกลางจอ
+        ctx.canvas.height * 0.2 // ตำแหน่ง Y
+      );
       return;
     }
 

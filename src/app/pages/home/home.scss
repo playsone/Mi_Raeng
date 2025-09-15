@@ -1,109 +1,140 @@
 // นำเข้าฟอนต์ 'Nunito' จาก Google Fonts
 @import url('https://fonts.googleapis.com/css2?family=Nunito:wght@700;900&display=swap');
 
-// --- ⚙️ ตัวแปรหลัก ---
+/* --- ⚙️ ตัวแปรหลักและสไตล์หลักของ Component --- */
 :host {
-  --primary-color: #3b5998;
-  --bg-start: #d6f2ff;
-  --bg-end: #78d6ff;
-  --font-main: 'Nunito', sans-serif;
+    /* Global Variables */
+    --primary-color: #3b5998;
+    --bg-start: #d6f2ff;
+    --bg-end: #78d6ff;
+    --font-main: 'Nunito', sans-serif;
+    --menu-icon-size: clamp(80px, 15vw, 150px);
+    --grid-gap: clamp(20px, 5vw, 50px);
+
+    /* Core Component Styles */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    min-height: 100vh;
+    background: linear-gradient(to bottom, var(--bg-start), var(--bg-end));
+    font-family: var(--font-main);
+    color: var(--primary-color);
+    padding: clamp(20px, 5%, 50px);
+    box-sizing: border-box;
+    width: 100%;
+    overflow-y: auto; /* Allow vertical scrolling if content is too long */
 }
 
-// --- 🎨 สไตล์หลักของ Component ---
-:host {
-  display: block; 
-  min-height: 100vh; 
-  background: linear-gradient(to bottom, var(--bg-start), var(--bg-end)); 
-  font-family: var(--font-main); 
-  color: var(--primary-color); 
+/* --- Container เพื่อจัดเนื้อหาทั้งหมดให้อยู่ตรงกลาง --- */
+.container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    max-width: 800px;
 }
 
-// --- 🌟 ส่วนหัว (Header) ---
+/* --- 🌟 ส่วนหัว (Header) --- */
 .info-box {
-  display: flex;
-  align-items: center;
-  background-color: rgba(255, 255, 255, 0.8);
-  border-radius: 50px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  font-weight: bold;
-  font-size: clamp(1rem, 0.4rem + 2.8vw, 1.5rem);
-  padding: clamp(6px, 0.5vh + 1vw, 10px) clamp(12px, 1rem + 2vw, 20px);
+    display: flex;
+    align-items: center;
+    background-color: rgba(255, 255, 255, 0.8);
+    border-radius: 50px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    font-weight: bold;
+    font-size: clamp(1rem, 0.4rem + 2.8vw, 1.5rem);
+    padding: clamp(6px, 0.5vh + 1vw, 10px) clamp(12px, 1rem + 2vw, 20px);
+    margin-bottom: clamp(20px, 4vw, 40px);
+    width: 100%;
+}
 
-  .icon {
+.info-box .icon {
     width: clamp(22px, 1rem + 3vw, 32px);
     height: clamp(22px, 1rem + 3vw, 32px);
     margin-right: clamp(8px, 0.5rem + 1vw, 12px);
-  }
 }
 
 .profile-info {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  
-  .profile-pic {
-    width: clamp(50px, 5rem + 8vw, 80px);
-    height: clamp(50px, 5rem + 8vw, 80px);
-    border-radius: 50%;
-  }
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: clamp(20px, 5vw, 40px);
+    text-align: center;
+}
 
-  .profile-name {
+.profile-info .profile-pic {
+    width: clamp(50px, 15vw, 80px);
+    height: clamp(50px, 15vw, 80px);
+    border-radius: 50%;
+    margin-bottom: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.profile-info .profile-name {
     font-size: clamp(1rem, 0.5rem + 2.5vw, 1.5rem);
     font-weight: 900;
-  }
 }
 
-// --- 🌳 ส่วนกลาง (Main Content) ---
+/* --- 🌳 ส่วนกลาง (Main Content) --- */
 .tree-logo {
-  min-height: 20vh; /* เล็กสุดเวลาหน้าจอแคบ */
-  max-height: clamp(40vh, 20vh + 40vw, 90vh); /* ใหญ่สุดเต็มเกือบจอ */
-  width: auto;
+    width: clamp(200px, 50vw, 400px);
+    height: auto;
+    object-fit: contain;
+    margin: auto 0;
 }
 
-// --- 📱 Grid เมนูหลัก ---
+/* --- 📱 Grid เมนูหลัก --- */
 .menu-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
-  // ✨ 2. เพิ่มระยะห่างสูงสุดระหว่างเมนูสำหรับจอใหญ่ (จาก 25px เป็น 40px)
-  gap: clamp(30px, 1rem + 2vw, 90px);
-  width: 100%;
-  max-width: 600px;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--grid-gap);
+    width: 100%;
+    margin-top: clamp(20px, 5vw, 50px);
+    margin-bottom: clamp(20px, 5vw, 50px);
 }
 
+/* --- Menu Item Styles --- */
 .menu-item {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  
-  background-color: rgba(255, 255, 255, 0); // ทำให้พื้นหลังโปร่งใส
-  border-radius: 20px;
-  padding: clamp(15px, 1rem + 2vh, 25px);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background-color: rgba(255, 255, 255, 0.5);
+    border-radius: 20px;
+    padding: clamp(15px, 1rem + 2vh, 25px);
+    cursor: pointer;
+    text-decoration: none;
+    color: var(--primary-color);
+    border: none;
+    transition: transform 0.2s ease-in-out, box-shadow 0.2s;
+    font-weight: 700;
+    text-align: center;
+    font-size: clamp(1rem, 1.5rem + 1.5vw, 2rem);
+    line-height: 1.4;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+}
 
-  
-  cursor: pointer;
-  text-decoration: none;
-  color: var(--primary-color);
-  border: none;
-  transition: transform 0.2s ease-in-out;
-  font-weight: 700;
-  text-align: center;
-  font-size: clamp(1rem, 1.5rem + 1.5vw, 2rem);
-
-line-height: 1.4;
-white-space: nowrap;
-  overflow: visible;
-text-overflow: ellipsis;
-
-  img {
-    // ขนาดไอคอนในปุ่ม
-    width: clamp(150px, 3rem + 5vw, 220px);
+.menu-item img {
+    width: var(--menu-icon-size);
     height: auto;
     margin-bottom: 10px;
-  }
-
-  &:hover {
-    transform: translateY(-5px);
-  }
 }
 
+.menu-item:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+}
+
+/* --- Media Queries for Larger Screens --- */
+@media (min-width: 576px) {
+    .menu-grid {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
+
+@media (min-width: 992px) {
+    .menu-grid {
+        grid-template-columns: repeat(4, 1fr);
+    }
+}

@@ -6,7 +6,7 @@ import { RouterModule } from '@angular/router';
   selector: 'app-welcome',
   imports: [CommonModule, RouterModule],
   templateUrl: './welcome.html',
-  styleUrl: './welcome.scss'
+  styleUrls: ['./welcome.scss']
 })
 export class Welcome {
 

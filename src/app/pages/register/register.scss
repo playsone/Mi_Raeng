@@ -1,52 +1,71 @@
 // นำเข้าฟอนต์ 'Nunito' จาก Google Fonts
-@import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;700;900&display=swap');
+@import url('https://fonts.com/css2?family=Nunito:wght@400;700;900&display=swap');
 
 // --- ⚙️ ตัวแปรหลัก ---
 :host {
-  --primary-color: #4a5a8a;
-  --bg-start: #e9f7ff;
-  --bg-end: #b3e0ff;
+  --primary-color: #4B0082; /* Deep purple for titles/primary text */
+  --secondary-color: #27d97b; /* Vibrant green for buttons/accents */
+  --text-color-dark: #333; /* Darker text for input labels/placeholders */
+  --bg-start: #a4e5f7; /* Top blue from the image gradient */
+  --bg-end: #dcf0fb;   /* Bottom blue from the image gradient */
   --font-main: 'Nunito', sans-serif;
-  --btn-green: #27d97b;
-  --btn-green-shadow: #1db968;
-  --input-border: #d0e1ec;
-  --input-border-focus: var(--btn-green);
+
+  /* Input specific variables */
+  --input-bg: white;
+  --input-border-radius: 40px; /* Rounded corners for inputs */
+  --input-shadow: 0 5px 10px rgba(0, 0, 0, 0.08); /* Subtle shadow for inputs */
+  --input-height: clamp(50px, 12vw, 60px); /* Responsive height for inputs */
+
+  /* Button specific variables */
+  --btn-padding: clamp(15px, 2vh, 20px);
+  --btn-font-size: clamp(1.2rem, 0.8rem + 2vw, 1.5rem);
+  --btn-shadow: 0 5px 0 #1db968; /* Darker green for button shadow */
 }
 
 // --- 🎨 สไตล์หลักของ Component ---
 .register-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
   font-family: var(--font-main);
   background: linear-gradient(to bottom, var(--bg-start), var(--bg-end));
   color: var(--primary-color);
-  justify-content: flex-start; // จัดให้อยู่ข้างบน
-  padding-top: clamp(1rem, 5vh, 2rem); // เพิ่ม padding ด้านบน
+  min-height: 100vh; /* Ensure it takes full viewport height */
+  padding: clamp(20px, 5vh, 40px) clamp(20px, 5vw, 40px); /* Responsive padding */
+  box-sizing: border-box; /* Include padding in element's total width and height */
+  overflow: auto; /* Allow scrolling if content overflows */
 }
 
 // --- 🌟 ส่วนหัวและปุ่มย้อนกลับ ---
 .register-header {
   position: relative;
   width: 100%;
-  height: clamp(40px, 3rem + 2vw, 50px);
-   margin-bottom: clamp(1rem, 5vh, 2rem);
+  max-width: 500px; /* Limit header width */
+  height: clamp(40px, 10vw, 60px); /* Responsive header height */
+  margin-bottom: clamp(20px, 5vh, 40px); /* Spacing below header */
+  display: flex;
+  align-items: center;
+  justify-content: center; /* Center the title horizontally */
+}
 
-}
-h1 {
+.register-header h1 {
   text-align: center;
-  font-size: clamp(2rem, 1rem + 4vw, 3rem);
+  font-size: clamp(1.8rem, 5vw, 2.5rem); /* Responsive title font size */
   font-weight: 900;
-  
-  margin-bottom: clamp(1rem, 5vh, 2rem);
+  color: var(--primary-color);
+  margin: 0; /* Remove default margin */
 }
+
 .back-btn {
   position: absolute;
   top: 50%;
   left: 0;
   transform: translateY(-50%);
-  background-color: var(--btn-green);
+  background-color: var(--secondary-color);
   border: none;
   border-radius: 50%;
-  width: clamp(40px, 3rem + 2vw, 50px);
-  height: clamp(40px, 3rem + 2vw, 50px);
+  width: clamp(45px, 12vw, 55px); /* Slightly larger back button */
+  height: clamp(45px, 12vw, 55px);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -54,15 +73,17 @@ h1 {
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
   transition: transform 0.2s;
   color: white;
-  svg { width: 60%; height: 60%; }
-  &:hover { transform: translateY(-2px) scale(1.05); }
+  z-index: 11; /* Ensure button is above other elements */
 }
+.back-btn svg { width: 50%; height: 50%; } /* Adjusted SVG size */
+.back-btn:hover { transform: translateY(-2px) scale(1.05); }
+
 
 // --- 📝 ฟอร์ม ---
 .register-form {
   display: flex;
   flex-direction: column;
-  gap: clamp(15px, 2vh, 25px);
+  gap: clamp(15px, 3vh, 25px); /* Responsive gap between form groups */
   width: 100%;
   max-width: 500px;
   margin: 0 auto;
@@ -71,123 +92,154 @@ h1 {
 .form-group {
   display: flex;
   align-items: center;
-  gap: 15px;
+  background-color: var(--input-bg);
+  border-radius: var(--input-border-radius);
+  box-shadow: var(--input-shadow);
+  height: var(--input-height);
+  padding: 0 clamp(15px, 4vw, 25px); /* Responsive horizontal padding */
+  gap: 15px; /* Gap between icon and input */
+  position: relative; /* For label positioning */
 }
 
 // ✨ ปรับสไตล์สำหรับ Material Symbols ✨
 .icon-wrapper {
-  font-size: clamp(1.8rem, 1rem + 3vw, 2.5rem);
-  color: #b0c4de;
+  font-size: clamp(1.8rem, 5vw, 2.2rem); /* Responsive icon size */
+  color: var(--primary-color); /* Use primary color for icons */
+  opacity: 0.7;
   user-select: none;
 }
 
 .input-wrapper {
-  position: relative;
   flex-grow: 1;
+  height: 100%;
+  display: flex;
+  align-items: center; /* Vertically center input/select */
+  position: relative; /* For label and toggle-password positioning */
+}
 
-  label {
-    position: absolute;
-    top: 50%;
-    left: 0;
-    transform: translateY(-50%);
-    font-size: clamp(1rem, 0.8rem + 1vw, 1.2rem);
-    color: var(--primary-color);
-    opacity: 0.7;
-    transition: all 0.2s ease;
-    pointer-events: none; 
-  }
+.input-wrapper label {
+  position: absolute;
+  top: 50%; /* Center vertically by default */
+  left: 0;
+  transform: translateY(-50%);
+  font-size: clamp(0.9rem, 2.5vw, 1.1rem); /* Responsive label font size */
+  color: var(--text-color-dark);
+  opacity: 0.7;
+  transition: all 0.2s ease;
+  pointer-events: none;
+  background-color: transparent; /* Ensure label background is transparent */
+  padding: 0 5px; /* Padding for when it floats up */
+  z-index: 1; /* Ensure label is above input when floating */
+}
 
-  input, select {
-    width: 100%;
-    border: none;
-    border-bottom: 2px solid var(--input-border);
-    background: none;
-    outline: none;
-    font-size: clamp(1rem, 0.8rem + 1vw, 1.2rem);
-    font-family: var(--font-main);
-    color: var(--primary-color);
-    padding: 10px 0;
-    height: 50px;
-  }
-  
-  input:focus + label,
-  input:not(:placeholder-shown) + label,
-  select:focus + label,
-  select:valid + label {
-    top: -5px;
-    font-size: 0.8rem;
-    color: var(--input-border-focus);
-  }
+.input-wrapper input,
+.input-wrapper select {
+  width: 100%;
+  height: 100%; /* Fill parent height */
+  border: none;
+  background: none;
+  outline: none;
+  font-size: clamp(1rem, 3vw, 1.2rem); /* Responsive input font size */
+  font-family: var(--font-main);
+  color: var(--primary-color);
+  padding: 0; /* Remove default padding */
+  text-indent: 0; /* Reset text indent */
+  position: relative; /* Needed for z-index */
+  z-index: 2; /* Ensure input is above label when typing */
+}
 
-  input:focus, select:focus {
-    border-bottom-color: var(--input-border-focus);
-  }
+/* Float label when input is focused or has content */
+.input-wrapper input:focus + label,
+.input-wrapper input:not(:placeholder-shown) + label,
+.input-wrapper select:focus + label,
+.input-wrapper select:valid + label {
+  top: 0; /* Float to the top */
+  transform: translateY(-50%); /* Adjust for smaller text */
+  font-size: clamp(0.7rem, 2vw, 0.9rem); /* Smaller font when floated */
+  color: var(--secondary-color); /* Highlight color when active */
+  opacity: 1;
+  background-color: var(--input-bg); /* Match input background */
+  padding: 0 8px; /* Give it some breathing room */
+}
 
-  // ✨ จัดตำแหน่งไอคอนดวงตา ✨
-  .toggle-password {
-    position: absolute;
-    top: 50%;
-    right: 0;
-    transform: translateY(-50%);
-    cursor: pointer;
-    font-size: clamp(1.5rem, 1rem + 2vw, 1.8rem);
-    color: #b0c4de;
-    transition: color 0.2s;
-    user-select: none;
-    &:hover {
-      color: var(--primary-color);
-    }
-  }
+/* Adjust input padding when label is floated to prevent overlap */
+.input-wrapper input:focus,
+.input-wrapper input:not(:placeholder-shown),
+.input-wrapper select:focus,
+.input-wrapper select:valid {
+    padding-top: 10px; /* Make space for the floating label */
+}
 
-  // กันที่ให้ไอคอนดวงตา
-  input#password, input#confirmPassword {
-    padding-right: 40px;
-  }
+// ✨ จัดตำแหน่งไอคอนดวงตา (Password Toggle) ✨
+.toggle-password {
+  position: absolute;
+  top: 50%;
+  right: 0;
+  transform: translateY(-50%);
+  cursor: pointer;
+  font-size: clamp(1.5rem, 4vw, 1.8rem);
+  color: var(--primary-color); /* Use primary color for toggle icon */
+  opacity: 0.7;
+  transition: color 0.2s;
+  user-select: none;
+  z-index: 3; /* Ensure it's clickable */
+  padding: 5px; /* Make it easier to click */
+}
+.toggle-password:hover { color: var(--secondary-color); } /* Highlight on hover */
+
+// กันที่ให้ไอคอนดวงตา
+.input-wrapper input[type="password"] {
+  padding-right: clamp(30px, 8vw, 40px); /* Space for the eye icon */
 }
 
 // จัดการลูกศรของ Select box
 .input-wrapper select {
-  appearance: none;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%234a5a8a'%3E%3Cpath d='M12 16L6 10H18L12 16Z'%3E%3C/path%3E%3C/svg%3E");
+  appearance: none; /* Remove default arrow */
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%234B0082'%3E%3Cpath d='M12 16L6 10H18L12 16Z'%3E%3C/path%3E%3C/svg%3E");
   background-repeat: no-repeat;
-  background-position: right 0.5rem center;
-  background-size: 1.5em;
-  padding-right: 2.5rem;
+  background-position: right clamp(10px, 3vw, 15px) center; /* Position custom arrow */
+  background-size: clamp(1.2em, 4vw, 1.5em); /* Size of custom arrow */
+  padding-right: clamp(30px, 8vw, 40px); /* Space for the custom arrow */
 }
 
 
 .form-row {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: clamp(15px, 4vw, 25px);
+  gap: clamp(15px, 4vw, 25px); /* Responsive gap between columns */
+  width: 100%; /* Ensure row takes full width */
 }
 
 // --- 🚀 ปุ่มสมัครสมาชิก ---
 .submit-btn {
-  background-color: var(--btn-green);
+  background-color: var(--secondary-color);
   color: white;
   border: none;
   border-radius: 50px;
-  padding: clamp(15px, 2vh, 20px);
-  font-size: clamp(1.2rem, 0.8rem + 2vw, 1.5rem);
+  padding: var(--btn-padding);
+  font-size: var(--btn-font-size);
   font-weight: 900;
   cursor: pointer;
-  box-shadow: 0 5px 0 var(--btn-green-shadow);
+  box-shadow: var(--btn-shadow);
   transition: all 0.1s ease-in-out;
-  margin-top: 1rem;
-
-  &:active {
-    transform: translateY(3px);
-    box-shadow: 0 2px 0 var(--btn-green-shadow);
-  }
+  margin-top: clamp(20px, 5vh, 30px); /* Responsive top margin */
+  width: 100%; /* Ensure button takes full width */
+  max-width: 500px; /* Max width for button */
 }
 
+.submit-btn:active {
+  transform: translateY(3px);
+  box-shadow: 0 2px 0 #1db968; /* Adjust shadow on active state */
+}
+
+/* Error Message (if you need it) */
 .error-message {
-  color: #d32f2f; // สีแดงสำหรับ Error
+  color: #d32f2f;
   background-color: rgba(255, 235, 238, 0.8);
   padding: 10px;
   border-radius: 8px;
   font-weight: bold;
-  margin-top: 0;
-  margin-bottom: 0.5rem;
+  margin-top: 10px;
+  margin-bottom: 5px;
+  text-align: center;
 }

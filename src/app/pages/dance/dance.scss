@@ -17,7 +17,7 @@ canvas {
   background: rgba(255,255,255,0.85);
   border-radius: 12px;
   font-weight: 700;
-  font-size: 1.2rem;
+  font-size: 5rem;
 }:host {
   display: block;
   background-color: #f0f2f5;
@@ -38,7 +38,8 @@ canvas {
   position: relative;
   width: 100%;
   max-width: 960px;
-  aspect-ratio: 16 / 9;
+
+  height: 60vh; /* หรือใช้ vh เช่น 60vh */
 
   border-radius: 12px;
   overflow: hidden;

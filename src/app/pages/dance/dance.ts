@@ -30,27 +30,19 @@ export class Dance implements OnDestroy {
   safeYouTubeUrl: SafeResourceUrl;
 
   // --- UI ---
-  timer: number = 1* 10; // 12 นาที
+  timer: number = 5 * 60; // 5 นาที (แก้ได้)
   score: number = 0;
   isMoving: boolean = false;
   showPopup = false;
   workoutMinutes = 0;
 
-
   // --- Movement ---
   private lastLandmarks: any[] | null = null;
-  private movementThreshold = 0.03;  // 1% ของ frame
-  private pointsMultiplier = 2;      // ยิ่งขยับมาก ยิ่งได้คะแนนเยอะ
+  private movementThreshold = 0.07;  // ความไวต่อการขยับ
+  private pointsMultiplier = 2;
 
   // --- Standing Box ---
-  private standingBox = {
-    x: this.videoRef?.nativeElement?.videoWidth * 0.15 || 150,
-    y: this.videoRef?.nativeElement?.videoHeight * 0.05 || 50,
-    width: this.videoRef?.nativeElement?.videoWidth * 0.7 || 900,
-    height: this.videoRef?.nativeElement?.videoHeight * 0.9 || 650
-  };
-
-
+  private standingBox: { x: number; y: number; width: number; height: number } | null = null;
 
   constructor() {
     const videoUrl = 'https://www.youtube.com/embed/-rUD9jpq8Qo?autoplay=1&mute=1&controls=0&loop=1';
@@ -84,11 +76,10 @@ export class Dance implements OnDestroy {
     this.router.navigate(['/home']);
   }
 
-
   private async initCamera() {
     const video = this.videoRef.nativeElement;
     const stream = await navigator.mediaDevices.getUserMedia({
-      video: { facingMode: 'user', width: { ideal: 1280 }, height: { ideal: 720 } },
+      video: { facingMode: 'user', width: { ideal: 480 }, height: { ideal: 720 } },
       audio: false
     });
     video.srcObject = stream;
@@ -107,6 +98,14 @@ export class Dance implements OnDestroy {
     const canvas = this.canvasRef.nativeElement;
     canvas.width = video.videoWidth;
     canvas.height = video.videoHeight;
+
+    // ✅ กำหนดกรอบหลังจาก video metadata โหลดเสร็จ
+    this.standingBox = {
+      x: video.videoWidth * 0.1,
+      y: video.videoHeight * 0.1,
+      width: video.videoWidth * 0.8,
+      height: video.videoHeight * 0.8
+    };
   }
 
   private async loadPoseLandmarker() {
@@ -144,15 +143,14 @@ export class Dance implements OnDestroy {
 
   finishExercise() {
     this.running = false;
-    this.workoutMinutes = 12; // หรือใช้ this.timer
-    this.showPopup = true; // แสดงป็อปอัพ
+    this.workoutMinutes = 12; // หรือใช้ this.timer ที่เหลือ
+    this.showPopup = true;
 
     this.apiService.updateActivity({ minute: 12, score: this.score }).subscribe({
       next: () => console.log("Activity updated successfully!"),
       error: (err) => console.error("Failed to update activity", err)
     });
   }
-
 
   private loop = () => {
     if (!this.running) return;
@@ -170,35 +168,41 @@ export class Dance implements OnDestroy {
     ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
 
     // --- วาดกรอบยืน ---
-    ctx.strokeStyle = 'red';
-    ctx.lineWidth = 4;
-    ctx.strokeRect(
-      this.standingBox.x,
-      this.standingBox.y,
-      this.standingBox.width,
-      this.standingBox.height
-    );
-    ctx.fillStyle = 'red';
-    ctx.font = '20px Arial';
-    ctx.fillText('ยืนในกรอบนี้!', this.standingBox.x + 10, this.standingBox.y - 10);
+    if (this.standingBox) {
+      ctx.strokeStyle = 'red';
+      ctx.lineWidth = 4;
+      ctx.strokeRect(
+        this.standingBox.x,
+        this.standingBox.y,
+        this.standingBox.width,
+        this.standingBox.height
+      );
+      ctx.fillStyle = 'red';
+      ctx.font = '20px Arial';
+      ctx.fillText('ยืนในกรอบนี้!', this.standingBox.x + 10, this.standingBox.y - 10);
+    }
 
     if (results.landmarks && results.landmarks.length > 0) {
       const currentLandmarks = results.landmarks[0];
       this.detectMovement(currentLandmarks, ctx);
       this.lastLandmarks = currentLandmarks;
 
+      // --- วาดคะแนน ---
       ctx.fillStyle = 'yellow';
       ctx.font = '28px Arial';
-      ctx.fillText(`Score: ${Math.floor(this.score)}`, 20, 40);
+      ctx.fillText(`Score: ${Math.floor(this.score)}`, canvas.width - 200, 50);
     }
 
-    // วาดเวลาที่เหลือ
-    ctx.fillStyle = 'lime'; // สีเขียวสด
+    // --- วาดเวลา ---
+    ctx.fillStyle = 'lime';
     ctx.font = '28px Arial';
     const minutes = Math.floor(this.timer / 60);
     const seconds = this.timer % 60;
-    ctx.fillText(`Time: ${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`, 20, 80);
-
+    ctx.fillText(
+      `Time: ${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`,
+      canvas.width - 200,
+      90
+    );
   }
 
   private detectMovement(currentLandmarks: any[], ctx: CanvasRenderingContext2D) {
@@ -216,6 +220,7 @@ export class Dance implements OnDestroy {
         const px = point.x * this.videoRef.nativeElement.videoWidth;
         const py = point.y * this.videoRef.nativeElement.videoHeight;
         if (
+          this.standingBox &&
           px >= this.standingBox.x &&
           px <= this.standingBox.x + this.standingBox.width &&
           py >= this.standingBox.y &&
@@ -231,7 +236,7 @@ export class Dance implements OnDestroy {
       this.isMoving = false;
       ctx.fillStyle = 'orange';
       ctx.font = '24px Arial';
-      ctx.fillText('อยู่ในกรอบเพื่อให้คะแนน', 50, 60);
+      ctx.fillText('อยู่ในกรอบเพื่อให้คะแนน', 500, 120);
       return;
     }
 

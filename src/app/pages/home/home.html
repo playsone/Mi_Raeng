@@ -8,7 +8,7 @@
     </div>
     
     <div class="col text-center profile-info">
-      <img [src]="profilePictureUrl" alt="Profile Picture" class="profile-pic"> <span class="profile-name">{{ userProfile.name }}</span> </div>
+      <img [src]="profilePictureUrl" alt="Profile Picture" class="profile-pic" (click)="goTo('/profile')"> <span class="profile-name">{{ userProfile.name }}</span> </div>
 
     <div class="col-auto d-flex align-items-center">
       <div class="info-box">
@@ -18,7 +18,7 @@
   </header>
 
   <main class="main-content flex-grow-1 d-flex flex-column justify-content-center align-items-center">
-    <img src="assets/images/treelogo.png" alt="Tree Logo" class="tree-logo mb-4">
+    <img src="assets/images/treelogo.png" alt="Tree Logo" class="tree-logo mb-4" (click)="goTo('/mytree')">
     <div class="menu-grid">
       <button class="menu-item" (click)="goTo('/exercise')">
         <img src="assets/images/exer.png" alt="Exercise Icon">

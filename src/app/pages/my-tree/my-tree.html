@@ -1,7 +1,7 @@
 <div class="container-fluid page-container d-flex flex-column vh-100 p-3 p-md-4">
   <header class="back-header">
     <button class="back-btn" type="button" (click)="goBack()">
-      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24" fill="currentColor">
         <path d="M10.8284 12.0007L15.7782 16.9504L14.364 18.3646L8 12.0007L14.364 5.63672L15.7782 7.05093L10.8284 12.0007Z"></path>
       </svg>
     </button>
@@ -27,11 +27,24 @@
       </div>
     </header>
 
-    <main class="row flex-grow-1">
+     <main class="row flex-grow-1">
       <div class="col-12 text-center tree-container">
-        <div class="watering-info" (click)="waterTree()" [class.disabled]="userProfile.minute === 0 && userProfile.minute < maxProgress">
-          <p>{{ userProfile.minute >= maxProgress ? 'คลิกเพื่อเก็บต้นไม้!' : 'คลิกเพื่อรดน้ำ' }}</p>
-          <img src="assets/images/water.png" alt="Watering Can" class="watering-can">
+        
+        <div class="watering-info">
+          <p>คลิกเพื่อรดน้ำ</p>
+
+          <ng-container *ngIf="userProfile.tree_progress < maxProgress">
+            <button class="water-btn" (click)="waterTree(500)" [disabled]="userProfile.score < 100">
+              <img src="assets/images/water.png" alt="Watering Can">
+            </button>
+          </ng-container>
+
+          <ng-container *ngIf="userProfile.tree_progress >= maxProgress">
+            <button class="water-btn collectable" (click)="waterTree(0)">
+              <img src="assets/images/tree.png" alt="Collect Tree Icon">
+              เก็บต้นไม้!
+            </button>
+          </ng-container>
         </div>
         <img [src]="'assets/images/' + treeImageName" alt="Tree" class="tree-logo">
       </div>
@@ -43,7 +56,7 @@
           <div class="progress-bar-container">
             <div class="progress-bar-fill" [style.width.%]="progressPercentage"></div>
           </div>
-          <span class="progress-text">{{ Math.min(userProfile.minute, maxProgress) }}/{{ maxProgress }}</span>
+          <span class="progress-text">{{ userProfile.tree_progress }}/{{ maxProgress }}</span>
         </div>
         <p class="accumulated-text">จำนวนต้นไม้สะสม {{ userProfile.number_tree }} ต้น</p>
       </div>
@@ -52,7 +65,7 @@
 
   <ng-template #loadingTemplate>
     <div class="loading-container">
-      <p>Loading your tree...</p>
+      <p>กำลังโหลดสวนของคุณ...</p>
     </div>
   </ng-template>
 </div>

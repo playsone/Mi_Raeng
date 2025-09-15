@@ -1,5 +1,5 @@
 // นำเข้าฟอนต์ 'Nunito' จาก Google Fonts
-@import url('https://fonts.googleapis.com/css2?family=Nunito:wght@700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;700;900&display=swap');
 
 // --- ⚙️ ตัวแปรหลัก (Custom Properties) ---
 :host {
@@ -18,21 +18,21 @@
   font-family: var(--font-main); 
   color: var(--primary-color); 
 }
-// --- ✨ สไตล์สำหรับปุ่มย้อนกลับ (เพิ่มเข้ามาใหม่) ✨ ---
+
+// --- ✨ สไตล์สำหรับปุ่มย้อนกลับ ✨ ---
 .back-header {
-  // ทำให้ header นี้เป็นแค่ container ว่างๆ สำหรับจัดตำแหน่งปุ่ม
   position: relative;
   width: 100%;
-  height: clamp(40px, 3rem + 2vw, 50px); // กำหนดความสูงให้พอดีกับปุ่ม
+  height: clamp(40px, 3rem + 2vw, 50px);
 }
 
 .back-btn {
-  position: absolute; // ทำให้ปุ่มลอยอยู่ได้
+  position: absolute;
   top: 0;
   left: 0;
   background-color: var(--btn-green);
   border: none;
-  border-radius: 50%; // ทำให้เป็นวงกลม
+  border-radius: 50%;
   width: clamp(40px, 3rem + 2vw, 50px);
   height: clamp(40px, 3rem + 2vw, 50px);
   display: flex;
@@ -41,8 +41,8 @@
   cursor: pointer;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
   transition: transform 0.2s;
-  color: white; // สีของ SVG ข้างใน
-  z-index: 100; // ให้อยู่หน้าสุดเสมอ
+  color: white;
+  z-index: 100;
 
   svg {
     width: 60%;
@@ -53,6 +53,7 @@
     transform: translateY(-2px) scale(1.05);
   }
 }
+
 // --- 🌟 ส่วนหัว (Header) ---
 .info-box {
   display: flex;
@@ -88,6 +89,7 @@
     font-weight: 900;
   }
 }
+
 // --- ส่วนกลาง (ต้นไม้) ---
 .tree-container {
   position: relative; 
@@ -98,10 +100,10 @@
 }
 
 .tree-logo {
-  // บนไอแพด เราต้องการให้ต้นไม้สูงขึ้นเล็กน้อย
- max-height: clamp(50vh, 40vh + 10vw, 75vh); 
+  max-height: clamp(50vh, 40vh + 10vw, 75vh); 
   height: auto;
-  width: auto; // width: auto จะปรับความกว้างตามความสูงที่เปลี่ยนไปเอง
+  width: auto;
+  transition: transform 0.5s ease-in-out;
 }
 
 .watering-info {
@@ -109,25 +111,67 @@
   top: 5%;
   right: 0;
   text-align: center;
+  z-index: 10;
+}
+
+// ✨ --- สไตล์ใหม่สำหรับปุ่ม --- ✨
+.water-btn {
+  // ทำให้พื้นหลังและเส้นขอบโปร่งใส
+  background: transparent;
+  border: none;
   
-  // เป้าหมาย: โทรศัพท์ ~0.9rem | ไอแพด ~1.3rem
-  font-size: clamp(0.9rem, 0.5rem + 1.5vw, 1.3rem);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  cursor: pointer;
+  transition: transform 0.2s ease-in-out;
   
-  p {
+  img {
+    // เพิ่มขนาดรูปให้ใหญ่ขึ้น
+    width: clamp(100px, 10vw + 50px, 160px);
+    height: auto;
     margin-bottom: 5px;
   }
 
-  .watering-can {
-    // เป้าหมาย: โทรศัพท์ ~100px | ไอแพด ~160px
-    width: clamp(100px, 10vw + 50px, 160px);
-    animation: float 3s ease-in-out infinite;
+  span {
+    background-color: rgba(0, 0, 0, 0.6);
+    color: white;
+    padding: 5px 15px;
+    border-radius: 20px;
+    font-weight: bold;
+    font-size: clamp(0.9rem, 0.5rem + 1.5vw, 1.3rem);
+  }
+
+  &:hover {
+    transform: scale(1.1);
+  }
+
+  &:disabled {
+    cursor: not-allowed;
+    filter: grayscale(80%);
+    opacity: 0.7;
+    transform: none;
+  }
+
+  &.collectable {
+    span {
+      background-color: #2ecc71; // สีเขียวตอนเก็บได้
+    }
+    animation: bounce 1.5s infinite;
   }
 }
 
 // --- ✨ Animation ---
-@keyframes float {
-  0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(-10px); }
+@keyframes bounce {
+  0%, 20%, 50%, 80%, 100% {
+    transform: translateY(0);
+  }
+  40% {
+    transform: translateY(-15px);
+  }
+  60% {
+    transform: translateY(-8px);
+  }
 }
 
 // --- 📊 ส่วนท้าย (Footer) ---
@@ -146,7 +190,6 @@
 
 .progress-bar-container {
   width: 100%;
-  // เป้าหมาย: โทรศัพท์ ~25px | ไอแพด ~35px
   height: clamp(25px, 20px + 2vw, 35px);
   background-color: rgba(255, 255, 255, 0.7);
   border-radius: 50px;
@@ -170,14 +213,11 @@
   font-weight: bold;
   color: var(--primary-color);
   text-shadow: 0 1px 1px white;
-  // เป้าหมาย: โทรศัพท์ ~0.9rem | ไอแพด ~1.4rem
   font-size: clamp(0.9rem, 0.4rem + 2vw, 1.4rem);
 }
 
 .accumulated-text {
   font-weight: bold;
   margin: 0;
-  // เป้าหมาย: โทรศัพท์ ~1rem | ไอแพด ~1.5rem
   font-size: clamp(1rem, 0.5rem + 2vw, 1.5rem);
 }
-

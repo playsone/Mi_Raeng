@@ -14,13 +14,15 @@ export interface UserProfile {
   gender: string;
   score: number;
   minute: number;
-  number_tree: number; // <-- เพิ่ม field นี้
+  number_tree: number; 
+  tree_progress: number;
 }
 
 // สำหรับแสดงข้อมูลในหน้าจัดอันดับ
 export interface LeaderboardEntry {
-  rank: number;
   name: string;
   number_tree: number;
-  score: number;
+  minute: number;
+  // เราจะสร้าง rank ขึ้นมาเองในฝั่ง Frontend
+  rank?: number; 
 }

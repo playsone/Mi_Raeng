@@ -63,4 +63,8 @@ export class ApiService {
   getAdminDashboardData(): Observable<any> {
     return this.http.get(`${this.API_ENDPOINT}/admin/dashboard`);
   }
+
+  waterTree(data: { amount: number }): Observable<any> {
+    return this.http.post(`${this.API_ENDPOINT}/profile/tree/water`, data);
+  }
 }

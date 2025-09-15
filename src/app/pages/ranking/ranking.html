@@ -29,28 +29,28 @@
           <tr>
             <th>อันดับ</th>
             <th>ชื่อ</th>
-            <th>ต้น</th>
-            <th>คะแนน</th>
+            <th>ต้นไม้</th>
+            <th>นาที</th> 
           </tr>
         </thead>
         <tbody>
-          <tr *ngFor="let user of leaderboard">
+          <tr *ngFor="let user of leaderboard; let i = index">
             <td>
-              <ng-container *ngIf="user.rank <= 3; else otherRanks">
-                <img *ngIf="user.rank === 1" src="assets/images/num1.png" alt="1st Place">
-                <img *ngIf="user.rank === 2" src="assets/images/num2.png" alt="2nd Place">
-                <img *ngIf="user.rank === 3" src="assets/images/num3.png" alt="3rd Place">
+              <ng-container *ngIf="i + 1 <= 3; else otherRanks">
+                <img *ngIf="i + 1 === 1" src="assets/images/num1.png" alt="1st Place">
+                <img *ngIf="i + 1 === 2" src="assets/images/num2.png" alt="2nd Place">
+                <img *ngIf="i + 1 === 3" src="assets/images/num3.png" alt="3rd Place">
               </ng-container>
               <ng-template #otherRanks>
                 <div class="rank-icon-container">
                   <img src="assets/images/starrank.png" alt="Rank Star">
-                  <span class="rank-number">{{ user.rank }}</span>
+                  <span class="rank-number">{{ i + 1 }}</span>
                 </div>
               </ng-template>
             </td>
             <td>{{ user.name }}</td>
             <td>{{ user.number_tree }}</td>
-            <td>{{ user.score }}</td>
+            <td>{{ user.minute }}</td>
           </tr>
         </tbody>
       </table>
@@ -59,7 +59,7 @@
 
   <ng-template #loadingTemplate>
     <div class="loading-container">
-      <p>Loading leaderboard...</p>
+      <p>กำลังโหลดอันดับ...</p>
     </div>
   </ng-template>
 </div>

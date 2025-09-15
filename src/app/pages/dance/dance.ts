@@ -19,6 +19,8 @@ import * as visionModule from '@mediapipe/tasks-vision';
   styleUrls: ['./dance.scss'],
 })
 export class Dance implements OnDestroy {
+  readonly WORKOUT_DURATION_MINUTES = 12;
+
   private zone = inject(NgZone);
   private router = inject(Router);
   private apiService = inject(ApiService);
@@ -35,7 +37,7 @@ export class Dance implements OnDestroy {
   isLoading = true;
   statusMessage = 'กำลังโหลดโมเดล AI...';
 
-  timer: number = 5 * 60;
+  timer: number = 12 * 60;
   score: number = 0;
   isMoving: boolean = false;
   showPopup = false;
@@ -80,6 +82,12 @@ export class Dance implements OnDestroy {
 
   goHome() {
     this.router.navigate(['/home']);
+  }
+  quitExercise(): void {
+    console.log('User quit the exercise early.');
+    this.running = false; // หยุดการทำงานของ AI
+    this.router.navigate(['/home']); // กลับไปหน้า Home ทันที
+    // ไม่มีการเรียก API, ไม่มีการบันทึกคะแนน
   }
 
   private async initCamera() {
@@ -137,7 +145,7 @@ export class Dance implements OnDestroy {
     );
   }
 
-  private startWorkoutTimer() {
+   private startWorkoutTimer() {
     const interval = setInterval(() => {
       if (!this.running) {
         clearInterval(interval);
@@ -146,23 +154,27 @@ export class Dance implements OnDestroy {
       this.timer--;
       if (this.timer <= 0) {
         clearInterval(interval);
-        this.finishExercise();
+        this.finishExercise(); // 👈 เรียกใช้เมื่อเวลาหมดเท่านั้น
       }
     }, 1000);
   }
 
-  finishExercise() {
-    this.running = false;
-    this.workoutMinutes = 12;
-    this.showPopup = true;
+ finishExercise() {
+  this.running = false;
+  this.workoutMinutes = this.WORKOUT_DURATION_MINUTES;
+  this.showPopup = true;
 
-    this.apiService
-      .updateActivity({ minute: 12, score: this.score })
-      .subscribe({
-        next: () => console.log('Activity updated successfully!'),
-        error: (err) => console.error('Failed to update activity', err),
-      });
-  }
+  // ✨ --- แก้ไขบรรทัดนี้ --- ✨
+  // ปัดเศษ score ให้เป็นจำนวนเต็มก่อนส่งไปที่ API
+  const finalScore = Math.floor(this.score);
+
+  this.apiService
+    .updateActivity({ minute: this.WORKOUT_DURATION_MINUTES, score: finalScore }) // ✅ ส่ง finalScore ที่เป็นจำนวนเต็ม
+    .subscribe({
+      next: () => console.log('Activity updated successfully!'),
+      error: (err) => console.error('Failed to update activity', err),
+    });
+}
 
   private loop = () => {
     if (!this.running) return;
@@ -282,7 +294,7 @@ export class Dance implements OnDestroy {
       ctx.fillText(
         'อยู่ในกรอบเพื่อให้คะแนน',
         ctx.canvas.width / 2, // จัดกลางจอ
-        ctx.canvas.height * 0.2 // ตำแหน่ง Y
+        ctx.canvas.height * 0.5 // ตำแหน่ง Y
       );
       return;
     }

@@ -1,6 +1,6 @@
 @import url('https://fonts.googleapis.com/css2?family=Kanit:wght@500;700&display=swap');
 
-// --- ตัวแปรสำหรับปรับแต่งสีและฟอนต์ ---
+// --- Tokens
 $font-family: 'Kanit', sans-serif;
 $background-blue: #a3e1f7;
 $gradient-start: #c3ff74;
@@ -12,84 +12,75 @@ $star-color: #FFD700;
 
 :host {
   display: block;
-  background-color: #f0f2f5;
+  background: #f0f2f5;
   min-height: 100vh;
 }
 
+/* แนะนำ: ใส่ meta นี้ใน index.html เพื่อรองรับหน้าจอโนช iOS
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+*/
+
 .page-container {
   display: flex;
-  flex-direction: column; /* <-- ตัวนี้คือหัวใจหลักที่จัดเรียงเป็นแนวตั้ง */
+  flex-direction: column;
   align-items: center;
-  gap: 2rem;
-  padding: 1.5rem;
+  gap: 1.25rem;
+  padding: max(12px, env(safe-area-inset-top)) max(12px, env(safe-area-inset-right))
+           max(12px, env(safe-area-inset-bottom)) max(12px, env(safe-area-inset-left));
   width: 100%;
   box-sizing: border-box;
 }
 
+/* ===== Webcam + HUD ===== */
 .webcam-container {
   position: relative;
   width: 100%;
   max-width: 960px;
-  height: 60vh;
+
+  /* ใช้ dvh/svh เพื่อแก้ปัญหาแถบ URL บนมือถือ */
+  height: clamp(40dvh, 60svh, 70dvh);
+
   border-radius: 12px;
   overflow: hidden;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15); /* เพิ่มเงาให้สวยงาม */
-  background-color: #000; /* ✅ เพิ่มพื้นหลังสีดำเผื่อกรณีเกิดขอบ (letterbox) */
+  box-shadow: 0 8px 24px rgba(0,0,0,0.15);
+  background: #000;
+
+  /* ทำให้วิดีโอเรนเดอร์ลื่นขึ้นในมือถือบางรุ่น */
+  will-change: transform;
+  transform: translateZ(0);
 
   video,
   canvas {
     position: absolute;
-    top: 0;
-    left: 0;
+    inset: 0;
     width: 100%;
     height: 100%;
-    /* ✅ แก้ไขจาก cover เป็น contain เพื่อแก้ปัญหากล้องซูม */
+
+    /* ใช้ contain เพื่อ “เห็นทั้งตัว” แม้จอแคบ */
     object-fit: contain;
   }
 
-  canvas {
-    z-index: 1;
-  }
+  /* ถ้าอยากสลับเป็นกล้องหน้าแล้วให้กระจกเงา ให้ใส่ class="mirror" ที่ <video> */
+  video.mirror { transform: scaleX(-1); }
+
+  canvas { z-index: 1; }
 }
-
-.youtube-container {
-  width: 100%;
-  max-width: 960px;
-  text-align: center;
-
-  h2 {
-    margin-bottom: 1rem;
-    font-size: 1.75rem;
-    color: #333;
-  }
-
-  video {
-    width: 100%;
-    height: auto;
-    aspect-ratio: 16 / 9;
-    border-radius: 12px;
-    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
-  }
-}
-
-
-// --- สไตล์สำหรับ HUD Overlay และ Pop-up (ใช้โค้ดเดิมได้เลย) ---
 
 .hud-overlay {
   position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
+  inset: 0;
   z-index: 5;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
   padding: 10px;
-  color: white;
+  color: #fff;
   font-family: 'Nunito', sans-serif;
   text-shadow: 1px 1px 3px rgba(0,0,0,0.7);
-  pointer-events: none;
+  pointer-events: none; /* ปิดรับคลิกทั้งหมด */
+  /* กันชนรอบๆ สำหรับ iOS notch/gesture bar */
+  padding-top: calc(10px + env(safe-area-inset-top));
+  padding-bottom: calc(10px + env(safe-area-inset-bottom));
 }
 
 .hud-header {
@@ -98,67 +89,65 @@ $star-color: #FFD700;
 }
 
 .hud-box {
-  background-color: rgba(0, 0, 0, 0.5);
-  padding: 5px 12px;
+  background: rgba(0,0,0,0.5);
+  padding: 6px 12px;
   border-radius: 20px;
-  font-size: 1rem;
-  font-weight: bold;
+  font-size: clamp(0.9rem, 1.6vw, 1rem);
+  font-weight: 700;
 }
 
-.hud-main {
-  text-align: center;
-}
+.hud-main { text-align: center; }
 
 .state-display {
-  background-color: rgba(0, 0, 0, 0.6);
-  padding: 10px 20px;
-  border-radius: 15px;
+  background: rgba(0,0,0,0.6);
+  padding: 10px 16px;
+  border-radius: 14px;
   display: inline-block;
+
   p {
     margin: 0;
-    font-size: 1.5rem;
+    font-size: clamp(1.1rem, 3.8vw, 1.5rem);
     font-weight: 900;
   }
 }
 
-.hud-footer {
-  text-align: center;
-}
+.hud-footer { text-align: center; }
 
+/* เปิดรับคลิกเฉพาะปุ่ม */
 .finish-btn {
   pointer-events: auto;
-  background-color: #ff4d4d;
-  color: white;
+  background: #ff4d4d;
+  color: #fff;
   border: none;
   padding: 8px 18px;
   border-radius: 25px;
   font-size: 1rem;
-  font-weight: bold;
+  font-weight: 700;
   cursor: pointer;
   box-shadow: 0 2px 5px rgba(0,0,0,0.3);
 }
 
+/* ขณะโหลด โชว์ทับเต็มกรอบกล้อง */
 .loading {
-    position: absolute;
-    inset: 0;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    background: rgba(0, 0, 0, 0.8);
-    color: white;
-    font-size: 1.5rem;
-    z-index: 10;
-    text-align: center;
-    padding: 20px;
-}
-
-.popup-overlay {
   position: absolute;
   inset: 0;
-  width: 100%;
-  height: 100%;
-  background-color: rgba(0, 0, 0, 0.7);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: rgba(0,0,0,0.8);
+  color: #fff;
+  font-size: clamp(1rem, 3.5vw, 1.5rem);
   z-index: 10;
+  text-align: center;
+  padding: 20px;
+}
+
+/* ===== Reward Popup (ให้ครอบทั้งจอ) ===== */
+.popup-overlay {
+  position: fixed; /* ปรับจาก absolute -> fixed ให้คลุมทั้งหน้าแน่นอน */
+  inset: 0;
+  background: rgba(0,0,0,0.7);
+  z-index: 1000; /* สูงกว่าทุกอย่าง */
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -171,58 +160,94 @@ $star-color: #FFD700;
 .popup-content {
   background: linear-gradient(180deg, $gradient-start, $gradient-end);
   border-radius: 30px;
-  padding: 40px 30px;
-  width: 100%;
-  max-width: 350px;
-  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15), inset 0 2px 4px rgba(255, 255, 255, 0.5);
+  padding: 32px 24px;
+  width: min(92vw, 350px);
+  box-shadow: 0 8px 25px rgba(0,0,0,0.15), inset 0 2px 4px rgba(255,255,255,0.5);
   display: flex;
   flex-direction: column;
   align-items: center;
   text-align: center;
-  border: 2px solid rgba(255, 255, 255, 0.7);
+  border: 2px solid rgba(255,255,255,0.7);
 }
 
 .stars {
-  margin-bottom: 20px;
+  margin-bottom: 16px;
   display: flex;
   align-items: center;
+  gap: 6px;
+
   span {
-    font-size: 3rem;
-    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    font-size: clamp(2rem, 8vw, 3rem);
+    text-shadow: 0 2px 4px rgba(0,0,0,0.2);
+
     &:nth-child(2) {
-      transform: translateY(-15px);
-      font-size: 3.5rem;
+      transform: translateY(-10px);
+      font-size: clamp(2.2rem, 9vw, 3.5rem);
     }
   }
 }
 
 .reward-text {
   color: $text-color;
-  font-size: 1.75rem;
-  font-weight: 500;
-  margin: 5px 0;
-  text-shadow: 1px 1px 2px rgba(255, 255, 255, 0.4);
+  font-size: clamp(1.2rem, 4.5vw, 1.6rem);
+  font-weight: 600;
+  margin: 4px 0;
+  text-shadow: 1px 1px 2px rgba(255,255,255,0.4);
 }
 
 .home-btn {
-  margin-top: 25px;
-  padding: 12px 45px;
+  margin-top: 18px;
+  padding: 10px 28px;
   font-family: $font-family;
-  font-size: 1.25rem;
+  font-size: clamp(1rem, 4.2vw, 1.2rem);
   font-weight: 700;
   color: $text-color;
-  background-color: $button-bg;
+  background: $button-bg;
   border: 3px solid $button-border;
   border-radius: 50px;
   cursor: pointer;
-  box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
-  transition: all 0.2s ease-in-out;
-  &:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 8px 15px rgba(0, 0, 0, 0.25);
+  box-shadow: 0 5px 10px rgba(0,0,0,0.2);
+  transition: transform .15s ease, box-shadow .15s ease;
+
+  &:hover { transform: translateY(-2px); box-shadow: 0 8px 15px rgba(0,0,0,0.25); }
+  &:active { transform: translateY(1px); box-shadow: 0 2px 5px rgba(0,0,0,0.2); }
+}
+
+/* ===== วิดีโอต้นแบบ ===== */
+.youtube-container {
+  width: 100%;
+  max-width: 960px;
+  text-align: center;
+
+  h2 {
+    margin: 0 0 10px;
+    font-size: clamp(1.1rem, 4.2vw, 1.5rem);
+    color: #333;
   }
-  &:active {
-    transform: translateY(1px);
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+
+  video {
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    height: auto;
+    border-radius: 12px;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.2);
+    background: #000;
   }
+}
+
+/* ===== Responsive tweaks ===== */
+@media (max-width: 768px) {
+  .page-container { gap: 12px; }
+
+  .webcam-container {
+    height: clamp(42dvh, 54svh, 64dvh); /* มือถือส่วนใหญ่จะเห็น “ทั้งตัว” มากขึ้น */
+    border-radius: 10px;
+  }
+
+  .finish-btn { font-size: 0.95rem; padding: 7px 16px; }
+}
+
+@media (max-width: 420px) {
+  .webcam-container { height: clamp(44dvh, 52svh, 60dvh); }
+  .state-display { padding: 8px 14px; }
 }

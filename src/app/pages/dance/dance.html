@@ -38,6 +38,16 @@
 
   <div class="youtube-container">
     <h2>วิดีโอต้นแบบ</h2>
-    <video width="100%" height="100%" [src]="videoSourceUrl" controls autoplay muted loop></video>
+    <!-- เดิมมี autoplay/loop → เอาออก และเพิ่ม preload="metadata" -->
+    <video
+      #refVideo
+      width="100%"
+      height="100%"
+      [src]="videoSourceUrl"
+      controls
+      muted
+      preload="metadata"
+      playsinline
+    ></video>
   </div>
 </div>

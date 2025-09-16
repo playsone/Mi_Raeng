@@ -107,6 +107,6 @@ export class Profile implements OnInit {
 
   logout(): void {
     localStorage.removeItem('authToken'); // ลบแค่ token
-    this.router.navigate(['/login']);
+    this.router.navigate(['/welcome']);
   }
 }

@@ -35,8 +35,8 @@
   background-color: var(--btn-green);
   border: none;
   border-radius: 50%; // ทำให้เป็นวงกลม
-  width: clamp(40px, 3rem + 2vw, 50px);
-  height: clamp(40px, 3rem + 2vw, 50px);
+  width: clamp(30px, 3rem + 2vw, 40px);
+  height: clamp(30px, 3rem + 2vw, 40px);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -59,40 +59,35 @@
 
 // --- 🌟 ส่วนหัว (Header) ---
 .info-box {
-  display: flex;
-  align-items: center;
-  background-color: rgba(255, 255, 255, 0.8);
-  border-radius: 50px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  font-weight: bold;
-  font-size: clamp(1.1rem, 0.4rem + 2.8vw, 1.8rem);
-  padding: clamp(8px, 0.5vh + 1vw, 12px) clamp(15px, 1rem + 2vw, 25px);
+    display: flex;
+    align-items: center;
+    background-color: rgba(255, 255, 255, 0.8);
+    border-radius: 50px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    font-weight: bold;
+    font-size: clamp(1rem, 0.4rem + 2.8vw, 1.5rem);
+    padding: clamp(6px, 0.5vh + 1vw, 10px) clamp(12px, 1rem + 2vw, 20px);
+    white-space: nowrap; /* ป้องกันการขึ้นบรรทัดใหม่ */
+}
 
-  .icon {
-    width: clamp(24px, 1rem + 3vw, 38px);
-    height: clamp(24px, 1rem + 3vw, 38px);
+.info-box .icon {
+    width: clamp(22px, 1rem + 3vw, 32px);
+    height: clamp(22px, 1rem + 3vw, 32px);
     margin-right: clamp(8px, 0.5rem + 1vw, 12px);
-  }
 }
 
-.profile-info {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  
-  .profile-pic {
-    width: clamp(60px, 5rem + 8vw, 100px);
-    height: clamp(60px, 5rem + 8vw, 100px);
+.profile-info .profile-pic {
+    width: clamp(50px, 15vw, 80px);
+    height: clamp(50px, 15vw, 80px);
     border-radius: 50%;
-    margin-bottom: 5px;
-  }
-
-  .profile-name {
-    font-size: clamp(1.2rem, 0.5rem + 2.5vw, 2rem);
-    font-weight: 900;
-  }
+    margin-bottom: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
+.profile-info .profile-name {
+    font-size: clamp(1rem, 0.5rem + 2.5vw, 1.5rem);
+    font-weight: 900;
+}
 // --- 🎶 ส่วนกลาง (Main Content) ---
 h1 {
   font-size: clamp(1.8rem, 1rem + 3.5vw, 3.2rem);

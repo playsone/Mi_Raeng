@@ -26,3 +26,4 @@ export interface LeaderboardEntry {
   // เราจะสร้าง rank ขึ้นมาเองในฝั่ง Frontend
   rank?: number; 
 }
+

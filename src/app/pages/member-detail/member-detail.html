@@ -1,0 +1,11 @@
+<mat-card *ngIf="user">
+  <h2>{{ user.name }}</h2>
+  <p>อายุ: {{ user.age }}</p>
+  <p>เบอร์โทร: {{ user.phone }}</p>
+  <p>คะแนน: {{ user.score }}</p>
+  <p>เวลาที่เล่น: {{ user.minute }} นาที</p>
+  <p>จำนวนต้นไม้: {{ user.number_tree }}</p>
+  <p>ความก้าวหน้า: {{ user.tree_progress }}%</p>
+
+  <button mat-stroked-button color="primary" (click)="goBack()">ย้อนกลับ</button>
+</mat-card>

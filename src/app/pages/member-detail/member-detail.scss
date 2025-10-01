@@ -1,0 +1,37 @@
+.member-detail-container {
+  display: flex;
+  justify-content: center;
+  padding: 30px;
+  background: linear-gradient(to bottom, #f1f2f6, #dfe6e9);
+  min-height: 100vh;
+}
+
+.member-card {
+  max-width: 500px;
+  width: 100%;
+  padding: 20px;
+  border-radius: 16px;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+  background: white;
+}
+
+.profile-section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 15px;
+}
+
+.profile-img {
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  margin-bottom: 10px;
+  object-fit: cover;
+  border: 3px solid #74b9ff;
+}
+
+.phone {
+  color: #636e72;
+  font-size: 14px;
+}

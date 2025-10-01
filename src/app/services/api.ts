@@ -67,4 +67,17 @@ export class ApiService {
   waterTree(data: { amount: number }): Observable<any> {
     return this.http.post(`${this.API_ENDPOINT}/profile/tree/water`, data);
   }
+  getAllUsersSummary(): Observable<{ uid: string, name: string }[]> {
+    return this.http.get<{ uid: string, name: string }[]>(`${this.API_ENDPOINT}/admin/users`);
+  }
+
+  /**
+   * ดึงรายละเอียดสมาชิกแบบเต็ม ตาม UID
+   * @param uid รหัสสมาชิก
+   */
+  getFullUserProfile(uid: string): Observable<UserProfile> {
+    return this.http.get<UserProfile>(`${this.API_ENDPOINT}/admin/users/${uid}`);
+  }
+
+  
 }

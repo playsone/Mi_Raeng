@@ -22,7 +22,7 @@ type Phase = 'loading' | 'precheck' | 'running' | 'finished';
 })
 export class Dance implements OnDestroy {
   /** ---------- Config ---------- */
-  readonly WORKOUT_DURATION_MINUTES = 12;
+  readonly WORKOUT_DURATION_MINUTES = 1;
   // --- V V V เพิ่ม 2 บรรทัดนี้ V V V ---
   private lastScoreTime = 0; // เวลาล่าสุดที่ได้คะแนน
   private readonly SCORE_COOLDOWN_MS = 400; // ดีเลย์ 400 มิลลิวินาที (0.4 วินาที)
@@ -77,7 +77,7 @@ export class Dance implements OnDestroy {
   /** ---------- Precheck ---------- */
   precheckFrames = 0; // นับเฟรมที่ “ผ่านเงื่อนไขเห็นครบทั้งตัวในกรอบ”
   precheckPassed = false;
-
+  public formattedTime: string = 'Time: 00:00';
   constructor() {
     this.init();
   }
@@ -297,13 +297,6 @@ export class Dance implements OnDestroy {
         this.standingBox.width,
         this.standingBox.height
       );
-      ctx.fillStyle = 'red';
-      ctx.font = `${smallFontSize}px Kanit, Arial`;
-      ctx.fillText(
-        'ยืนในกรอบนี้!',
-        this.standingBox.x + 10,
-        this.standingBox.y - 10
-      );
     }
 
     const hasPose =
@@ -341,12 +334,12 @@ export class Dance implements OnDestroy {
           14
         );
         ctx.font = `${smallFontSize}px Kanit, Arial`;
-        ctx.fillStyle = 'white';
+        ctx.fillStyle = 'Black';
         ctx.textAlign = 'center';
         ctx.fillText(
           'ยืนให้เห็นครบทั้งตัวในกรอบสักครู่...',
           canvas.width / 2,
-          canvas.height * 0.08 - 8
+          canvas.height * 0.08 - 20
         );
 
         if (this.precheckFrames >= this.PRECHECK_REQUIRED_FRAMES) {
@@ -389,34 +382,18 @@ export class Dance implements OnDestroy {
         this.detectMovementAndScore(currentLandmarks);
       }
 
-      // วาดคะแนน
-      ctx.textAlign = 'right';
-      ctx.textBaseline = 'top';
-      ctx.fillStyle = 'yellow';
-      ctx.font = `${mainFontSize}px Kanit, Arial`;
-      ctx.fillText(
-        `Score: ${Math.floor(this.score)}`,
-        canvas.width - margin,
-        margin
-      );
     }
 
-    // วาดเวลา (ทั้งตอน running และช่วงอื่น ๆ ก็แสดงได้)
+    // วาดเวลา (ย้ายไปอัปเดตตัวแปรอย่างเดียว)
     if (this.phase !== 'finished') {
-      ctx.textAlign = 'right';
-      ctx.textBaseline = 'top';
-      ctx.fillStyle = 'lime';
-      ctx.font = `${mainFontSize}px Kanit, Arial`;
       const minutes = Math.floor(this.timer / 60);
       const seconds = this.timer % 60;
-      ctx.fillText(
-        `Time: ${minutes.toString().padStart(2, '0')}:${seconds
-          .toString()
-          .padStart(2, '0')}`,
-        canvas.width - margin,
-        margin + mainFontSize * 1.2
-      );
+      // This line now correctly updates the public property
+      this.formattedTime = `Time: ${minutes.toString().padStart(2, '0')}:${seconds
+        .toString()
+        .padStart(2, '0')}`;
     }
+
   }
 
   /** ========== Movement / Visibility Helpers ========== */

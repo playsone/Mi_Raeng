@@ -28,25 +28,6 @@
       </div>
     </div>
 
-    <!-- รหัสผ่าน -->
-    <div class="form-group">
-      <span class="material-symbols-outlined icon-wrapper">lock</span>
-      <div class="input-wrapper">
-        <input [type]="passwordFieldType" id="password" name="password" [(ngModel)]="registerData.password" placeholder=" " required />
-        <label for="password">รหัสผ่าน</label>
-        <mat-icon class="toggle-password" (click)="togglePasswordVisibility()">{{ passwordIcon }}</mat-icon>
-      </div>
-    </div>
-
-    <!-- ยืนยันรหัสผ่าน -->
-    <div class="form-group">
-      <span class="material-symbols-outlined icon-wrapper">lock</span>
-      <div class="input-wrapper">
-        <input [type]="confirmPasswordFieldType" id="confirmPassword" name="confirmPassword" [(ngModel)]="registerData.confirmPassword" placeholder=" " required />
-        <label for="confirmPassword">ยืนยันรหัสผ่าน</label>
-        <mat-icon class="toggle-password" (click)="toggleConfirmPasswordVisibility()">{{ confirmPasswordIcon }}</mat-icon>
-      </div>
-    </div>
 
     <!-- อายุ และ เพศ -->
     <div class="form-row">

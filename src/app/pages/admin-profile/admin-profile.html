@@ -1,0 +1,78 @@
+<head>
+  <!-- โหลด Material Symbols Icons เพื่อใช้ไอคอนทั้งหมด -->
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+</head>
+
+<div class="profile-container">
+  <!-- ปุ่มย้อนกลับ -->
+  <button class="back-btn" type="button" (click)="goBack()">
+    <span class="material-symbols-outlined">arrow_back_ios</span>
+  </button>
+
+  <!-- แสดงข้อมูลโปรไฟล์ เมื่อโหลดสำเร็จ -->
+  <div *ngIf="userProfile; else loadingTemplate" class="content-wrapper">
+    <div class="header">
+      <h1>ข้อมูลโปรไฟล์แอดมิน</h1>
+      <!-- ข้อความสถานะ (ใช้ successMessage ที่ถูก mock เพื่อแจ้งเตือนการโหลดสำเร็จ) -->
+      <p *ngIf="successMessage" class="success-message">{{ successMessage }}</p>
+      <!-- ข้อความข้อผิดพลาด -->
+      <p *ngIf="errorMessage" class="error-message">{{ errorMessage }}</p>
+    </div>
+
+    <!-- View Mode (โหมดอ่านอย่างเดียว) -->
+    <div class="view-mode">
+      
+      <!-- ข้อมูลชื่อ-นามสกุล -->
+      <div class="info-group">
+        <span class="material-symbols-outlined icon">person</span>
+        <div class="text-content">
+          <label>ชื่อ-นามสกุล</label>
+          <p>{{ userProfile.name }}</p>
+        </div>
+      </div>
+      
+      <!-- ข้อมูลเบอร์โทร -->
+      <div class="info-group">
+        <span class="material-symbols-outlined icon">call</span>
+        <div class="text-content">
+          <label>เบอร์โทร</label>
+          <p>{{ userProfile.phone }}</p>
+        </div>
+      </div>
+      
+      <!-- ข้อมูลอายุ -->
+      <div class="info-group">
+        <span class="material-symbols-outlined icon">cake</span>
+        <div class="text-content">
+          <label>อายุ</label>
+          <!-- แสดง 'ไม่ได้ระบุ' หากไม่มีข้อมูล -->
+          <p>{{ userProfile.age || 'ไม่ได้ระบุ' }} ปี</p>
+        </div>
+      </div>
+      
+      <!-- ข้อมูลเพศ -->
+      <div class="info-group">
+        <span class="material-symbols-outlined icon">wc</span>
+        <div class="text-content">
+          <label>เพศ</label>
+          <!-- แสดง 'ไม่ได้ระบุ' หากไม่มีข้อมูล -->
+          <p>{{ userProfile.gender || 'ไม่ได้ระบุ' }}</p>
+        </div>
+      </div>
+
+      <div class="button-group">
+        <!-- ปุ่มออกจากระบบ (เชื่อมกับ logout() ใน TS) -->
+        <button type="button" class="logout-btn" (click)="logout()">ออกจากระบบ</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Loading/Error Template เมื่อ userProfile เป็น null -->
+  <ng-template #loadingTemplate>
+    <div class="loading-container">
+      <p *ngIf="isLoading">กำลังโหลดโปรไฟล์...</p>
+      <!-- แสดงข้อความ error กรณีโหลดล้มเหลว -->
+      <p *ngIf="!isLoading && errorMessage" class="error-message">{{ errorMessage }}</p>
+    </div>
+  </ng-template>
+</div>

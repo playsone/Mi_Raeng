@@ -36,25 +36,7 @@
         </div>
       </div>
 
-      <div class="form-group">
-        <span class="material-symbols-outlined icon-wrapper">lock</span>
-        <div class="input-wrapper">
-          <input
-            [type]="passwordFieldType"
-            id="password"
-            name="password"
-            [(ngModel)]="passwordValue"
-            placeholder=" "
-            required
-            autocomplete="current-password"
-          />
-          <label for="password">รหัสผ่าน</label>
-          <mat-icon class="toggle-password" >
-            {{ passwordIcon }}
-          </mat-icon>
-        </div>
-      </div>
-
+      
       <p *ngIf="errorMessage" class="error-message">
         {{ errorMessage }}
       </p>

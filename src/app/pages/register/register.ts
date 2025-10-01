@@ -27,8 +27,6 @@ export class Register {
   registerData = {
     name: '',
     phone: '',
-    password: '',
-    confirmPassword: '',
     age: null,
     gender: ''
   };
@@ -50,11 +48,7 @@ export class Register {
 
   // --- Main Register Function ---
   onRegister(): void {
-    // Client-side validation
-    if (this.registerData.password !== this.registerData.confirmPassword) {
-      this.errorMessage = 'รหัสผ่านและการยืนยันรหัสผ่านไม่ตรงกัน';
-      return;
-    }
+    
 
     this.isLoading = true;
     this.errorMessage = '';
@@ -64,7 +58,6 @@ export class Register {
     const payload = {
       name: this.registerData.name,
       phone: this.registerData.phone,
-      password: this.registerData.password,
       age: this.registerData.age,
       gender: this.registerData.gender
     };

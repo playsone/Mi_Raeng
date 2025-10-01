@@ -21,7 +21,7 @@ export class MemberDetailComponent implements OnInit {
   user: UserProfile | null = null;
 
   ngOnInit(): void {
-    const uid = this.route.snapshot.paramMap.get('id');
+    const uid = this.route.snapshot.paramMap.get('uid');
     if (uid) {
       this.apiService.getFullUserProfile(uid).subscribe({
         next: (data) => this.user = data,

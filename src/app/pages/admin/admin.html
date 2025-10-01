@@ -14,6 +14,7 @@
     </div>
     <div class="member-table-row" *ngFor="let user of users">
       <span class="member-name">{{ user.name }}</span>
+      <span class="member-name">{{ user.uid }}</span>
       <button mat-stroked-button color="primary" (click)="viewUser(user)">
         รายละเอียด
       </button>

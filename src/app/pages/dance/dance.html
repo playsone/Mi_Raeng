@@ -6,12 +6,12 @@
     <div class="hud-overlay">
       <header class="hud-header"></header>
       <main class="hud-main">
-        <div *ngIf="!isLoading && isMoving" class="state-display moving">
+        <!-- <div *ngIf="!isLoading && isMoving" class="state-display moving">
           <p>ยอดเยี่ยม ขยับต่อไป!</p>
-        </div>
-        <div *ngIf="!isLoading && !isMoving" class="state-display not-moving">
+        </div> -->
+        <!-- <div *ngIf="!isLoading && !isMoving" class="state-display not-moving">
           <p>ลองขยับตัวดูสิ!</p>
-        </div>
+        </div> -->
       </main>
       <footer class="hud-footer">
         <button (click)="quitExercise()" class="finish-btn">จบ</button>
@@ -50,4 +50,6 @@
       playsinline
     ></video>
   </div>
+
+   <div class="timer-display">{{ formattedTime }}</div>
 </div>

@@ -7,7 +7,7 @@ import { ApiService } from '../../services/api';
 
 @Component({
   selector: 'app-register',
-  standalone: true, // เพิ่ม standalone: true
+  standalone: true,
   imports: [
     CommonModule,
     FormsModule,
@@ -23,7 +23,6 @@ export class Register {
   private apiService = inject(ApiService);
 
   // --- Form Data Model ---
-  // สร้าง object เดียวเพื่อรวบรวมข้อมูลจากฟอร์มทั้งหมด
   registerData = {
     name: '',
     phone: '',
@@ -36,11 +35,8 @@ export class Register {
   successMessage: string = '';
   isLoading: boolean = false;
 
-  // --- Password Visibility ---
-  passwordFieldType: string = 'password';
-  passwordIcon: string = 'visibility';
-  confirmPasswordFieldType: string = 'password';
-  confirmPasswordIcon: string = 'visibility';
+  // --- ลบส่วนของรหัสผ่านออกไปแล้ว ---
+  // passwordFieldType, passwordIcon, confirmPasswordFieldType, confirmPasswordIcon ถูกลบออกไป
 
   goBack(): void {
     history.back();
@@ -48,13 +44,17 @@ export class Register {
 
   // --- Main Register Function ---
   onRegister(): void {
-    
+    // เพิ่มการตรวจสอบเบื้องต้น
+    if (!this.registerData.name || !this.registerData.phone) {
+      this.errorMessage = 'กรุณากรอกชื่อและเบอร์โทรศัพท์';
+      return;
+    }
 
     this.isLoading = true;
     this.errorMessage = '';
     this.successMessage = '';
 
-    // สร้าง payload ที่จะส่งไป backend (ตัด confirmPassword ออก)
+    // payload ที่จะส่งไปถูกต้องอยู่แล้ว
     const payload = {
       name: this.registerData.name,
       phone: this.registerData.phone,
@@ -67,7 +67,6 @@ export class Register {
         this.isLoading = false;
         this.successMessage = 'สมัครสมาชิกสำเร็จ! กำลังนำคุณไปยังหน้าเข้าสู่ระบบ...';
         console.log('Registration successful', response);
-        // หน่วงเวลาเล็กน้อยเพื่อให้ผู้ใช้เห็นข้อความ
         setTimeout(() => {
           this.router.navigate(['/login']);
         }, 2000);
@@ -75,7 +74,7 @@ export class Register {
       error: (err) => {
         this.isLoading = false;
         if (err.error && err.error.error) {
-          this.errorMessage = err.error.error; // แสดง error จาก backend เช่น "เบอร์โทรซ้ำ"
+          this.errorMessage = err.error.error;
         } else {
           this.errorMessage = 'เกิดข้อผิดพลาดในการสมัครสมาชิก';
         }
@@ -84,24 +83,6 @@ export class Register {
     });
   }
 
-  // --- Password Toggle Functions ---
-  togglePasswordVisibility(): void {
-    if (this.passwordFieldType === 'password') {
-      this.passwordFieldType = 'text';
-      this.passwordIcon = 'visibility_off';
-    } else {
-      this.passwordFieldType = 'password';
-      this.passwordIcon = 'visibility';
-    }
-  }
-
-  toggleConfirmPasswordVisibility(): void {
-    if (this.confirmPasswordFieldType === 'password') {
-      this.confirmPasswordFieldType = 'text';
-      this.confirmPasswordIcon = 'visibility_off';
-    } else {
-      this.confirmPasswordFieldType = 'password';
-      this.confirmPasswordIcon = 'visibility';
-    }
-  }
+  // --- ลบฟังก์ชันที่เกี่ยวกับรหัสผ่านออกไปแล้ว ---
+  // togglePasswordVisibility และ toggleConfirmPasswordVisibility ถูกลบออกไป
 }

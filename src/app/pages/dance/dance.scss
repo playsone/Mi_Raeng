@@ -251,3 +251,14 @@ $star-color: #FFD700;
   .webcam-container { height: clamp(44dvh, 52svh, 60dvh); }
   .state-display { padding: 8px 14px; }
 }
+
+
+/* ในไฟล์ component.scss หรือ styles.scss ของคุณ */
+
+
+.timer-display {
+  color: lime; /* สีเดียวกับบน Canvas */
+  font-size: 30px; /* ปรับขนาดตามความเหมาะสม */
+  font-family: 'Kanit', Arial, sans-serif;
+  font-weight: bold;
+}

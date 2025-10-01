@@ -1,0 +1,12 @@
+<mat-card class="member-detail-card" *ngIf="user">
+  <h2>{{ user.name }}</h2>
+  <p><strong>Age:</strong> {{ user.age }}</p>
+  <p><strong>Phone:</strong> {{ user.phone }}</p>
+  <p><strong>Gender:</strong> {{ user.gender }}</p>
+  <p><strong>Score:</strong> {{ user.score }}</p>
+  <p><strong>Minutes:</strong> {{ user.minute }}</p>
+  <p><strong>Trees Planted:</strong> {{ user.number_tree }}</p>
+  <p><strong>Tree Progress:</strong> {{ user.tree_progress }}%</p>
+
+  <button mat-stroked-button color="primary" (click)="goBack()">กลับ</button>
+</mat-card>

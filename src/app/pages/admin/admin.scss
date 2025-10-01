@@ -1,0 +1,117 @@
+:host {
+  --primary-color: #3b5998;
+  --bg-start: #d6f2ff;
+  --bg-end: #78d6ff;
+  --font-main: 'Nunito', sans-serif;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: clamp(20px, 5%, 50px);
+  min-height: 100vh;
+  width: 100%;
+  box-sizing: border-box;
+  font-family: var(--font-main);
+  background: linear-gradient(to bottom, var(--bg-start), var(--bg-end));
+  color: var(--primary-color);
+}
+
+/* --- Header --- */
+.admin-header {
+  display: flex;
+  align-items: center;
+  gap: clamp(10px, 2vw, 20px);
+  width: 100%;
+  max-width: 900px;
+  background-color: #3f51b5;
+  color: white;
+  padding: clamp(10px, 2vw, 20px);
+  border-radius: 12px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.admin-header:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 14px rgba(0,0,0,0.2);
+}
+
+.admin-header h2 {
+  margin: 0;
+  font-size: clamp(1.5rem, 2vw, 2rem);
+}
+
+/* Icon */
+.profile-icon {
+  font-size: clamp(40px, 8vw, 60px);
+}
+
+/* --- Member List --- */
+.member-list {
+  width: 100%;
+  max-width: 900px;
+  margin-top: clamp(20px, 5vw, 40px);
+  padding: clamp(15px, 2vw, 20px);
+  background-color: rgba(255,255,255,0.9);
+  border-radius: 12px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: clamp(10px, 2vw, 15px);
+}
+
+/* Title */
+.member-list h3 {
+  grid-column: 1 / -1;
+  margin: 0 0 clamp(10px, 2vw, 20px) 0;
+  font-size: clamp(1.4rem, 2vw, 1.8rem);
+  color: var(--primary-color);
+  font-weight: 700;
+}
+
+/* Table Header */
+.member-table-header {
+  display: contents;
+  font-weight: bold;
+  color: var(--primary-color);
+}
+
+.member-table-header span {
+  padding: clamp(6px, 1vw, 10px) 0;
+}
+
+/* Table Rows */
+.member-table-row {
+  display: contents;
+  align-items: center;
+}
+
+.member-name {
+  font-size: clamp(1rem, 1.5vw, 1.2rem);
+  padding: clamp(6px, 1vw, 10px) 0;
+}
+
+/* Button */
+.member-table-row button {
+  padding: clamp(6px, 0.5vw, 10px) clamp(12px, 1vw, 15px);
+  font-size: clamp(0.9rem, 1vw, 1.1rem);
+  border-radius: 8px;
+  border: 1px solid var(--primary-color);
+  background-color: white;
+  color: var(--primary-color);
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.member-table-row button:hover {
+  background-color: var(--primary-color);
+  color: white;
+}
+
+/* --- Responsive --- */
+@media (max-width: 768px) {
+  .member-list {
+    grid-template-columns: 1fr;
+  }
+}

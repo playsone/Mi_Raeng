@@ -1,11 +1,13 @@
 <div class="admin-container">
+  <!-- Header -->
   <mat-card class="admin-header">
     <div class="header-content">
-      <mat-icon class="profile-icon">admin_panel_settings</mat-icon>
+      <mat-icon class="profile-icon" (click)="goToAdminProfile()">admin_panel_settings</mat-icon>
       <h2>Admin Dashboard</h2>
     </div>
   </mat-card>
 
+  <!-- Member List -->
   <mat-card class="member-list">
     <h3>รายชื่อสมาชิก</h3>
     <mat-list>

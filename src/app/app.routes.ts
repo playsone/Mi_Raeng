@@ -11,6 +11,8 @@ import { Quiz } from './pages/quiz/quiz';
 import { Profile } from './pages/profile/profile';
 import { Dance } from './pages/dance/dance';
 import { AdminComponent } from './pages/admin/admin';
+import { MemberDetailComponent } from './pages/member-detail/member-detail';
+import { AdminProfile } from './pages/admin-profile/admin-profile';
 
 export const routes: Routes = [
   { path: '', redirectTo: '/quiz', pathMatch: 'full' },
@@ -26,6 +28,9 @@ export const routes: Routes = [
   { path: '', redirectTo: '/welcome', pathMatch: 'full' },
   { path: 'dance', component: Dance },
   {path: 'admin', component: AdminComponent}, // เพิ่มเส้นทางสำหรับหน้าแอดมิน
+  {path: 'member-detail/:uid', component: MemberDetailComponent} ,// เพิ่มเส้นทางสำหรับหน้าแอดมิน
+  {path: 'admin-profile', component: AdminProfile} // เพิ่มเส้นทางสำหรับหน้าแอดมิน
+  
 
 ];
 

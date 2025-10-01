@@ -35,4 +35,8 @@ export class AdminComponent implements OnInit {
   viewUser(user: { uid: string; name: string }): void {
     this.router.navigate(['/member-detail', user.uid]);
   }
+
+  goToAdminProfile(): void {
+    this.router.navigate(['/admin-profile']);
+  }
 }

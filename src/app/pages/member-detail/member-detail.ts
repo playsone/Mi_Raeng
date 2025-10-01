@@ -3,19 +3,17 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
-import { MatIconModule } from '@angular/material/icon';
 import { ApiService } from '../../services/api';
 import { UserProfile } from '../../model/api.model';
 
 @Component({
   selector: 'app-member-detail',
   standalone: true,
-  imports: [CommonModule, MatCardModule, MatButtonModule, MatIconModule],
+  imports: [CommonModule, MatCardModule, MatButtonModule],
   templateUrl: './member-detail.html',
   styleUrls: ['./member-detail.scss']
 })
 export class MemberDetailComponent implements OnInit {
-
   private route = inject(ActivatedRoute);
   private router = inject(Router);
   private apiService = inject(ApiService);

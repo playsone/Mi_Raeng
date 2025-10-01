@@ -23,6 +23,9 @@ type Phase = 'loading' | 'precheck' | 'running' | 'finished';
 export class Dance implements OnDestroy {
   /** ---------- Config ---------- */
   readonly WORKOUT_DURATION_MINUTES = 12;
+  // --- V V V เพิ่ม 2 บรรทัดนี้ V V V ---
+  private lastScoreTime = 0; // เวลาล่าสุดที่ได้คะแนน
+  private readonly SCORE_COOLDOWN_MS = 400; // ดีเลย์ 400 มิลลิวินาที (0.4 วินาที)
   /** ต้อง “เห็นครบทั้งตัวในกรอบ” ต่อเนื่องกี่เฟรมจึงเริ่ม */
   private readonly PRECHECK_REQUIRED_FRAMES = 45; // ~1.5s ที่ ~30fps
   /** ต้องมี keypoints ครบกี่จุดจากชุดที่กำหนด */
@@ -164,11 +167,12 @@ export class Dance implements OnDestroy {
     canvas.height = video.videoHeight;
 
     // สร้างกรอบยืน (80% ของเฟรม)
+    // โค้ดใหม่ (กรอบขนาด 90% และมีขอบ 5%) ✨
     this.standingBox = {
-      x: video.videoWidth * 0.1,
-      y: video.videoHeight * 0.1,
-      width: video.videoWidth * 0.8,
-      height: video.videoHeight * 0.8,
+      x: video.videoWidth * 0.05, // ลดระยะห่างเหลือ 5%
+      y: video.videoHeight * 0.05, // ลดระยะห่างเหลือ 5%
+      width: video.videoWidth * 0.9, // เพิ่มขนาดเป็น 90%
+      height: video.videoHeight * 0.9, // เพิ่มขนาดเป็น 90%
     };
   }
 
@@ -268,8 +272,16 @@ export class Dance implements OnDestroy {
 
     // Draw camera
     ctx.clearRect(0, 0, canvas.width, canvas.height);
+    // Draw camera
+    ctx.clearRect(0, 0, canvas.width, canvas.height); // --- V V V เพิ่มโค้ดส่วนนี้เพื่อกลับด้านภาพ V V V ---
+
+    ctx.save(); // 1. บันทึกสถานะของ canvas ไว้ก่อน
+    ctx.scale(-1, 1); // 2. กลับด้านในแนวนอน (แกน X)
+    ctx.translate(-canvas.width, 0); // 3. ย้ายจุดอ้างอิงกลับมาที่มุมซ้ายบน // วาดวิดีโอ (ซึ่งตอนนี้จะถูกกลับด้านแล้ว)
+
     ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
 
+    ctx.restore(); // 4. คืนสถานะเดิม เพื่อให้ข้อความ (คะแนน, เวลา) ไม่กลับด้านไปด้วย // --- ^ ^ ^ สิ้นสุดส่วนที่เพิ่ม ^ ^ ^ ---
     // Responsive font/margin
     const margin = canvas.width * 0.04;
     const mainFontSize = canvas.width * 0.05;
@@ -363,6 +375,7 @@ export class Dance implements OnDestroy {
       const inside = this.anyKeypointInsideBox(currentLandmarks, video);
       if (!inside) {
         this.isMoving = false;
+        this.lastLandmarks = null; // เพิ่มบรรทัดนี้เพื่อรีเซ็ต!
         ctx.fillStyle = 'orange';
         ctx.font = `${smallFontSize}px Kanit, Arial`;
         ctx.textAlign = 'center';
@@ -419,8 +432,9 @@ export class Dance implements OnDestroy {
   ): boolean {
     if (!this.standingBox) return false;
 
-    // ชุด keypoints สำคัญ
-    const requiredIdx = [0, 11, 12, 15, 16, 23, 24, 27, 28]; // nose, shoulders, wrists, hips, ankles
+    // --- 1. แก้ไขตรงนี้: เอาข้อเท้า (27, 28) ออกจากจุดที่ต้องเช็ค ---
+    const requiredIdx = [0, 11, 12, 15, 16, 23, 24]; // nose, shoulders, wrists, hips
+
     const existCount = requiredIdx.filter((i) => !!landmarks[i]).length;
     if (existCount / requiredIdx.length < this.REQUIRED_KEYPOINT_COVERAGE)
       return false;
@@ -443,7 +457,7 @@ export class Dance implements OnDestroy {
 
     if (!inBox) return false;
 
-    // ตรวจ bounding box ของทั้งตัว (จากจุดสำคัญ) ว่ามี "ความสูง" เพียงพอ (ไม่น้อยกว่า 55% ของกรอบ)
+    // --- 2. แก้ไขตรงนี้: ลดความสูงขั้นต่ำที่ต้องการเห็นในกรอบ ---
     const pts = requiredIdx
       .map((i) => landmarks[i])
       .map((p) => ({
@@ -453,7 +467,9 @@ export class Dance implements OnDestroy {
     const minY = Math.min(...pts.map((p) => p.y));
     const maxY = Math.max(...pts.map((p) => p.y));
     const bodyHeight = maxY - minY;
-    const minRequired = this.standingBox.height * 0.55; // เห็น “หัวถึงเท้า” พอประมาณ
+
+    // ปรับจาก 0.55 เป็น 0.35 ให้เช็คแค่ "หัวถึงสะโพก" ก็พอ
+    const minRequired = this.standingBox.height * 0.35;
 
     return bodyHeight >= minRequired;
   }
@@ -482,7 +498,6 @@ export class Dance implements OnDestroy {
     }
     return false;
   }
-
   private detectMovementAndScore(currentLandmarks: any[]) {
     if (!this.lastLandmarks) {
       this.isMoving = false;
@@ -490,23 +505,66 @@ export class Dance implements OnDestroy {
       return;
     }
 
-    const keypointIndices = [11, 12, 13, 14, 15, 16, 23, 24, 25, 26, 27, 28];
-    let totalDistance = 0;
-    let count = 0;
-
-    for (const i of keypointIndices) {
-      const p1 = this.lastLandmarks[i];
-      const p2 = currentLandmarks[i];
-      if (p1 && p2) {
-        totalDistance += Math.hypot(p2.x - p1.x, p2.y - p1.y);
-        count++;
+    // ฟังก์ชันคำนวณระยะทางรวม (2D)
+    const calculateDistance = (indices: number[]): number => {
+      let totalDistance = 0;
+      let count = 0;
+      for (const i of indices) {
+        const p1 = this.lastLandmarks![i];
+        const p2 = currentLandmarks[i];
+        if (p1 && p2) {
+          totalDistance += Math.hypot(p2.x - p1.x, p2.y - p1.y);
+          count++;
+        }
       }
+      return count > 0 ? totalDistance / count : 0;
+    };
+
+    // ✨ เพิ่ม: ฟังก์ชันคำนวณระยะทางเฉพาะ "แนวตั้ง" สำหรับการย่ำเท้า
+    const calculateVerticalDistance = (indices: number[]): number => {
+      let totalDistance = 0;
+      let count = 0;
+      for (const i of indices) {
+        const p1 = this.lastLandmarks![i];
+        const p2 = currentLandmarks[i];
+        if (p1 && p2) {
+          totalDistance += Math.abs(p2.y - p1.y); // ใช้แค่แกน Y
+          count++;
+        }
+      }
+      return count > 0 ? totalDistance / count : 0;
+    };
+
+    // 1. แยกกลุ่มข้อต่อ
+    const bodyIndices = [11, 12, 23, 24]; // ไหล่, สะโพก
+    const armIndices = [13, 14, 15, 16]; // ข้อศอก, ข้อมือ
+    const ankleIndices = [27, 28]; // ✨ เพิ่ม: ข้อเท้าอย่างเดียวสำหรับย่ำเท้า
+
+    // 2. คำนวณระยะการขยับของแต่ละส่วน
+    const bodyMovement = calculateDistance(bodyIndices);
+    const armMovement = calculateDistance(armIndices);
+    const footStompMovement = calculateVerticalDistance(ankleIndices); // ✨ เพิ่ม: คำนวณการขยับย่ำเท้า
+
+    // 3. คำนวณคะแนนที่จะได้ในรอบนี้
+    let scoreToAdd = 0;
+    if (bodyMovement > 0.06) {
+      scoreToAdd += 0.5;
+    }
+    if (armMovement > 0.08) {
+      scoreToAdd += 0.5;
+    }
+    // ✨ เพิ่ม: เกณฑ์การให้คะแนนสำหรับการย่ำเท้า
+    if (footStompMovement > 0.04) {
+      scoreToAdd += 0.5;
     }
 
-    const averageDistance = count ? totalDistance / count : 0;
-    this.isMoving = averageDistance > this.movementThreshold;
-    if (this.isMoving && this.phase === 'running') {
-      this.score += averageDistance * this.pointsMultiplier;
+    this.isMoving = scoreToAdd > 0;
+
+    // 4. เช็ค Cooldown ก่อนบวกคะแนน
+    const now = performance.now();
+    if (scoreToAdd > 0 && now - this.lastScoreTime > this.SCORE_COOLDOWN_MS) {
+      this.score += scoreToAdd;
+      this.lastScoreTime = now;
     }
 
     this.lastLandmarks = currentLandmarks;

@@ -1,20 +1,48 @@
+:host {
+  --primary-color: #3b5998;
+  --bg-start: #d6f2ff;
+  --bg-end: #78d6ff;
+  --font-main: 'Nunito', sans-serif;
+
+  display: flex;
+  justify-content: center;
+  padding: clamp(20px, 5%, 50px);
+  width: 100%;
+  min-height: 100vh;
+  background: linear-gradient(to bottom, var(--bg-start), var(--bg-end));
+  font-family: var(--font-main);
+  box-sizing: border-box;
+}
+
 .member-detail-card {
-  max-width: 500px;
-  margin: 20px auto;
-  padding: 20px;
+  width: 100%;
+  max-width: 600px;
+  padding: clamp(20px, 5%, 30px);
   border-radius: 12px;
-  background-color: #f5f5f5;
+  background-color: rgba(255,255,255,0.85);
+  box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+  display: flex;
+  flex-direction: column;
+  gap: clamp(8px, 2vw, 12px);
+}
 
-  h2 {
-    color: #3f51b5;
-    margin-bottom: 15px;
-  }
+.member-detail-card h2 {
+  margin: 0;
+  color: var(--primary-color);
+  font-size: clamp(1.5rem, 3vw, 2rem);
+}
 
-  p {
-    margin: 5px 0;
-  }
+.member-detail-card p {
+  margin: 0;
+  font-size: clamp(1rem, 2vw, 1.2rem);
+}
 
-  button {
-    margin-top: 20px;
-  }
+button {
+  margin-top: clamp(15px, 3vw, 20px);
+  font-size: clamp(1rem, 2vw, 1.2rem);
+  align-self: flex-start;
+}
+button mat-icon {
+  vertical-align: middle;
+  margin-right: 8px;
 }

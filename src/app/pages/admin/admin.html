@@ -1,24 +1,23 @@
 <div class="admin-container">
+
   <!-- Header -->
-  <mat-card class="admin-header">
-    <div class="header-content">
-      <mat-icon class="profile-icon" (click)="goToAdminProfile()">admin_panel_settings</mat-icon>
-      <h2>Admin Dashboard</h2>
-    </div>
+  <mat-card class="admin-header" (click)="goToAdminProfile()">
+    <mat-icon class="profile-icon">admin_panel_settings</mat-icon>
+    <h2>Admin Dashboard</h2>
   </mat-card>
 
   <!-- Member List -->
   <mat-card class="member-list">
     <h3>รายชื่อสมาชิก</h3>
-    <mat-list>
-      <mat-list-item *ngFor="let user of users">
-        <div class="member-row">
-          <span>{{ user.name }}</span>
-          <button mat-stroked-button color="primary" (click)="viewUser(user)">
-            รายละเอียด
-          </button>
-        </div>
-      </mat-list-item>
-    </mat-list>
+    <div class="member-table-header">
+      <span>ชื่อสมาชิก</span>
+    </div>
+    <div class="member-table-row" *ngFor="let user of users">
+      <span class="member-name">{{ user.name }}</span>
+      <button mat-stroked-button color="primary" (click)="viewUser(user)">
+        รายละเอียด
+      </button>
+    </div>
   </mat-card>
+
 </div>

@@ -56,7 +56,7 @@ export class Login {
         
         // ✨ เช็ค Role แล้วเปลี่ยนหน้า
         if (response.role === 'admin') {
-          this.router.navigate(['/admin/dashboard']); // ไปหน้าแอดมิน
+          this.router.navigate(['/admin']); // ไปหน้าแอดมิน
         } else {
           this.router.navigate(['/home']); // ไปหน้าผู้ใช้ทั่วไป
         }

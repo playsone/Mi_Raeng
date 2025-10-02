@@ -63,13 +63,15 @@
         </button>
 
         <div class="modal-header">
-            <h2>ยินดีต้อนรับ, {{ userProfile!.name }}! 👋</h2>
+            <h2>{{ welcomePopupTitle }}</h2>
         </div>
 
         <div class="modal-body">
-            <p style="font-weight: 500;">คุณเข้ามาในหน้าหลักแล้ว!</p>
+            <p style="font-weight: 500;" [innerHTML]="personalizedPopupMessage"></p>
             
-            <p>
+            <p style="margin-top: 20px;">
+                ข้อมูลสะสม:
+                <br>
                 คุณมีจำนวนต้นไม้ <strong style="color: #4CAF50; font-size: 1.3em;">{{ treeCount }}</strong> ต้น
                 <br>
                 คะแนนสะสม: <strong style="color: #FF9800; font-size: 1.3em;">{{ userProfile!.score }}</strong> คะแนน
@@ -94,3 +96,15 @@
         </div>
     </div>
 </div>
+
+
+
+
+
+
+
+
+
+
+
+

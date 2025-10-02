@@ -27,7 +27,10 @@ export class Login {
   
   // --- UI State ---
   errorMessage: string = '';
-  isLoading: boolean = false; // ✨ เพิ่ม isLoading เข้ามา
+  isLoading: boolean = false; 
+  
+  // 🔑 คีย์สำหรับเก็บวันห่างหาย (ต้องตรงกับที่ใช้ใน home.ts)
+  private readonly DAYS_LAPSED_KEY = 'daysLapsed'; 
 
   goBack(): void {
     history.back();
@@ -40,8 +43,8 @@ export class Login {
       return;
     }
     
-    this.isLoading = true; // ✨ เริ่ม loading
-    this.errorMessage = ''; // เคลียร์ error เก่า
+    this.isLoading = true; 
+    this.errorMessage = ''; 
 
     const credentials = {
       phone: this.phoneNumber,
@@ -49,12 +52,18 @@ export class Login {
     
     this.apiService.login(credentials).subscribe({
       next: (response) => {
-        this.isLoading = false; // ✨ หยุด loading
+        this.isLoading = false; 
         console.log('Login successful!', response);
         
         localStorage.setItem('authToken', response.token);
         localStorage.setItem('userRole', response.role);
         
+        // 🔥 สำคัญ: บันทึก days_since_last_login ลงใน localStorage
+        // เพื่อให้ Home Component ดึงไปใช้ในการแสดง Popup ต้อนรับ
+        if (response.days_since_last_login !== undefined && response.days_since_last_login !== null) {
+             localStorage.setItem(this.DAYS_LAPSED_KEY, response.days_since_last_login.toString());
+        }
+
         if (response.role === 'admin') {
           this.router.navigate(['/admin']);
         } else {
@@ -62,16 +71,12 @@ export class Login {
         }
       },
       error: (err) => {
-        this.isLoading = false; // ✨ หยุด loading
+        this.isLoading = false; 
         console.error('Login failed', err);
 
-        // ✨ แก้ไขการแสดง Error Message ให้ดีขึ้น ✨
         if (err.error && err.error.error) {
-          // แสดงข้อความ error ที่ส่งมาจาก Backend โดยตรง
-          // เช่น "Phone number not found"
           this.errorMessage = err.error.error;
         } else {
-          // ข้อความสำรองกรณีที่ไม่มี error message จาก backend
           this.errorMessage = 'เกิดข้อผิดพลาดในการเข้าสู่ระบบ';
         }
       }

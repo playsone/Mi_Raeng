@@ -4,11 +4,38 @@
   <div class="col-12 col-md-8 col-lg-6 col-xl-5 text-center">
     <h1 class="display-6 mb-4">แบบประเมินความพร้อม<br />ในการออกกำลังกาย</h1>
 
-    <!-- Quiz Card (No changes here) -->
+    <!-- Quiz Card -->
     @if (!isQuizFinished) {
     <div class="card shadow p-4 p-md-5">
       <div class="card-body">
-        <p class="fs-5 mb-5">{{ currentQuestion }}</p>
+        <!-- MODIFIED: Question display with a speaker button -->
+        <div class="d-flex align-items-start justify-content-center mb-5 gap-3">
+          <p class="fs-5 m-0 text-center flex-grow-1">{{ currentQuestion }}</p>
+          <button
+            class="btn btn-outline-secondary rounded-circle p-2 flex-shrink-0"
+            (click)="speak(currentQuestion)"
+            title="อ่านออกเสียง"
+            aria-label="Read question aloud"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="24"
+              height="24"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
+              <path
+                d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"
+              ></path>
+            </svg>
+          </button>
+        </div>
+
         <div class="row justify-content-around">
           <div class="col-5">
             <label class="option-label green">
@@ -39,7 +66,7 @@
     </div>
     }
 
-    <!-- Result Card (Text is now reversed) -->
+    <!-- Result Card -->
     @if (isQuizFinished) {
     <div class="card shadow-lg p-4 p-md-5 finished-card">
       <!-- Case 1: User passed (all 'no') -->
@@ -65,10 +92,7 @@
       <p class="fs-5 text-muted">
         คุณพร้อมสำหรับการออกกำลังกาย... กำลังนำคุณไปสู่หน้าถัดไป
       </p>
-      }
-
-      <!-- Case 2: User failed (at least one 'yes') -->
-      @if (quizResult === 'failed') {
+      } @if (quizResult === 'failed') {
       <div class="icon-container">
         <svg
           xmlns="http://www.w3.org/2000/svg"
@@ -100,7 +124,7 @@
     </div>
     }
 
-    <!-- Navigation Buttons (No changes here) -->
+    <!-- Navigation Buttons -->
     @if (!isQuizFinished) {
     <div class="d-flex justify-content-center gap-3 mt-4">
       @if (currentIndex > 0) {

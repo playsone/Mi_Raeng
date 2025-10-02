@@ -1,14 +1,14 @@
 import { Component, OnInit, inject } from '@angular/core';
 import { Router } from '@angular/router';
-import { CommonModule } from '@angular/common'; // ✨ Import CommonModule
-import { MatIconModule } from '@angular/material/icon'; // ✨ Import MatIconModule
+import { CommonModule } from '@angular/common';
+import { MatIconModule } from '@angular/material/icon'; 
 import { ApiService } from '../../services/api';
 import { UserProfile } from '../../model/api.model';
 
 @Component({
   selector: 'app-home',
-  standalone: true, // ✨ เพิ่ม standalone
-  imports: [CommonModule, MatIconModule], // ✨ เพิ่ม imports
+  standalone: true,
+  imports: [CommonModule, MatIconModule], 
   templateUrl: './home.html',
   styleUrls: ['./home.scss']
 })
@@ -17,38 +17,64 @@ export class Home implements OnInit {
   private router = inject(Router);
   private apiService = inject(ApiService);
   
-  // ✨ สร้างตัวแปรเพื่อเก็บข้อมูลผู้ใช้
   userProfile: UserProfile | null = null;
+  // ✨ ตัวแปรควบคุมการแสดง Popup
+  showWelcomePopup: boolean = false; 
+  
+  // ✨ ตัวแปรเก็บข้อมูลสำหรับ Popup
+  treeCount: number = 0;
+  remainingScore: number = 0;
+  private readonly SCORE_PER_TREE = 60; // กำหนด 60 คะแนนต่อ 1 ต้นไม้
 
   ngOnInit(): void {
-    // ✨ เมื่อ component โหลดเสร็จ ให้ดึงข้อมูลโปรไฟล์
     this.apiService.getMyProfile().subscribe({
       next: (data) => {
         this.userProfile = data;
         console.log('Profile data loaded:', data);
+        // ✨ คำนวณและแสดง Popup ทันที
+        this.calculateAndShowPopup();
       },
       error: (err) => {
         console.error('Failed to load profile, logging out.', err);
-        this.logout(); // ถ้า token ไม่ถูกต้องหรือไม่เจอ ให้ logout
+        this.logout(); 
       }
     });
   }
 
-  // ✨ สร้าง getter สำหรับเลือกรูปโปรไฟล์ตามเพศ
+  // ✨ ฟังก์ชันคำนวณและตั้งค่า Popup
+  calculateAndShowPopup(): void {
+    if (this.userProfile) {
+      const totalScore = this.userProfile.score;
+      this.treeCount = Math.floor(totalScore / this.SCORE_PER_TREE);
+      this.remainingScore = this.SCORE_PER_TREE - (totalScore % this.SCORE_PER_TREE);
+      this.showWelcomePopup = true; // เปิด Popup
+    }
+  }
+
+  // ✨ ฟังก์ชันสำหรับกดปุ่ม 'ไปออกกำลังกายกัน'
+  goToExerciseFromPopup(): void {
+    this.showWelcomePopup = false; // ปิด Popup
+    this.goTo('/exercise'); // นำทาง
+  }
+
+  // ✨ ฟังก์ชันสำหรับปิด Popup โดยไม่ไปไหน
+  closePopup(): void {
+    this.showWelcomePopup = false;
+  }
+  
   get profilePictureUrl(): string {
     if (this.userProfile?.gender?.toLowerCase() === 'female') {
-      return 'assets/images/profilefm.png'; // รูปผู้หญิง
+      return 'assets/images/profilefm.png'; 
     }
-    return 'assets/images/profilem.png'; // รูปผู้ชาย (หรือค่าเริ่มต้น)
+    return 'assets/images/profilem.png'; 
   }
 
   goTo(route: string): void {
     this.router.navigate([route]);
   }
 
-  // ✨ สร้างฟังก์ชัน Logout
   logout(): void {
-    localStorage.removeItem('authToken'); // ลบ token
-    this.router.navigate(['/login']);     // กลับไปหน้า login
+    localStorage.removeItem('authToken');
+    this.router.navigate(['/login']); 
   }
 }

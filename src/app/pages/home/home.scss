@@ -1,100 +1,97 @@
 /* --- ⚙️ ตัวแปรหลักและสไตล์หลักของ Component --- */
 :host {
     /* Global Variables */
-    --primary-color: #3b5998;
-    --bg-start: #d6f2ff;
-    --bg-end: #78d6ff;
+    --primary-color: #3b5998; /* สีน้ำเงินหลัก */
+    --accent-color: #4CAF50; /* สีเขียวสำหรับปุ่ม/ความสำเร็จ */
+    --warning-color: #d32f2f; /* สีแดงสำหรับแจ้งเตือน */
+    --bg-start: #d6f2ff; /* ฟ้าอ่อนมาก */
+    --bg-end: #78d6ff; /* ฟ้าอ่อน */
     --font-main: 'Nunito', sans-serif;
     --menu-icon-size: clamp(80px, 15vw, 150px);
     --grid-gap: clamp(20px, 5vw, 50px);
-    --menu-item-min-width: 150px; /* กำหนดขนาดขั้นต่ำของเมนู */
+    --menu-item-min-width: 150px; 
 
     /* Core Component Styles */
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: flex-start;
+    display: block;
     min-height: 100vh;
+    /* สำคัญ: ให้พื้นหลัง Gradient แสดงเต็มหน้าจอทั้งหมด */
     background: linear-gradient(to bottom, var(--bg-start), var(--bg-end));
     font-family: var(--font-main);
     color: var(--primary-color);
-    padding: clamp(20px, 5%, 50px);
     box-sizing: border-box;
     width: 100%;
-    overflow-y: auto;
+    overflow-x: hidden; /* ป้องกันการเกิด scroll bar แนวนอนจากองค์ประกอบที่ไม่พอดี */
 }
 
-/* --- Container เพื่อจัดเนื้อหาทั้งหมดให้อยู่ตรงกลาง --- */
-.container {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
+/* --- Container หลักที่รับผิดชอบ Layout ทั้งหมด --- */
+/* (ใช้ร่วมกับคลาส d-flex flex-column vh-100 ใน home.html) */
+.home-container {
     width: 100%;
     max-width: 800px;
+    margin: 0 auto; 
+    /* การตั้งค่า padding แยก: ช่วยให้พื้นที่สี Gradient ของ :host คลุมเต็มที่ */
+    padding-top: clamp(20px, 5%, 50px) !important;
+    padding-left: clamp(20px, 5%, 50px) !important;
+    padding-right: clamp(20px, 5%, 50px) !important;
+    padding-bottom: clamp(20px, 5%, 50px) !important; 
+    
+    min-height: 100vh;
 }
 
-/* --- 🌟 ส่วนหัว (Header) --- */
+/* --- 🌟 ส่วนหัว (Header) - แก้ไข Responsive ให้ดาวอยู่ขวาโปรไฟล์เสมอ --- */
 .header {
     display: flex;
-    flex-wrap: wrap; /* Cho phép các mục xuống dòng */
+    flex-wrap: nowrap; /* สำคัญ: บังคับให้อยู่ในแถวเดียวกันเสมอ */
     justify-content: space-between;
     align-items: center;
     width: 100%;
     margin-bottom: clamp(20px, 5vw, 40px);
-    gap: 10px; /* Adjust spacing between items */
+    gap: 5px; /* ลดระยะห่างเล็กน้อยเพื่อประหยัดพื้นที่บนมือถือ */
 }
 
 .profile-info {
-    order: 1;
-    display: flex;
+    /* อนุญาตให้ Profile ยืดขยายตรงกลาง */
+    flex-grow: 1;
+    flex-shrink: 1; 
+    display: flex; 
     flex-direction: column;
     align-items: center;
     text-align: center;
-    flex-basis: 100%; /* Take full width on small screens */
     margin: 0;
+    min-width: 100px; 
 }
 
 .col-auto {
-    order: 2;
-}
-
-.col-auto:last-of-type {
-    order: 3;
+    /* ป้องกันไม่ให้ Time และ Star ถูกบีบอัด */
+    flex-shrink: 0; 
 }
 
 /* --- Header styles for larger screens (Tablet and above) --- */
 @media (min-width: 768px) {
     .header {
+        /* ใช้ Grid กลับมาจัดวางในรูปแบบดั้งเดิมสำหรับหน้าจอใหญ่ */
         display: grid;
         grid-template-columns: 1fr auto 1fr;
         justify-items: center;
         flex-wrap: nowrap;
-    }
-
-    .col-auto {
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        align-items: center;
+        gap: 20px;
     }
     
     .col-auto:first-of-type {
         justify-self: start;
-        text-align: left;
     }
 
     .col-auto:last-of-type {
         justify-self: end;
-        text-align: right;
     }
 
     .profile-info {
-        order: initial;
+        flex-grow: 0;
         flex-basis: auto;
     }
 
     .info-box {
-        margin-bottom: 0; /* No margin between info boxes on large screens */
+        margin-bottom: 0;
     }
 }
 
@@ -102,13 +99,13 @@
 .info-box {
     display: flex;
     align-items: center;
-    background-color: rgba(255, 255, 255, 0.8);
+    background-color: rgba(255, 255, 255, 0.95); 
     border-radius: 50px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    font-weight: bold;
+    box-shadow: 0 6px 10px rgba(0, 0, 0, 0.15); 
+    font-weight: 800;
     font-size: clamp(1rem, 0.4rem + 2.8vw, 1.5rem);
     padding: clamp(6px, 0.5vh + 1vw, 10px) clamp(12px, 1rem + 2vw, 20px);
-    white-space: nowrap; /* ป้องกันการขึ้นบรรทัดใหม่ */
+    white-space: nowrap;
 }
 
 .info-box .icon {
@@ -118,24 +115,45 @@
 }
 
 .profile-info .profile-pic {
-    width: clamp(50px, 15vw, 80px);
-    height: clamp(50px, 15vw, 80px);
+    width: clamp(60px, 15vw, 90px); 
+    height: clamp(60px, 15vw, 90px);
     border-radius: 50%;
     margin-bottom: 10px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    border: 3px solid white; 
+    transition: transform 0.2s;
+    cursor: pointer;
+}
+
+.profile-info .profile-pic:hover {
+    transform: scale(1.05);
 }
 
 .profile-info .profile-name {
-    font-size: clamp(1rem, 0.5rem + 2.5vw, 1.5rem);
+    font-size: clamp(1rem, 0.5rem + 2.5vw, 1.6rem);
     font-weight: 900;
+    text-shadow: 1px 1px 2px rgba(255, 255, 255, 0.5); 
 }
 
 /* --- 🌳 ส่วนกลาง (Main Content) --- */
+.main-content {
+    flex-grow: 1; 
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+}
+
 .tree-logo {
     width: clamp(200px, 50vw, 400px);
     height: auto;
     object-fit: contain;
     margin: auto 0;
+    transition: transform 0.3s;
+    cursor: pointer;
+}
+
+.tree-logo:hover {
+    transform: scale(1.02);
 }
 
 /* --- 📱 Grid เมนูหลัก --- */
@@ -155,19 +173,19 @@
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    background-color: rgba(255, 255, 255, 0.5);
-    border-radius: 20px;
+    background-color: rgba(255, 255, 255, 0.8); /* พื้นหลังขาวใส */
+    border-radius: 25px; 
     padding: clamp(15px, 1rem + 2vh, 25px);
     cursor: pointer;
     text-decoration: none;
     color: var(--primary-color);
-    border: none;
-    transition: transform 0.2s ease-in-out, box-shadow 0.2s;
-    font-weight: 700;
+    border: 3px solid rgba(255, 255, 255, 0.5); 
+    transition: transform 0.2s ease-in-out, box-shadow 0.2s, background-color 0.2s;
+    font-weight: 800;
     text-align: center;
-    font-size: clamp(1rem, 1.5rem + 1.5vw, 2rem);
+    font-size: clamp(1rem, 1.5rem + 1.5vw, 1.8rem);
     line-height: 1.4;
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15); 
     flex-grow: 1;
     flex-basis: var(--menu-item-min-width);
     max-width: 250px;
@@ -177,11 +195,13 @@
     width: var(--menu-icon-size);
     height: auto;
     margin-bottom: 10px;
+    filter: drop-shadow(2px 2px 4px rgba(0, 0, 0, 0.1)); 
 }
 
 .menu-item:hover {
-    transform: translateY(-5px);
-    box-shadow: 8px 20px rgba(0, 0, 0, 0.15);
+    transform: translateY(-8px); 
+    box-shadow: 0 12px 25px rgba(0, 0, 0, 0.25);
+    background-color: rgba(255, 255, 255, 1); 
 }
 
 /* --- Media Queries for Larger Screens --- */
@@ -196,4 +216,127 @@
     .menu-grid {
         grid-template-columns: repeat(4, minmax(0, 1fr));
     }
+}
+
+/* ------------------- ✨ Custom Popup Styles ✨ ------------------- */
+
+.custom-modal-backdrop {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5); 
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 2000;
+}
+
+.custom-modal-content {
+    position: relative; 
+    background: #f0f8ff; 
+    padding: 30px;
+    border-radius: 20px;
+    width: 90%;
+    max-width: 420px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+    text-align: center;
+    border: 5px solid white;
+    animation: fadeIn 0.3s ease-out;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: scale(0.9); }
+    to { opacity: 1; transform: scale(1); }
+}
+
+/* สไตล์สำหรับไอคอนกากบาท */
+.close-icon-btn {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: none;
+    border: none;
+    font-size: 2em; 
+    color: #f44336; 
+    cursor: pointer;
+    line-height: 1;
+    padding: 5px 10px;
+    border-radius: 50%;
+    transition: background-color 0.2s, transform 0.2s;
+    font-weight: 300; 
+    z-index: 10;
+}
+
+.close-icon-btn:hover {
+    background-color: #ffdddd;
+    transform: rotate(5deg);
+}
+
+
+.modal-header h2 {
+    color: var(--primary-color);
+    margin-top: 0;
+    margin-bottom: 15px;
+    font-size: 1.8em;
+    font-weight: 900;
+    text-shadow: 1px 1px 0px rgba(255, 255, 255, 0.5);
+}
+
+.modal-body p {
+    margin-bottom: 10px;
+    line-height: 1.6;
+    color: #444;
+}
+
+.score-message {
+    margin-top: 20px; 
+    padding: 12px; 
+    border-radius: 10px; 
+    font-weight: 700;
+    border: 1px dashed;
+}
+
+.score-message:not(.success) {
+    background-color: #ffcccc;
+    color: var(--warning-color);
+    border-color: var(--warning-color);
+}
+
+.score-message.success {
+    background-color: #dcf8e8;
+    color: var(--accent-color);
+    border-color: var(--accent-color);
+}
+
+.modal-footer {
+    margin-top: 25px;
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    width: 100%;
+}
+
+.modal-footer .btn {
+    padding: 12px 25px;
+    border: none;
+    border-radius: 30px;
+    cursor: pointer;
+    font-weight: 800;
+    transition: background-color 0.2s, transform 0.2s;
+    font-size: 1.1em;
+}
+
+/* ปรับปุ่มหลักให้เต็มความกว้าง */
+.modal-footer .btn-primary {
+    background-color: var(--accent-color);
+    color: white;
+    width: 100%; 
+    box-shadow: 0 4px 10px rgba(76, 175, 80, 0.4);
+}
+
+.modal-footer .btn-primary:hover {
+    background-color: #388e3c;
+    transform: translateY(-2px);
 }

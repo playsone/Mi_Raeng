@@ -1,48 +1,96 @@
 <div *ngIf="userProfile; else loadingTemplate" class="home-container d-flex flex-column vh-100 p-3 p-md-4">
 
-  <header class="row justify-content-between align-items-center mb-3">
-    <div class="col-auto">
-      <div class="info-box">
-        <img src="assets/images/time.png" alt="Time Icon" class="icon">
-        <span>{{ userProfile.minute }}</span> </div>
-    </div>
-    
-    <div class="col text-center profile-info">
-      <img [src]="profilePictureUrl" alt="Profile Picture" class="profile-pic" (click)="goTo('/profile')"> <span class="profile-name">{{ userProfile.name }}</span> </div>
+    <header class="header">
+        <div class="col-auto">
+            <div class="info-box">
+                <img src="assets/images/time.png" alt="Time Icon" class="icon">
+                <span>{{ userProfile.minute }}</span>
+            </div>
+        </div>
+        
+        <div class="profile-info">
+            <img [src]="profilePictureUrl" alt="Profile Picture" class="profile-pic" (click)="goTo('/profile')">
+            <span class="profile-name">{{ userProfile.name }}</span>
+        </div>
 
-    <div class="col-auto d-flex align-items-center">
-      <div class="info-box">
-        <img src="assets/images/star.png" alt="Star Icon" class="icon">
-        <span>{{ userProfile.score }}</span> </div>
-    </div>
-  </header>
+        <div class="col-auto">
+            <div class="info-box">
+                <img src="assets/images/star.png" alt="Star Icon" class="icon">
+                <span>{{ userProfile.score }}</span>
+            </div>
+        </div>
+    </header>
 
-  <main class="main-content flex-grow-1 d-flex flex-column justify-content-center align-items-center">
-    <img src="assets/images/treelogo.png" alt="Tree Logo" class="tree-logo mb-4" (click)="goTo('/mytree')">
-    <div class="menu-grid">
-      <button class="menu-item" (click)="goTo('/exercise')">
-        <img src="assets/images/exer.png" alt="Exercise Icon">
-        <span>ออกกำลังกาย</span>
-      </button>
-      <button class="menu-item" (click)="goTo('/ranking')">
-        <img src="assets/images/graph.png" alt="Ranking Icon">
-        <span>อันดับ</span>
-      </button>
-      <button class="menu-item" (click)="goTo('/mytree')">
-        <img src="assets/images/tree.png" alt="My Tree Icon">
-        <span>ต้นไม้ของฉัน</span>
-      </button>
-      <button class="menu-item" (click)="goTo('/profile')">
-        <img src="assets/images/proflie.png" alt="Profile Icon">
-        <span>ข้อมูลของฉัน</span>
-      </button>
-    </div>
-  </main>
+    <main class="main-content flex-grow-1 d-flex flex-column justify-content-center align-items-center">
+        <img src="assets/images/treelogo.png" alt="Tree Logo" class="tree-logo mb-4" (click)="goTo('/mytree')">
+        <div class="menu-grid">
+            <button class="menu-item" (click)="goTo('/exercise')">
+                <img src="assets/images/exer.png" alt="Exercise Icon">
+                <span>ออกกำลังกาย</span>
+            </button>
+            <button class="menu-item" (click)="goTo('/ranking')">
+                <img src="assets/images/graph.png" alt="Ranking Icon">
+                <span>อันดับ</span>
+            </button>
+            <button class="menu-item" (click)="goTo('/mytree')">
+                <img src="assets/images/tree.png" alt="My Tree Icon">
+                <span>ต้นไม้ของฉัน</span>
+            </button>
+            <button class="menu-item" (click)="goTo('/profile')">
+                <img src="assets/images/proflie.png" alt="Profile Icon">
+                <span>ข้อมูลของฉัน</span>
+            </button>
+        </div>
+    </main>
 
 </div>
 
 <ng-template #loadingTemplate>
-  <div class="loading-container">
-    <p>Loading profile...</p>
+    <div class="loading-container">
+        <p>Loading profile...</p>
     </div>
 </ng-template>
+
+
+
+<!-- Welcome Popup Modal -->
+
+<div *ngIf="showWelcomePopup" class="custom-modal-backdrop">
+    <div class="custom-modal-content">
+        
+        <button class="close-icon-btn" (click)="closePopup()">
+            &times; 
+        </button>
+
+        <div class="modal-header">
+            <h2>ยินดีต้อนรับ, {{ userProfile!.name }}! 👋</h2>
+        </div>
+
+        <div class="modal-body">
+            <p style="font-weight: 500;">คุณเข้ามาในหน้าหลักแล้ว!</p>
+            
+            <p>
+                คุณมีจำนวนต้นไม้ <strong style="color: #4CAF50; font-size: 1.3em;">{{ treeCount }}</strong> ต้น
+                <br>
+                คะแนนสะสม: <strong style="color: #FF9800; font-size: 1.3em;">{{ userProfile!.score }}</strong> คะแนน
+            </p>
+            
+            <div *ngIf="remainingScore > 0">
+                <p class="score-message">
+                    🎯 ต้องทำอีก <strong style="color: #c62828;">{{ remainingScore }} คะแนน</strong> ถึงจะได้ต้นไม้อีก 1 ต้น!
+                </p>
+            </div>
+            <div *ngIf="remainingScore <= 0">
+                <p class="score-message success">
+                    🎉 ยอดเยี่ยม! คุณได้รับต้นไม้ใหม่แล้ว!
+                </p>
+            </div>
+        </div>
+
+        <div class="modal-footer">
+            <button class="btn btn-primary full-width-btn" (click)="goToExerciseFromPopup()">
+                ไปออกกำลังกายกัน!
+            </button>
+        </div>
+    </div>
+</div>

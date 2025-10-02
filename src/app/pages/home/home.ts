@@ -70,7 +70,7 @@ export class Home implements OnInit {
         const daysLapsedStr = localStorage.getItem(this.DAYS_LAPSED_KEY);
         const daysLapsed = daysLapsedStr ? parseInt(daysLapsedStr) : 0; 
         
-        this.welcomePopupTitle = `ยินดีต้อนรับ, ${this.userProfile.name}! 👋`;
+        this.welcomePopupTitle = `ยินดีต้อนรับคุณ, ${this.userProfile.name}`;
         let message = '';
 
         if (daysLapsed > 2) {

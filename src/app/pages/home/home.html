@@ -76,17 +76,7 @@
                 <br>
                 คะแนนสะสม: <strong style="color: #FF9800; font-size: 1.3em;">{{ userProfile!.score }}</strong> คะแนน
             </p>
-            
-            <div *ngIf="remainingScore > 0">
-                <p class="score-message">
-                    🎯 ต้องทำอีก <strong style="color: #c62828;">{{ remainingScore }} คะแนน</strong> ถึงจะได้ต้นไม้อีก 1 ต้น!
-                </p>
-            </div>
-            <div *ngIf="remainingScore <= 0">
-                <p class="score-message success">
-                    🎉 ยอดเยี่ยม! คุณได้รับต้นไม้ใหม่แล้ว!
-                </p>
-            </div>
+        
         </div>
 
         <div class="modal-footer">

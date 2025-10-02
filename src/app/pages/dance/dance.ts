@@ -22,7 +22,7 @@ type Phase = 'loading' | 'precheck' | 'running' | 'finished';
 })
 export class Dance implements OnDestroy {
   /** ---------- Config ---------- */
-  readonly WORKOUT_DURATION_MINUTES = 1;
+  readonly WORKOUT_DURATION_MINUTES = 12;
   // --- V V V เพิ่ม 2 บรรทัดนี้ V V V ---
   private lastScoreTime = 0; // เวลาล่าสุดที่ได้คะแนน
   private readonly SCORE_COOLDOWN_MS = 400; // ดีเลย์ 400 มิลลิวินาที (0.4 วินาที)
@@ -381,7 +381,6 @@ export class Dance implements OnDestroy {
         // คำนวณการขยับ
         this.detectMovementAndScore(currentLandmarks);
       }
-
     }
 
     // วาดเวลา (ย้ายไปอัปเดตตัวแปรอย่างเดียว)
@@ -389,11 +388,10 @@ export class Dance implements OnDestroy {
       const minutes = Math.floor(this.timer / 60);
       const seconds = this.timer % 60;
       // This line now correctly updates the public property
-      this.formattedTime = `Time: ${minutes.toString().padStart(2, '0')}:${seconds
+      this.formattedTime = `Time: ${minutes
         .toString()
-        .padStart(2, '0')}`;
+        .padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
     }
-
   }
 
   /** ========== Movement / Visibility Helpers ========== */

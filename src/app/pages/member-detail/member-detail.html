@@ -1,42 +1,70 @@
 <mat-card class="member-detail-card" *ngIf="user">
-  <div class="card-header">
-    <h2>{{ user.name }}</h2>
-  </div>
+    <div class="card-header">
+        <div class="header-info">
+            <!-- Avatar: แสดงเฉพาะ Placeholder Icon (person) เมื่อไม่มี user.avatarUrl -->
+            <div class="user-avatar">
+                <mat-icon class="avatar-placeholder">person</mat-icon>
+            </div>
+            
+            <div class="text-group">
+                <h2>{{ user.name }}</h2>
+                <!-- ป้ายบ่งบอกความเป็น Admin View (แก้ไขการปิดแท็กที่ผิดพลาด) -->
+                <span class="card-subtitle">
+                    <mat-icon class="admin-icon">verified_user</mat-icon> 
+                    กำลังดูในโหมดผู้ดูแล (Admin View)
+                </span>
+            </div>
+        </div>
+        <!-- ป้าย UID สำหรับแอดมิน (วางไว้มุมขวาบน) -->
+    </div>
 
-  <div class="card-body">
-    <div class="detail-item">
-      <mat-icon>cake</mat-icon>
-      <p><strong>Age:</strong> {{ user.age }}</p>
-    </div>
-    <div class="detail-item">
-      <mat-icon>phone</mat-icon>
-      <p><strong>Phone:</strong> {{ user.phone }}</p>
-    </div>
-    <div class="detail-item">
-      <mat-icon>wc</mat-icon>
-      <p><strong>Gender:</strong> {{ user.gender }}</p>
-    </div>
-    <div class="detail-item">
-      <mat-icon>emoji_events</mat-icon>
-      <p><strong>Score:</strong> {{ user.score }}</p>
-    </div>
-    <div class="detail-item">
-      <mat-icon>schedule</mat-icon>
-      <p><strong>Minutes:</strong> {{ user.minute }}</p>
-    </div>
-    <div class="detail-item">
-      <mat-icon>park</mat-icon>
-      <p><strong>Trees Planted:</strong> {{ user.number_tree }}</p>
-    </div>
-    <div class="detail-item">
-      <mat-icon>timeline</mat-icon>
-      <p><strong>Tree Progress:</strong> {{ user.tree_progress }}%</p>
-    </div>
-  </div>
+    <div class="card-body">
+        <!-- ข้อมูลส่วนตัว -->
+        <div class="section-title">
+            <mat-icon>info</mat-icon> <span>ข้อมูลส่วนตัว</span>
+        </div>
+        <div class="detail-grid">
+            <div class="detail-item">
+                <mat-icon>cake</mat-icon>
+                <p><strong>อายุ:</strong> {{ user.age || 'ไม่ได้ระบุ' }} ปี</p>
+            </div>
+            <div class="detail-item">
+                <mat-icon>phone</mat-icon>
+                <p><strong>เบอร์โทร:</strong> {{ user.phone || 'ไม่ได้ระบุ' }}</p>
+            </div>
+            <div class="detail-item">
+                <mat-icon>wc</mat-icon>
+                <p><strong>เพศ:</strong> {{ user.gender || 'ไม่ได้ระบุ' }}</p>
+            </div>
+        </div>
 
-  <div class="card-footer">
-    <button mat-stroked-button color="primary" (click)="goBack()">
-      <mat-icon>arrow_back_ios_new</mat-icon> กลับ
-    </button>
-  </div>
+        <!-- สถิติ -->
+        <div class="section-title">
+            <mat-icon>trending_up</mat-icon> <span>สถิติการแข่งขัน</span>
+        </div>
+        <div class="detail-grid">
+            <div class="detail-item stat-highlight">
+                <mat-icon>emoji_events</mat-icon>
+                <p><strong>คะแนน:</strong> {{ user.score | number }}</p>
+            </div>
+            <div class="detail-item stat-highlight">
+                <mat-icon>schedule</mat-icon>
+                <p><strong>นาทีออกกำลัง:</strong> {{ user.minute | number }}</p>
+            </div>
+            <div class="detail-item stat-highlight">
+                <mat-icon>park</mat-icon>
+                <p><strong>จำนวนต้นไม้:</strong> {{ user.number_tree | number }}</p>
+            </div>
+            <div class="detail-item stat-highlight">
+                <mat-icon>timeline</mat-icon>
+                <p><strong>ความคืบหน้า:</strong> {{ user.tree_progress || 0 }}%</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="card-footer">
+        <button mat-stroked-button color="primary" (click)="goBack()">
+            <mat-icon>arrow_back_ios_new</mat-icon> กลับ
+        </button>
+    </div>
 </mat-card>

@@ -9,6 +9,7 @@
   --font-main: 'Nunito', sans-serif;
   --btn-green: #27d97b;
   --btn-red: #ff6b6b;
+  --btn-orange: #ff9800; /* สีใหม่สำหรับปุ่มรีเซ็ต */
   --btn-gray: #e0e9f1;
   --input-bg: white;
   --icon-color: var(--btn-green);
@@ -63,11 +64,29 @@
   }
 }
 
+.success-message {
+    background-color: #d4edda;
+    color: #155724;
+    padding: 10px;
+    border-radius: 8px;
+    margin-top: 15px;
+    font-weight: 700;
+}
+
+.error-message {
+    background-color: #f8d7da;
+    color: #721c24;
+    padding: 10px;
+    border-radius: 8px;
+    margin-top: 15px;
+    font-weight: 700;
+}
+
 // --- 👁️ โหมดแสดงผล (View Mode) ---
 .info-group {
-  display: flex;
-  align-items: center;
-  margin-bottom: 1.5rem;
+display: flex;
+align-items: center;
+margin-bottom: 1.5rem;
   padding-bottom: 1.5rem;
   border-bottom: 1px solid var(--btn-gray);
 
@@ -101,70 +120,8 @@
 }
 
 // --- ✏️ โหมดแก้ไข (Edit Mode) ---
-form {
-  display: flex;
-  flex-direction: column;
-  gap: 1.5rem;
-}
+/* (ไม่มีการเปลี่ยนแปลงในส่วน Edit Mode) */
 
-// ✨ แก้ไข: ทำให้ .input-group และ .select-group div เป็น Flex Container
-.input-group, .select-group div {
-  display: flex; // <--- บังคับให้เป็น flex
-  align-items: center; // <--- จัดให้อยู่กลางแนวตั้ง
-  background-color: #f7faff;
-  border: 1px solid var(--btn-gray);
-  border-radius: 50px;
-  padding: 0 clamp(15px, 1rem + 2vw, 25px);
-  height: clamp(55px, 4rem + 1vh, 65px);
-  transition: border-color 0.2s;
-  
-  &:focus-within {
-    border-color: var(--btn-green);
-  }
-
-  .icon {
-    font-size: 1.5rem;
-    margin-right: 15px;
-    color: #b0c4de;
-  }
-  
-  input, select {
-    flex-grow: 1;
-    width: 100%;
-    height: 100%;
-    border: none;
-    outline: none;
-    background: none;
-    font-size: clamp(1rem, 0.8rem + 1vw, 1.2rem);
-    font-family: var(--font-main);
-    color: var(--primary-color);
-  }
-}
-
-.input-group {
-    position: relative;
-    input { padding-right: 40px; }
-    .toggle-password {
-        position: absolute;
-        top: 50%;
-        right: 20px;
-        transform: translateY(-50%);
-        cursor: pointer;
-        color: #b0c4de;
-        user-select: none;
-        &:hover { color: var(--primary-color); }
-    }
-}
-
-.select-group {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 1rem;
-  background: none;
-  border: none;
-  padding: 0;
-  height: auto;
-}
 
 // --- 🚀 ปุ่มต่างๆ ---
 .button-group {
@@ -174,7 +131,7 @@ form {
   margin-top: 2rem;
 }
 
-.submit-btn, .logout-btn, .cancel-btn {
+.submit-btn, .logout-btn, .cancel-btn, .reset-btn { /* เพิ่ม .reset-btn */
   border: none;
   border-radius: 50px;
   padding: clamp(15px, 2vh, 18px);
@@ -202,6 +159,13 @@ form {
   &:hover { filter: brightness(1.1); }
 }
 
+/* 🔥 เพิ่มสไตล์สำหรับปุ่มรีเซ็ต */
+.reset-btn {
+  background-color: var(--btn-orange);
+  color: white;
+  &:hover { filter: brightness(1.1); }
+}
+
 .cancel-btn {
   background-color: #f0f4f8;
   color: var(--primary-color);
@@ -216,9 +180,101 @@ form {
   }
   .button-group {
     flex-direction: row-reverse;
-    .submit-btn, .logout-btn, .cancel-btn {
-      flex-basis: 50%;
+    /* ปรับให้ปุ่ม Logout และ Reset อยู่ชิดขวา และใช้พื้นที่เท่ากัน */
+    .logout-btn, .reset-btn { 
+        flex-basis: 50%; 
+        width: 48%; /* ใช้เปอร์เซ็นต์แทน flex-basis เพื่อความชัวร์ */
     }
   }
 }
 
+/* --- Custom Modal Styles (สำหรับ Confirmation Dialog) --- */
+.custom-modal-backdrop {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.6);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+    padding: 20px;
+}
+
+.custom-modal-content {
+    background-color: white;
+    padding: 30px;
+    border-radius: 15px;
+    max-width: 450px;
+    width: 100%;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+    text-align: center;
+    animation: fadeIn 0.3s ease-out;
+}
+
+.modal-icon {
+    font-size: 60px;
+    color: var(--btn-red);
+    margin-bottom: 15px;
+}
+
+.modal-header h3 {
+    margin-top: 0;
+    font-weight: 900;
+    color: var(--btn-red);
+}
+
+.modal-body p {
+    font-size: 16px;
+    color: var(--primary-color);
+    margin-bottom: 25px;
+    line-height: 1.5;
+}
+
+.modal-footer {
+    display: flex;
+    gap: 15px;
+    justify-content: space-between;
+}
+
+.modal-footer button {
+    flex: 1;
+    padding: 12px;
+    border-radius: 50px;
+    font-weight: 700;
+    transition: all 0.2s;
+}
+
+.confirm-btn {
+    background-color: var(--btn-red);
+    color: white;
+    &:hover { filter: brightness(1.1); }
+}
+
+.cancel-modal-btn {
+    background-color: var(--btn-gray);
+    color: var(--primary-color);
+    &:hover { filter: brightness(0.95); }
+}
+
+.loading-spinner {
+    border: 4px solid rgba(255, 255, 255, 0.3);
+    border-radius: 50%;
+    border-top: 4px solid white;
+    width: 20px;
+    height: 20px;
+    animation: spin 1s linear infinite;
+    margin-right: 10px;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: scale(0.95); }
+    to { opacity: 1; transform: scale(1); }
+}

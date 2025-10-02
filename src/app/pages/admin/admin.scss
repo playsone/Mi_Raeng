@@ -1,12 +1,13 @@
 :host {
-  /* เพิ่มสีรอง */
+  /* 🎨 Theme */
   --primary-color: #3b5998;
-  --secondary-color: #f0f2f5; /* สีพื้นหลังการ์ดที่เบาลง */
-  --bg-start: #d6f2ff;
-  --bg-end: #78d6ff;
+  --secondary-color: #f9fbff;
+  --bg-start: #e8f2ff;
+  --bg-end: #b6d7ff;
   --font-main: 'Nunito', sans-serif;
-  --shadow-light: 0 4px 15px rgba(0,0,0,0.1);
-  --shadow-hover: 0 8px 25px rgba(0,0,0,0.2);
+  --shadow-light: 0 4px 12px rgba(0, 0, 0, 0.08);
+  --shadow-hover: 0 8px 20px rgba(0, 0, 0, 0.15);
+  --card-radius: 18px;
 
   display: flex;
   flex-direction: column;
@@ -16,25 +17,25 @@
   width: 100%;
   box-sizing: border-box;
   font-family: var(--font-main);
-  background: linear-gradient(180deg, var(--bg-start) 0%, var(--bg-end) 100%);
-  color: #333; /* ปรับสีตัวอักษรหลัก */
+  background: linear-gradient(135deg, var(--bg-start), var(--bg-end));
+  color: #333;
 }
 
-/* --- Admin Header --- */
+/* --- 🏷️ Admin Header --- */
 .admin-header {
   display: flex;
   align-items: center;
-  justify-content: space-between; /* จัดให้อยู่คนละฝั่ง */
+  justify-content: space-between;
   gap: clamp(10px, 2vw, 20px);
   width: 100%;
   max-width: 1000px;
-  background: linear-gradient(45deg, #3f51b5, var(--primary-color)); /* ไล่สีสวยๆ */
+  background: linear-gradient(120deg, #4c6ef5, var(--primary-color));
   color: white;
   padding: clamp(15px, 3vw, 25px);
-  border-radius: 16px; /* โค้งมนมากขึ้น */
+  border-radius: var(--card-radius);
   box-shadow: var(--shadow-light);
   cursor: pointer;
-  transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+  transition: all 0.3s ease;
 }
 
 .admin-header:hover {
@@ -45,14 +46,16 @@
 .admin-header h2 {
   margin: 0;
   font-size: clamp(1.8rem, 3vw, 2.5rem);
-  font-weight: 800;
+  font-weight: 900;
+  letter-spacing: 0.5px;
   flex-grow: 1;
 }
 
 .header-subtitle {
   font-size: clamp(0.9rem, 1.5vw, 1.1rem);
-  opacity: 0.8;
-  display: none; /* ซ่อนบนจอมือถือ */
+  opacity: 0.9;
+  font-weight: 400;
+  display: none;
 }
 
 @media (min-width: 600px) {
@@ -61,58 +64,56 @@
   }
 }
 
-/* Icon */
 .profile-icon {
   font-size: clamp(40px, 8vw, 60px);
+  filter: drop-shadow(0 4px 6px rgba(0,0,0,0.2));
 }
 
-/* --- Member List Card --- */
+/* --- 👥 Member List Card --- */
 .member-list {
   width: 100%;
   max-width: 1000px;
   margin-top: clamp(25px, 5vw, 40px);
   padding: clamp(20px, 3vw, 30px);
-  background-color: var(--secondary-color); /* ใช้สีที่เบาลง */
-  border-radius: 16px;
+  background: var(--secondary-color);
+  border-radius: var(--card-radius);
   box-shadow: var(--shadow-light);
-  
-  /* Grid Layout สำหรับตารางหลัก */
+  backdrop-filter: blur(6px);
+
   display: grid;
-  /* คอลัมน์: ชื่อ (1.5 ส่วน) | UID (1 ส่วน) | จัดการ (อัตโนมัติ/พอดีเนื้อหา) */
   grid-template-columns: 1.5fr 1fr auto;
   gap: 0 20px;
+  transition: all 0.3s ease;
 }
 
-/* Title */
+.member-list:hover {
+  box-shadow: var(--shadow-hover);
+}
+
 .member-list h3 {
   grid-column: 1 / -1;
   margin: 0 0 20px 0;
   font-size: clamp(1.6rem, 2.5vw, 2.2rem);
   color: var(--primary-color);
-  font-weight: 700;
+  font-weight: 800;
   display: flex;
   align-items: center;
   gap: 10px;
 }
 
-/* --- Table Header & Rows Layout --- */
+/* --- Table Rows --- */
 .member-table-header,
 .member-table-row {
-  display: contents; /* ใช้ contents เพื่อให้ child elements เป็น grid items */
-  border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+  display: contents;
 }
 
 .member-table-header {
   font-weight: bold;
   color: var(--primary-color);
-  background-color: rgba(255, 255, 255, 0.5);
-  border-radius: 8px;
-  margin-bottom: 5px;
 }
 
 .member-table-header span {
-  padding: 10px 10px;
-  text-align: left;
+  padding: 10px;
 }
 
 .member-table-row {
@@ -120,14 +121,14 @@
 }
 
 .member-table-row:nth-child(odd) {
-  background-color: rgba(255, 255, 255, 0.7);
+  background-color: rgba(255, 255, 255, 0.5);
 }
 
 .member-table-row:hover {
-  background-color: rgba(var(--primary-color), 0.1);
+  background-color: rgba(76, 110, 245, 0.08);
 }
 
-/* ชื่อสมาชิก */
+/* --- Member Data --- */
 .member-name-group {
   display: flex;
   align-items: center;
@@ -137,20 +138,21 @@
 
 .row-index {
   font-weight: 700;
-  color: #999;
+  color: #aaa;
 }
 
 .member-name {
-  font-size: clamp(1rem, 1.5vw, 1.1rem);
+  font-size: 1rem;
+  font-weight: 600;
 }
 
 .member-uid {
   padding: 12px 10px;
-  font-size: clamp(0.9rem, 1.5vw, 1.05rem);
+  font-size: 0.95rem;
   color: #666;
 }
 
-/* ปุ่มจัดการ */
+/* --- Action Buttons --- */
 .member-actions {
   padding: 8px 10px;
   display: flex;
@@ -159,12 +161,19 @@
 }
 
 .member-actions button {
-  font-size: clamp(0.9rem, 1vw, 1rem);
-  height: 36px;
-  border-radius: 6px;
+  border-radius: 8px;
+  padding: 0 12px;
+  font-weight: 600;
+  font-size: 0.9rem;
+  transition: all 0.25s ease;
 }
 
-/* --- Empty State (ไม่มีสมาชิก) --- */
+.member-actions button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+}
+
+/* --- Empty State --- */
 .empty-state {
   grid-column: 1 / -1;
   text-align: center;
@@ -182,32 +191,31 @@
   font-size: 1.1rem;
 }
 
-/* --- Responsive for Mobile (หน้าจอเล็ก) --- */
+/* --- 📱 Responsive --- */
 @media (max-width: 768px) {
   .member-list {
-    /* เปลี่ยนเป็น 2 คอลัมน์สำหรับมือถือ: ชื่อ/UID | จัดการ */
     grid-template-columns: 1fr auto;
     gap: 0 10px;
   }
-  
-  /* ซ่อนหัวตารางที่ไม่จำเป็นบนมือถือ */
+
   .member-table-header {
     display: none;
   }
 
   .member-table-row {
-    grid-column: 1 / -1; /* แต่ละแถวใช้เต็มความกว้าง */
+    grid-column: 1 / -1;
     display: grid;
     grid-template-columns: 1fr auto;
-    padding: 10px;
-    border: 1px solid rgba(0,0,0,0.1);
-    border-radius: 8px;
-    margin-bottom: 10px;
-    background-color: white !important;
+    padding: 12px;
+    border: 1px solid rgba(0,0,0,0.08);
+    border-radius: 12px;
+    margin-bottom: 12px;
+    background: white !important;
+    transition: box-shadow 0.25s ease;
   }
-  
+
   .member-table-row:hover {
-    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    box-shadow: var(--shadow-light);
   }
 
   .member-name-group {
@@ -219,29 +227,23 @@
   .member-uid {
     grid-column: 1 / 2;
     padding: 0;
-    font-size: 0.9rem;
-    color: #999;
+    font-size: 0.85rem;
+    color: #777;
   }
-  
+
   .member-actions {
     grid-column: 2 / 3;
     grid-row: 1 / 3;
     align-self: center;
-    padding: 0;
-    gap: 5px;
+    gap: 6px;
   }
 
   .member-actions button {
-    height: 40px;
-    min-width: unset;
     padding: 0 10px;
+    border-radius: 6px;
   }
-  
-  /* ทำให้ปุ่ม 'รายละเอียด' มีเฉพาะไอคอนบนมือถือ */
-  .member-actions button mat-icon {
-    margin-right: 0 !important;
-  }
-  .member-actions button:first-child span {
+
+  .member-actions button span {
     display: none;
   }
 }

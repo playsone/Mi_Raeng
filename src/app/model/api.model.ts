@@ -4,6 +4,7 @@ export interface LoginResponse {
   name: string;
   token: string;
   role: 'member' | 'admin'; // ✨ เพิ่มบรรทัดนี้
+  days_since_last_login: number;
 }
 
 // สำหรับแสดงข้อมูลโปรไฟล์

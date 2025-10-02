@@ -550,9 +550,15 @@ export class Dance implements OnDestroy {
     const v = this.refVideo?.nativeElement;
     if (!v) return;
     try {
+      v.muted = false; // <<< ✨ เพิ่มบรรทัดนี้เข้าไปครับ
       v.currentTime = 0;
-      v.play().catch(() => {});
-    } catch {}
+      v.play().catch((error) => {
+        console.warn('Autoplay with sound was blocked by the browser.', error);
+        // หากเบราว์เซอร์ยังบล็อกอยู่ ผู้ใช้จะยังสามารถกดเปิดเสียงเองได้เพราะมี controls
+      });
+    } catch (e) {
+      console.error('An error occurred trying to play the video:', e);
+    }
   }
 
   private safePauseRefVideo() {

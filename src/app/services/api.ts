@@ -78,6 +78,10 @@ export class ApiService {
   getFullUserProfile(uid: string): Observable<UserProfile> {
     return this.http.get<UserProfile>(`${this.API_ENDPOINT}/admin/users/${uid}`);
   }
+   resetAllUserStats(): Observable<{ message: string }> {
+    // ใช้ POST และส่ง Body เป็น object ว่างๆ เพราะเป็นการกระทำที่เปลี่ยนแปลงข้อมูล
+    return this.http.post<{ message: string }>(`${this.API_ENDPOINT}/admin/users/reset-stats`, {});
+  }
 
   
 }

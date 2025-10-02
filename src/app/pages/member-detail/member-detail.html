@@ -1,12 +1,42 @@
 <mat-card class="member-detail-card" *ngIf="user">
-  <h2>{{ user.name }}</h2>
-  <p><strong>Age:</strong> {{ user.age }}</p>
-  <p><strong>Phone:</strong> {{ user.phone }}</p>
-  <p><strong>Gender:</strong> {{ user.gender }}</p>
-  <p><strong>Score:</strong> {{ user.score }}</p>
-  <p><strong>Minutes:</strong> {{ user.minute }}</p>
-  <p><strong>Trees Planted:</strong> {{ user.number_tree }}</p>
-  <p><strong>Tree Progress:</strong> {{ user.tree_progress }}%</p>
+  <div class="card-header">
+    <h2>{{ user.name }}</h2>
+  </div>
 
-  <button mat-stroked-button color="primary" (click)="goBack()">กลับ</button>
+  <div class="card-body">
+    <div class="detail-item">
+      <mat-icon>cake</mat-icon>
+      <p><strong>Age:</strong> {{ user.age }}</p>
+    </div>
+    <div class="detail-item">
+      <mat-icon>phone</mat-icon>
+      <p><strong>Phone:</strong> {{ user.phone }}</p>
+    </div>
+    <div class="detail-item">
+      <mat-icon>wc</mat-icon>
+      <p><strong>Gender:</strong> {{ user.gender }}</p>
+    </div>
+    <div class="detail-item">
+      <mat-icon>emoji_events</mat-icon>
+      <p><strong>Score:</strong> {{ user.score }}</p>
+    </div>
+    <div class="detail-item">
+      <mat-icon>schedule</mat-icon>
+      <p><strong>Minutes:</strong> {{ user.minute }}</p>
+    </div>
+    <div class="detail-item">
+      <mat-icon>park</mat-icon>
+      <p><strong>Trees Planted:</strong> {{ user.number_tree }}</p>
+    </div>
+    <div class="detail-item">
+      <mat-icon>timeline</mat-icon>
+      <p><strong>Tree Progress:</strong> {{ user.tree_progress }}%</p>
+    </div>
+  </div>
+
+  <div class="card-footer">
+    <button mat-stroked-button color="primary" (click)="goBack()">
+      <mat-icon>arrow_back_ios_new</mat-icon> กลับ
+    </button>
+  </div>
 </mat-card>

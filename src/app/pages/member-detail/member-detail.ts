@@ -5,11 +5,12 @@ import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
 import { ApiService } from '../../services/api';
 import { UserProfile } from '../../model/api.model';
+import { MatIconModule } from "@angular/material/icon";
 
 @Component({
   selector: 'app-member-detail',
   standalone: true,
-  imports: [CommonModule, MatCardModule, MatButtonModule],
+  imports: [CommonModule, MatCardModule, MatButtonModule, MatIconModule],
   templateUrl: './member-detail.html',
   styleUrls: ['./member-detail.scss']
 })
@@ -21,7 +22,7 @@ export class MemberDetailComponent implements OnInit {
   user: UserProfile | null = null;
 
   ngOnInit(): void {
-    const uid = this.route.snapshot.paramMap.get('id');
+    const uid = this.route.snapshot.paramMap.get('uid');
     if (uid) {
       this.apiService.getFullUserProfile(uid).subscribe({
         next: (data) => this.user = data,

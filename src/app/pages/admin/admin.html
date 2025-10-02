@@ -1,23 +1,38 @@
 <div class="admin-container">
 
-  <!-- Header -->
   <mat-card class="admin-header" (click)="goToAdminProfile()">
     <mat-icon class="profile-icon">admin_panel_settings</mat-icon>
-    <h2>Admin Dashboard</h2>
+    <h2>Admin Dashboard 🧑‍💻</h2>
+    <span class="header-subtitle">Manage Users & System</span>
   </mat-card>
 
-  <!-- Member List -->
   <mat-card class="member-list">
-    <h3>รายชื่อสมาชิก</h3>
+    <h3><mat-icon>people</mat-icon> รายชื่อสมาชิก</h3>
+    
     <div class="member-table-header">
-      <span>ชื่อสมาชิก</span>
+      <span class="header-name">ชื่อสมาชิก</span>
+      <span class="header-uid">รหัสสมาชิก (UID)</span>
+      <span class="header-action">จัดการ</span>
     </div>
-    <div class="member-table-row" *ngFor="let user of users">
-      <span class="member-name">{{ user.name }}</span>
-      <span class="member-name">{{ user.uid }}</span>
-      <button mat-stroked-button color="primary" (click)="viewUser(user)">
-        รายละเอียด
-      </button>
+    
+    <div class="member-table-row" *ngFor="let user of users; let i = index">
+      <div class="member-name-group">
+        <span class="row-index">{{ i + 1 }}.</span>
+        <span class="member-name">{{ user.name }}</span>
+      </div>
+      
+      <span class="member-uid">{{ user.uid }}</span>
+      
+      <div class="member-actions">
+        <button mat-flat-button color="primary" (click)="viewUser(user)">
+          <mat-icon>visibility</mat-icon> รายละเอียด
+        </button>
+               </div>
+    </div>
+    
+    <div class="empty-state" *ngIf="!users || users.length === 0">
+      <mat-icon>sentiment_dissatisfied</mat-icon>
+      <p>ไม่พบรายชื่อสมาชิก</p>
     </div>
   </mat-card>
 

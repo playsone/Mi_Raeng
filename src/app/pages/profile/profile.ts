@@ -33,6 +33,9 @@ export class Profile implements OnInit {
   passwordFieldType: string = 'password';
   passwordIcon: string = 'visibility';
   
+  // 🔑 คีย์ที่ใช้ใน home.ts สำหรับ sessionStorage
+  private readonly WELCOME_POPUP_SEEN_KEY = 'welcomePopupSeen'; 
+
   ngOnInit(): void {
     // 1. ดึงข้อมูลโปรไฟล์เมื่อหน้าถูกโหลด
     this.apiService.getMyProfile().subscribe({
@@ -70,11 +73,11 @@ export class Profile implements OnInit {
     
     // สร้าง payload ที่จะส่งไป (ไม่ต้องส่ง phone เพราะ backend ไม่ได้ให้แก้)
     const payload = {
-        name: this.editData.name,
-        phone: this.editData.phone,
-        password: this.editData.password,
-        age: this.editData.age,
-        gender: this.editData.gender
+      name: this.editData.name,
+      phone: this.editData.phone,
+      password: this.editData.password,
+      age: this.editData.age,
+      gender: this.editData.gender
     };
 
     this.apiService.updateMyProfile(payload).subscribe({
@@ -105,8 +108,15 @@ export class Profile implements OnInit {
     }
   }
 
+  // 4. 🔥 แก้ไข: เพิ่มการลบสถานะ Popup จาก sessionStorage 
   logout(): void {
-    localStorage.removeItem('authToken'); // ลบแค่ token
+    // 1. ลบสถานะ Popup ออกจาก sessionStorage เพื่อให้ Popup แสดงขึ้นมาเมื่อ Log in ใหม่
+    sessionStorage.removeItem(this.WELCOME_POPUP_SEEN_KEY); 
+    
+    // 2. ลบ Auth Token
+    localStorage.removeItem('authToken'); 
+    
+    // 3. นำทางไปหน้า welcome
     this.router.navigate(['/welcome']);
   }
 }

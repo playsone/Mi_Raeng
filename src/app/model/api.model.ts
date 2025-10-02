@@ -22,7 +22,7 @@ export interface UserProfile {
 export interface LeaderboardEntry {
   name: string;
   number_tree: number;
-  minute: number;
+  score: number;
   // เราจะสร้าง rank ขึ้นมาเองในฝั่ง Frontend
   rank?: number; 
 }

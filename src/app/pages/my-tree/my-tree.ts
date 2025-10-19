@@ -19,7 +19,7 @@ export class MyTree implements OnInit {
   userProfile: UserProfile | null = null;
   isLoading: boolean = true;
   
-  maxProgress: number = 6000;
+  maxProgress: number = 1000;
   treeImageName: string = 't1.png';
 
   ngOnInit(): void {
@@ -43,11 +43,11 @@ export class MyTree implements OnInit {
   updateTreeImage(): void {
     if (!this.userProfile) return;
     const currentProgress = this.userProfile.tree_progress;
-    if (currentProgress >= 5000) this.treeImageName = 't6.png';
-    else if (currentProgress >= 4000) this.treeImageName = 't5.png';
-    else if (currentProgress >= 3000) this.treeImageName = 't4.png';
-    else if (currentProgress >= 2000) this.treeImageName = 't3.png';
-    else if (currentProgress >= 1000) this.treeImageName = 't2.png';
+    if (currentProgress >= 900) this.treeImageName = 't6.png';
+    else if (currentProgress >= 800) this.treeImageName = 't5.png';
+    else if (currentProgress >= 600) this.treeImageName = 't4.png';
+    else if (currentProgress >= 400) this.treeImageName = 't3.png';
+    else if (currentProgress >= 200) this.treeImageName = 't2.png';
     else this.treeImageName = 't1.png';
   }
 

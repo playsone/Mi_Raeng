@@ -22,7 +22,7 @@ type Phase = 'loading' | 'precheck' | 'running' | 'finished';
 })
 export class Dance implements OnDestroy {
   /** ---------- Config ---------- */
-  readonly WORKOUT_DURATION_MINUTES = 12;
+  readonly WORKOUT_DURATION_MINUTES = 1;
   // --- V V V เพิ่ม 2 บรรทัดนี้ V V V ---
   private lastScoreTime = 0; // เวลาล่าสุดที่ได้คะแนน
   private readonly SCORE_COOLDOWN_MS = 400; // ดีเลย์ 400 มิลลิวินาที (0.4 วินาที)
@@ -234,7 +234,7 @@ export class Dance implements OnDestroy {
 
     this.apiService
       .updateActivity({
-        minute: this.WORKOUT_DURATION_MINUTES,
+        minute: 30,
         score: finalScore,
       })
       .subscribe({

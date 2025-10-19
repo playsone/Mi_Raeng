@@ -34,7 +34,7 @@
           <p>คลิกเพื่อรดน้ำ</p>
 
           <ng-container *ngIf="userProfile.tree_progress < maxProgress">
-            <button class="water-btn" (click)="waterTree(50)" [disabled]="userProfile.score < 1">
+            <button class="water-btn" (click)="waterTree(100)" [disabled]="userProfile.score < 100">
               <img src="assets/images/water.png" alt="Watering Can">
             </button>
           </ng-container>
